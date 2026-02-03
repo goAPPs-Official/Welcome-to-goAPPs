@@ -3,42 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>goApps | Boot</title>
+    <title>goApps | Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <div id="splash-screen">
         <div class="logo-container">
-    <h1>go<span>Apps</span></h1>
-    <div class="spinner"></div>
-    
-    <div class="progress-container">
-        <div id="progress-bar"></div>
-    </div>
-    
-    <p id="status">Initializing system...</p>
-</div>
+            <h1>go<span>Apps</span></h1>
+            <div class="spinner"></div>
+            <div class="progress-container">
+                <div id="progress-bar"></div>
+            </div>
+            <p id="status">Initializing system...</p>
+        </div>
     </div>
 
     <div id="app-container" class="hidden">
+        <div class="theme-switch-wrapper">
+            <label class="theme-switch" for="checkbox">
+                <input type="checkbox" id="checkbox" />
+                <div class="slider round"></div>
+            </label>
+            <span id="theme-label">Dark Mode</span>
+        </div>
+
         <header>
-            <h2>App Directory</h2>
+            <div class="sliding-header">
+                <h2>Deploy Your</h2>
+                <div class="text-window">
+                    <div class="text-slide">
+                        <span>AI Assistant</span>
+                        <span>Support Bot</span>
+                        <span>Data Analyst</span>
+                        <span>DevOps Bot</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="search-wrapper">
+                <input type="text" id="appSearch" placeholder="Filter live apps..." onkeyup="filterApps()">
+            </div>
         </header>
-        <ul class="app-list">
-            <li class="app-item">
-                <span>Cloud Dashboard</span>
-                <button class="deploy-btn" onclick="deploy('cloud-db')">Deploy</button>
-            </li>
-            <li class="app-item">
-                <span>Analytics Engine</span>
-                <button class="deploy-btn" onclick="deploy('analytics')">Deploy</button>
-            </li>
-            <li class="app-item">
-                <span>Auth Service</span>
-                <button class="deploy-btn" onclick="deploy('auth')">Deploy</button>
-            </li>
-        </ul>
+
+        <div id="feed-container" class="app-list">
+            </div>
+
+        <footer class="system-log">
+            <div id="log-content"></div>
+        </footer>
     </div>
 
     <script src="script.js"></script>
