@@ -19,39 +19,89 @@
         </div>
     </div>
 
-    <div id="app-container" class="hidden">
-        <div class="theme-switch-wrapper">
-            <label class="theme-switch" for="checkbox">
-                <input type="checkbox" id="checkbox" />
-                <div class="slider round"></div>
-            </label>
-            <span id="theme-label">Dark Mode</span>
+    <div id="tour-modal" class="tour-overlay hidden">
+        <div class="tour-card">
+            <div class="tour-step" id="step-content">
+                <h2>Welcome to goApps</h2>
+                <p>Your deployment-ready dashboard is initialized. Let's take a quick look around.</p>
+            </div>
+            <div class="tour-footer">
+                <button class="tour-skip" onclick="endTour()">Skip</button>
+                <button class="tour-next" onclick="nextTourStep()">Next Step</button>
+            </div>
         </div>
+    </div>
 
-        <header>
+    <div id="app-container" class="hidden">
+        <header class="main-header">
+            <div class="header-left">
+                <div class="hamburger" onclick="toggleSidebar()">
+                    <span></span><span></span><span></span>
+                </div>
+                <div class="app-logo">
+                    <strong>go<span>Apps</span></strong>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="theme-switch-wrapper">
+                    <input type="checkbox" id="checkbox" class="hidden-check" />
+                    <label for="checkbox" class="slider-label"></label>
+                </div>
+                <div class="profile-icon">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" alt="User Profile">
+                </div>
+            </div>
+        </header>
+
+        <nav id="side-menu" class="side-menu">
+            <div class="menu-items">
+                <a href="#">Dashboard</a>
+                <a href="#">Settings</a>
+                <a href="#">Logout</a>
+            </div>
+            <div class="system-health">
+                <h3>System Health</h3>
+                <div class="stat-group">
+                    <div class="stat-label"><span>CPU</span> <span id="cpu-val">--</span></div>
+                    <div class="stat-bar"><div id="cpu-bar" class="stat-fill"></div></div>
+                </div>
+                <div class="stat-group">
+                    <div class="stat-label"><span>RAM</span> <span id="ram-val">--</span></div>
+                    <div class="stat-bar"><div id="ram-bar" class="stat-fill"></div></div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="content-body">
             <div class="sliding-header">
                 <h2>Deploy Your</h2>
                 <div class="text-window">
                     <div class="text-slide">
-                        <span>AI Assistant</span>
-                        <span>Support Bot</span>
-                        <span>Data Analyst</span>
-                        <span>DevOps Bot</span>
+                        <span>AI Assistant</span><span>Support Bot</span><span>Data Analyst</span>
                     </div>
                 </div>
             </div>
+            <input type="text" id="appSearch" placeholder="Filter apps..." onkeyup="filterApps()">
+            <div id="feed-container" class="app-list"></div>
+        </main>
 
-            <div class="search-wrapper">
-                <input type="text" id="appSearch" placeholder="Filter live apps..." onkeyup="filterApps()">
+        <div class="chat-widget">
+            <div id="chat-menu" class="chat-menu hidden">
+                <div class="menu-header">Available Agents</div>
+                <div class="agent-list">
+                    <div class="agent-item" onclick="closeChat('Nexus AI')">
+                        <div class="avatar-wrapper">
+                            <div class="avatar neon-blue pulse">N</div>
+                            <div class="status-dot"></div>
+                        </div>
+                        <span>Nexus AI</span><button class="connect-cta">Connect</button>
+                    </div>
+                </div>
             </div>
-        </header>
+            <button class="neon-chat-btn" onclick="toggleChat()">💬</button>
+        </div>
 
-        <div id="feed-container" class="app-list">
-            </div>
-
-        <footer class="system-log">
-            <div id="log-content"></div>
-        </footer>
+        <footer class="system-log"><div id="log-content"></div></footer>
     </div>
 
     <script src="script.js"></script>
