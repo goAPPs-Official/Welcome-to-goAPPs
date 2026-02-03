@@ -1,0 +1,72 @@
+<style>
+    .progress-container {
+        width: 100%;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 2px;
+        margin-top: 10px;
+        display: none; /* Hidden by default */
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        width: 0%;
+        height: 100%;
+        background: var(--accent-blue);
+        box-shadow: 0 0 10px var(--accent-blue);
+        transition: width 0.1s linear;
+    }
+
+    .status-text {
+        font-size: 0.75rem;
+        color: var(--accent-blue);
+        margin-top: 5px;
+        display: none;
+    }
+</style>
+
+<div class="app-card" id="card-EduPortal">
+    <div class="app-info">
+        <h3>EduPortal v2.0</h3>
+        <p>Student management & LMS</p>
+        <div class="progress-container"><div class="progress-bar"></div></div>
+        <div class="status-text">Preparing...</div>
+    </div>
+    <button class="deploy-btn" onclick="startDeployment(this, 'EduPortal')">Deploy</button>
+</div>
+
+<script>
+    function startDeployment(btn, appId) {
+        const card = document.getElementById('card-' + appId);
+        const pContainer = card.querySelector('.progress-container');
+        const pBar = card.querySelector('.progress-bar');
+        const sText = card.querySelector('.status-text');
+
+        // Disable button and show progress
+        btn.disabled = true;
+        btn.innerText = "Deploying...";
+        btn.style.opacity = "0.5";
+        pContainer.style.display = "block";
+        sText.style.display = "block";
+
+        let progress = 0;
+        const interval = setInterval(() => {
+            progress += Math.random() * 15; // Randomize speed for realism
+            if (progress > 100) progress = 100;
+
+            pBar.style.width = progress + "%";
+
+            if (progress < 40) sText.innerText = "Allocating Resources...";
+            else if (progress < 80) sText.innerText = "Configuring Database...";
+            else sText.innerText = "Finalizing Deployment...";
+
+            if (progress === 100) {
+                clearInterval(interval);
+                sText.innerText = "✅ Successfully Deployed!";
+                btn.innerText = "Live";
+                btn.style.background = "#28a745"; // Success Green
+                btn.style.opacity = "1";
+            }
+        }, 400);
+    }
+</script>
