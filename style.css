@@ -1,19 +1,29 @@
 :root {
-    --primary: #007bff;
     --bg: #0f172a;
     --card: #1e293b;
     --text: #f8fafc;
+    --primary: #007bff;
+    --input-bg: #1e293b;
+    --success: #10b981;
+}
+
+[data-theme="light"] {
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #1e293b;
+    --input-bg: #e2e8f0;
 }
 
 body {
     margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Inter', sans-serif;
     background-color: var(--bg);
     color: var(--text);
-    overflow: hidden; /* Prevent scrolling during splash */
+    overflow: hidden;
+    transition: background-color 0.4s ease;
 }
 
-/* Splash Screen Styles */
+/* Splash Screen */
 #splash-screen {
     position: fixed;
     inset: 0;
@@ -25,66 +35,22 @@ body {
     transition: opacity 0.5s ease;
 }
 
-.logo-container { text-align: center; }
-
-h1 { font-size: 3rem; margin-bottom: 20px; }
-h1 span { color: var(--primary); }
-
 .spinner {
-    width: 50px;
-    height: 50px;
-    border: 5px solid rgba(255, 255, 255, 0.1);
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
     border-top-color: var(--primary);
     border-radius: 50%;
     margin: 0 auto 20px;
     animation: spin 1s linear infinite;
 }
 
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
-
-/* App List Styles */
-#app-container {
-    padding: 40px 20px;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.hidden { display: none; opacity: 0; }
-
-.app-list { list-style: none; padding: 0; }
-
-.app-item {
-    background: var(--card);
-    margin-bottom: 15px;
-    padding: 20px;
-    border-radius: 12px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-}
-
-.deploy-btn {
-    background: var(--primary);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: transform 0.2s;
-}
-
-.deploy-btn:hover { background: #0056b3; transform: scale(1.05); }
-/* Add this to your style.css */
 .progress-container {
-    width: 250px;
+    width: 200px;
     height: 4px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255,255,255,0.1);
     border-radius: 10px;
-    margin: 20px auto;
+    margin: 15px auto;
     overflow: hidden;
 }
 
@@ -92,6 +58,53 @@ h1 span { color: var(--primary); }
     width: 0%;
     height: 100%;
     background: var(--primary);
-    box-shadow: 0 0 10px var(--primary);
-    transition: width 0.4s ease; /* Smooth filling effect */
+    transition: width 0.4s ease;
 }
+
+/* Header & Sliding Text */
+.sliding-header { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; }
+.text-window { height: 40px; overflow: hidden; color: var(--primary); font-weight: bold; }
+.text-slide { animation: slideVertical 8s infinite cubic-bezier(0.645, 0.045, 0.355, 1); }
+.text-slide span { height: 40px; display: block; }
+
+@keyframes slideVertical {
+    0%, 20% { transform: translateY(0); }
+    25%, 45% { transform: translateY(-40px); }
+    50%, 70% { transform: translateY(-80px); }
+    75%, 95% { transform: translateY(-120px); }
+}
+
+/* Main Content */
+#app-container { max-width: 800px; margin: 60px auto; padding: 20px; opacity: 0; transition: opacity 0.5s; }
+.hidden { display: none; }
+
+.app-item {
+    background: var(--card);
+    margin-bottom: 12px;
+    padding: 15px 25px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: slideIn 0.4s ease forwards;
+}
+
+/* Components */
+#appSearch {
+    width: 100%; padding: 12px; border-radius: 8px; border: none;
+    background: var(--input-bg); color: var(--text); margin-top: 20px;
+}
+
+.deploy-btn {
+    background: var(--primary); color: white; border: none;
+    padding: 8px 18px; border-radius: 5px; cursor: pointer;
+}
+
+.system-log {
+    position: fixed; bottom: 0; left: 0; width: 100%; height: 60px;
+    background: rgba(0,0,0,0.85); color: var(--success); font-family: monospace;
+    padding: 10px; font-size: 0.8rem; overflow: hidden;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
