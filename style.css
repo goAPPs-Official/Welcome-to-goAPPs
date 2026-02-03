@@ -1,110 +1,32 @@
 :root {
-    --bg: #0f172a;
-    --card: #1e293b;
-    --text: #f8fafc;
-    --primary: #007bff;
-    --input-bg: #1e293b;
-    --success: #10b981;
+    --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --primary: #007bff; --success: #10b981;
 }
-
 [data-theme="light"] {
-    --bg: #f1f5f9;
-    --card: #ffffff;
-    --text: #1e293b;
-    --input-bg: #e2e8f0;
+    --bg: #f1f5f9; --card: #ffffff; --text: #1e293b;
 }
 
-body {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg);
-    color: var(--text);
-    overflow: hidden;
-    transition: background-color 0.4s ease;
-}
+body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; transition: 0.4s; }
 
-/* Splash Screen */
-#splash-screen {
-    position: fixed;
-    inset: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: var(--bg);
-    z-index: 1000;
-    transition: opacity 0.5s ease;
-}
+/* Splash & Tour */
+#splash-screen, .tour-overlay { position: fixed; inset: 0; z-index: 2000; background: var(--bg); display: flex; justify-content: center; align-items: center; transition: 0.5s; }
+.hidden { display: none !important; opacity: 0; }
+.progress-container { width: 200px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 20px; }
+#progress-bar { height: 100%; width: 0; background: var(--primary); transition: 0.4s; }
 
-.spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid rgba(255, 255, 255, 0.1);
-    border-top-color: var(--primary);
-    border-radius: 50%;
-    margin: 0 auto 20px;
-    animation: spin 1s linear infinite;
-}
+/* Header & Sidebar */
+.main-header { position: fixed; top: 0; width: 100%; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; background: var(--card); z-index: 1000; box-sizing: border-box; }
+.side-menu { position: fixed; left: -250px; top: 60px; width: 250px; height: 100%; background: var(--card); transition: 0.4s; z-index: 999; border-right: 1px solid rgba(255,255,255,0.05); }
+.side-menu.active { left: 0; }
 
-.progress-container {
-    width: 200px;
-    height: 4px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 10px;
-    margin: 15px auto;
-    overflow: hidden;
-}
-
-#progress-bar {
-    width: 0%;
-    height: 100%;
-    background: var(--primary);
-    transition: width 0.4s ease;
-}
-
-/* Header & Sliding Text */
-.sliding-header { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; }
-.text-window { height: 40px; overflow: hidden; color: var(--primary); font-weight: bold; }
-.text-slide { animation: slideVertical 8s infinite cubic-bezier(0.645, 0.045, 0.355, 1); }
-.text-slide span { height: 40px; display: block; }
-
-@keyframes slideVertical {
-    0%, 20% { transform: translateY(0); }
-    25%, 45% { transform: translateY(-40px); }
-    50%, 70% { transform: translateY(-80px); }
-    75%, 95% { transform: translateY(-120px); }
-}
-
-/* Main Content */
-#app-container { max-width: 800px; margin: 60px auto; padding: 20px; opacity: 0; transition: opacity 0.5s; }
-.hidden { display: none; }
-
-.app-item {
-    background: var(--card);
-    margin-bottom: 12px;
-    padding: 15px 25px;
-    border-radius: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    animation: slideIn 0.4s ease forwards;
-}
-
-/* Components */
-#appSearch {
-    width: 100%; padding: 12px; border-radius: 8px; border: none;
-    background: var(--input-bg); color: var(--text); margin-top: 20px;
-}
-
-.deploy-btn {
-    background: var(--primary); color: white; border: none;
-    padding: 8px 18px; border-radius: 5px; cursor: pointer;
-}
-
-.system-log {
-    position: fixed; bottom: 0; left: 0; width: 100%; height: 60px;
-    background: rgba(0,0,0,0.85); color: var(--success); font-family: monospace;
-    padding: 10px; font-size: 0.8rem; overflow: hidden;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
+/* Feed & Animations */
+.content-body { padding: 80px 20px 100px; max-width: 800px; margin: 0 auto; }
+.app-item { background: var(--card); padding: 15px; margin-bottom: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; animation: slideIn 0.3s forwards; }
 @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Neon Chat */
+.neon-chat-btn { width: 50px; height: 50px; border-radius: 50%; background: var(--bg); border: 2px solid var(--primary); color: var(--primary); cursor: pointer; box-shadow: 0 0 10px var(--primary); position: fixed; bottom: 80px; right: 20px; }
+.avatar.pulse { animation: neonPulse 2s infinite; }
+@keyframes neonPulse { 0%, 100% { box-shadow: 0 0 5px var(--primary); } 50% { box-shadow: 0 0 15px var(--primary); } }
+
+/* System Log */
+.system-log { position: fixed; bottom: 0; width: 100%; height: 60px; background: rgba(0,0,0,0.9); color: var(--success); font-family: monospace; font-size: 0.75rem; padding: 10px; overflow: hidden; }
