@@ -1,58 +1,87 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const splash = document.getElementById('splash-screen');
-    const container = document.getElementById('app-container');
-    const statusText = document.getElementById('status');
+const appData = [
+    { name: "Nexus Chatbot", id: "nexus-1" },
+    { name: "Crypto Tracker", id: "crypto-v2" },
+    { name: "Safety Sentinel", id: "safe-bot" },
+    { name: "Auto-Coder Pro", id: "ac-pro" }
+];
 
-    // Simulate different loading stages
-    setTimeout(() => { statusText.innerText = "Loading modules..."; }, 1000);
-    setTimeout(() => { statusText.innerText = "Connecting to goApps..."; }, 2000);
+// 1. Theme Persistence
+function applyTheme() {
+    const saved = localStorage.getItem('goApps-theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', saved);
+    const checkbox = document.querySelector('#checkbox');
+    if (checkbox) checkbox.checked = saved === 'light';
+}
 
-    // Fade out splash and show content after 3 seconds
+// 2. System Log
+function addLog(text) {
+    const logContent = document.getElementById('log-content');
+    const entry = document.createElement('div');
+    entry.innerHTML = `<span>[${new Date().toLocaleTimeString()}]</span> ${text}`;
+    logContent.appendChild(entry);
+    if (logContent.children.length > 3) {
+        logContent.style.transform = `translateY(-${(logContent.children.length - 3) * 18}px)`;
+    }
+}
+
+// 3. Deployment Logic
+function deploy(btn, appId) {
+    btn.classList.add('loading');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = `<div class="btn-loader"></div>`;
+    addLog(`INIT: Deploying ${appId}...`);
+    
     setTimeout(() => {
-        splash.style.opacity = '0';
-        
+        btn.innerHTML = "Open";
+        btn.style.background = "#10b981";
+        addLog(`SUCCESS: ${appId} is live.`);
+    }, 2000);
+}
+
+// 4. Boot Sequence
+document.addEventListener('DOMContentLoaded', () => {
+    applyTheme();
+    const pb = document.getElementById('progress-bar');
+    const st = document.getElementById('status');
+
+    setTimeout(() => { pb.style.width = "40%"; st.innerText = "Fetching apps..."; }, 800);
+    setTimeout(() => { pb.style.width = "100%"; st.innerText = "System Ready"; }, 1800);
+
+    setTimeout(() => {
+        document.getElementById('splash-screen').style.opacity = '0';
         setTimeout(() => {
-            splash.style.display = 'none';
+            document.getElementById('splash-screen').style.display = 'none';
+            const container = document.getElementById('app-container');
             container.classList.remove('hidden');
             container.style.opacity = '1';
-            document.body.style.overflow = 'auto'; // Re-enable scrolling
+            document.body.style.overflow = 'auto';
+            
+            // Start Feed
+            appData.forEach((app, i) => {
+                setTimeout(() => {
+                    const item = document.createElement('div');
+                    item.className = 'app-item';
+                    item.innerHTML = `<strong>${app.name}</strong><button class="deploy-btn" onclick="deploy(this, '${app.id}')">Deploy</button>`;
+                    document.getElementById('feed-container').prepend(item);
+                    addLog(`STREAM: Found ${app.name}`);
+                }, i * 1000);
+            });
         }, 500);
-    }, 3500);
+    }, 2500);
 });
 
-// Deployment redirect function
-function deploy(appId) {
-    console.log(`Deploying: ${appId}`);
-    // Replace with your actual deployment URL structure
-    window.location.href = `https://deploy.goapps.com?app=${appId}`;
-}
-document.addEventListener('DOMContentLoaded', () => {
-    const splash = document.getElementById('splash-screen');
-    const container = document.getElementById('app-container');
-    const statusText = document.getElementById('status');
-    const progressBar = document.getElementById('progress-bar');
-
-    // Sequence of loading events
-    const steps = [
-        { progress: '30%', text: "Loading modules...", delay: 1000 },
-        { progress: '65%', text: "Connecting to goApps...", delay: 2000 },
-        { progress: '100%', text: "Ready!", delay: 3000 }
-    ];
-
-    steps.forEach(step => {
-        setTimeout(() => {
-            statusText.innerText = step.text;
-            progressBar.style.width = step.progress;
-        }, step.delay);
+// 5. Search Filter
+function filterApps() {
+    const query = document.getElementById('appSearch').value.toLowerCase();
+    document.querySelectorAll('.app-item').forEach(item => {
+        const text = item.querySelector('strong').innerText.toLowerCase();
+        item.style.display = text.includes(query) ? 'flex' : 'none';
     });
+}
 
-    // Final Transition
-    setTimeout(() => {
-        splash.style.opacity = '0';
-        setTimeout(() => {
-            splash.style.display = 'none';
-            container.classList.remove('hidden');
-            document.body.style.overflow = 'auto';
-        }, 500);
-    }, 3800);
+// 6. Theme Toggle Event
+document.querySelector('#checkbox').addEventListener('change', (e) => {
+    const theme = e.target.checked ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('goApps-theme', theme);
 });
