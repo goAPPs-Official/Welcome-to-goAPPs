@@ -3,121 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>goProfile & Settings</title>
+    <title>🚀goAPPs</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
     <style>
-            :root {
-            --bg: #0f172a;
-            --card: #1e293b;
-            --text: BLACK;
-            --primary: #007bff;
-            --input-bg: #1e293b;
-            --success: #10b981;
-        }
-
-        [data-theme="light"] {
-            --bg: #f1f5f9;
-            --card: #ffffff;
-            --text: #1e293b;
-            --input-bg: #e2e8f0;
-        }
-
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            overflow: hidden;
-            transition: background-color 0.4s ease;
-        }
-
-        /* Splash Screen */
-        #splash-screen {
-            position: fixed;
-            inset: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: var(--bg);
-            z-index: 1000;
-            transition: opacity 0.5s ease;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            animation: spin 1s linear infinite;
-        }
-
-        .progress-container {
-            width: 200px;
-            height: 4px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 10px;
-            margin: 15px auto;
-            overflow: hidden;
-        }
-
-        #progress-bar {
-            width: 0%;
-            height: 100%;
-            background: var(--primary);
-            transition: width 0.4s ease;
-        }
-
-        /* Header & Sliding Text */
-        .sliding-header { display: flex; align-items: center; gap: 10px; font-size: 1.5rem; }
-        .text-window { height: 40px; overflow: hidden; color: var(--primary); font-weight: bold; }
-        .text-slide { animation: slideVertical 8s infinite cubic-bezier(0.645, 0.045, 0.355, 1); }
-        .text-slide span { height: 40px; display: block; }
-
-        @keyframes slideVertical {
-            0%, 20% { transform: translateY(0); }
-            25%, 45% { transform: translateY(-40px); }
-            50%, 70% { transform: translateY(-80px); }
-            75%, 95% { transform: translateY(-120px); }
-        }
-
-        /* Main Content */
-        #app-container { max-width: 800px; margin: 60px auto; padding: 20px; opacity: 0; transition: opacity 0.5s; }
-        .hidden { display: none; }
-
-        .app-item {
-            background: var(--card);
-            margin-bottom: 12px;
-            padding: 15px 25px;
-            border-radius: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            animation: slideIn 0.4s ease forwards;
-        }
-
-        /* Components */
-        #appSearch {
-            width: 100%; padding: 12px; border-radius: 8px; border: none;
-            background: var(--input-bg); color: var(--text); margin-top: 20px;
-        }
-
-        .deploy-btn {
-            background: var(--primary); color: white; border: none;
-            padding: 8px 18px; border-radius: 5px; cursor: pointer;
-        }
-
-        .system-log {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 60px;
-            background: rgba(0,0,0,0.85); color: var(--success); font-family: monospace;
-            padding: 10px; font-size: 0.8rem; overflow: hidden;
-        }
-
-        @keyframes spin { to { transform: rotate(360deg); } }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-                /* PWA INSTALL PROMPT STYLE */
-                #install-banner {
+        /* PWA INSTALL PROMPT STYLE */
+        #install-banner {
             position: absolute;
             bottom: 90px;
             left: 20px;
@@ -243,23 +134,9 @@
     transform: scale(0.95);
     transition: transform 0.1s;
 }
-
     </style>
 </head>
-    
 <body>
-
-    <div id="splash-screen">
-        <div class="logo-container">
-            <h1>go<span>Apps</span></h1>
-            <div class="spinner"></div>
-            <div class="progress-container">
-                <div id="progress-bar"></div>
-            </div>
-            <p id="status">Initializing system...</p>
-        </div>
-    </div>
-
     <div id="install-banner">
         <div class="install-text">
             <b>🚀Install goAPPs</b>
@@ -403,97 +280,55 @@
     </nav>
 
 </div>
-
-    <script src="script.js"></script>
 <script>
-    const appData = [
-    { name: "Nexus Chatbot", id: "nexus-1" },
-    { name: "Crypto Tracker", id: "crypto-v2" },
-    { name: "Safety Sentinel", id: "safe-bot" },
-    { name: "Auto-Coder Pro", id: "ac-pro" }
-];
-
-// 1. Theme Persistence
-function applyTheme() {
-    const saved = localStorage.getItem('goApps-theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', saved);
-    const checkbox = document.querySelector('#checkbox');
-    if (checkbox) checkbox.checked = saved === 'light';
-}
-
-// 2. System Log
-function addLog(text) {
-    const logContent = document.getElementById('log-content');
-    const entry = document.createElement('div');
-    entry.innerHTML = `<span>[${new Date().toLocaleTimeString()}]</span> ${text}`;
-    logContent.appendChild(entry);
-    if (logContent.children.length > 3) {
-        logContent.style.transform = `translateY(-${(logContent.children.length - 3) * 18}px)`;
-    }
-}
-
-// 3. Deployment Logic
-function deploy(btn, appId) {
-    btn.classList.add('loading');
-    const originalText = btn.innerHTML;
-    btn.innerHTML = `<div class="btn-loader"></div>`;
-    addLog(`INIT: Deploying ${appId}...`);
-    
-    setTimeout(() => {
-        btn.innerHTML = "Open";
-        btn.style.background = "#10b981";
-        addLog(`SUCCESS: ${appId} is live.`);
-    }, 2000);
-}
-
-// 4. Boot Sequence
-document.addEventListener('DOMContentLoaded', () => {
-    applyTheme();
-    const pb = document.getElementById('progress-bar');
-    const st = document.getElementById('status');
-
-    setTimeout(() => { pb.style.width = "40%"; st.innerText = "Fetching apps..."; }, 800);
-    setTimeout(() => { pb.style.width = "100%"; st.innerText = "System Ready"; }, 1800);
-
-    setTimeout(() => {
-        document.getElementById('splash-screen').style.opacity = '0';
-        setTimeout(() => {
-            document.getElementById('splash-screen').style.display = 'none';
-            const container = document.getElementById('app-container');
-            container.classList.remove('hidden');
-            container.style.opacity = '1';
-            document.body.style.overflow = 'auto';
-            
-            // Start Feed
-            appData.forEach((app, i) => {
-                setTimeout(() => {
-                    const item = document.createElement('div');
-                    item.className = 'app-item';
-                    item.innerHTML = `<strong>${app.name}</strong><button class="deploy-btn" onclick="deploy(this, '${app.id}')">Deploy</button>`;
-                    document.getElementById('feed-container').prepend(item);
-                    addLog(`STREAM: Found ${app.name}`);
-                }, i * 1000);
-            });
-        }, 500);
-    }, 2500);
-});
-
-// 5. Search Filter
-function filterApps() {
-    const query = document.getElementById('appSearch').value.toLowerCase();
-    document.querySelectorAll('.app-item').forEach(item => {
-        const text = item.querySelector('strong').innerText.toLowerCase();
-        item.style.display = text.includes(query) ? 'flex' : 'none';
+    // Connection Monitoring
+    //window.addEventListener('online', () => {
+        document.getElementById('offline-screen').style.display = 'none';
+        
+        // Connection Restored Toast
+        const toast = document.createElement('div');
+        toast.style = "position:fixed; bottom:100px; left:50%; transform:translateX(-50%); background:#00d28d; color:white; padding:10px 20px; border-radius:30px; font-size:0.8rem; z-index:2000; box-shadow: 0 4px 12px rgba(0,0,0,0.2);";
+        toast.innerText = "⚡ Connection Restored!";
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
     });
-}
+    
+    window.addEventListener('offline', () => {
+        document.getElementById('offline-screen').style.display = 'flex';
+    });
 
-// 6. Theme Toggle Event
-document.querySelector('#checkbox').addEventListener('change', (e) => {
-    const theme = e.target.checked ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('goApps-theme', theme);
-});
+    // Initial check
+    if (!navigator.onLine) {
+        document.getElementById('offline-screen').style.display = 'flex';
+    }
 
+    // PWA INSTALL LOGIC
+    let deferredPrompt;
+    const installBanner = document.getElementById('install-banner');
+    const installBtn = document.getElementById('install-btn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installBanner.style.display = 'flex';
+
+        installBtn.addEventListener('click', () => {
+            installBanner.style.display = 'none';
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                deferredPrompt = null;
+            });
+        });
+    });
+
+    // Service Worker registration
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js').catch(err => {
+                console.log('SW registration failed: ', err);
+            });
+        });
+    }
 </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OPay Finance - OWealth</title>
+    <title>goWALLETS</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -100,11 +100,11 @@
 
 <div class="phone-container">
     <header>
-        <b style="font-size: 1.1rem;">Finance</b>
+        <b style="font-size: 1.1rem;">Accounts</b>
         <div class="tab-switcher">
-            <div class="tab active">OWealth</div>
+            <div class="tab active">Savings</div>
             <div class="tab">Fixed</div>
-            <div class="tab">Targets</div>
+            <div class="tab">Adashe</div>
         </div>
     </header>
 
@@ -112,22 +112,22 @@
         <div class="owealth-card">
             <div style="display: flex; justify-content: space-between; align-items: flex-start;">
                 <div>
-                    <small style="opacity: 0.8; font-size: 0.7rem;">OWealth Balance</small>
-                    <h2 style="font-size: 2rem; margin: 5px 0;">₦ 540,200</h2>
+                    <small style="opacity: 0.8; font-size: 0.7rem;">goCOINs Balance</small>
+                    <h2 style="font-size: 2rem; margin: 5px 0;">₦540,200</h2>
                 </div>
                 <span class="growth-chip">15% P.A.</span>
             </div>
-            <p style="font-size: 0.7rem; margin-top: 10px;">Daily Interest: +₦ 221.45</p>
+            <p style="font-size: 0.7rem; margin-top: 10px;">Daily Interest: +₦ 01.45</p>
         </div>
 
         <div class="stats-grid">
             <div class="stat-box">
                 <span class="stat-label">Total Profit</span>
-                <span class="stat-value" style="color: var(--opay-green);">+₦ 12,400</span>
+                <span class="stat-value" style="color: var(--opay-green);">+₦1,400</span>
             </div>
             <div class="stat-box">
                 <span class="stat-label">Yesterday's Pay</span>
-                <span class="stat-value">₦ 218.10</span>
+                <span class="stat-value">₦05.10</span>
             </div>
         </div>
 
@@ -136,18 +136,18 @@
             <div class="input-group">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
                     <small>Investment Amount</small>
-                    <b id="calcAmt">₦ 100,000</b>
+                    <b id="calcAmt">₦100,000</b>
                 </div>
                 <input type="range" id="investRange" min="10000" max="1000000" step="10000" value="100000" oninput="calculate()">
             </div>
             <div style="margin-top: 20px; background: var(--bg-gray); padding: 10px; border-radius: 10px; display: flex; justify-content: space-between;">
-                <small>Annual Return:</small>
-                <b style="color: var(--owealth-blue);" id="annualReturn">₦ 15,000</b>
+                <small>Annual Returns:</small>
+                <b style="color: var(--owealth-blue);" id="annualReturn">₦15,000</b>
             </div>
         </div>
 
         <div class="list-item">
-            <div><b style="font-size: 0.8rem;">OWealth FAQ</b><br><small>How is interest calculated?</small></div>
+            <div><b style="font-size: 0.8rem;">goCOINs FAQ</b><br><small>How is interest calculated?</small></div>
             <span>❯</span>
         </div>
     </div>
@@ -172,6 +172,54 @@
 </div>
 
 <script>
+        // Connection Monitoring
+    window.addEventListener('online', () => {
+        document.getElementById('offline-screen').style.display = 'none';
+        
+        // Connection Restored Toast
+        const toast = document.createElement('div');
+        toast.style = "position:fixed; bottom:100px; left:50%; transform:translateX(-50%); background:#00d28d; color:white; padding:10px 20px; border-radius:30px; font-size:0.8rem; z-index:2000; box-shadow: 0 4px 12px rgba(0,0,0,0.2);";
+        toast.innerText = "⚡ Connection Restored!";
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    });
+    
+    window.addEventListener('offline', () => {
+        document.getElementById('offline-screen').style.display = 'flex';
+    });
+
+    // Initial check
+    if (!navigator.onLine) {
+        document.getElementById('offline-screen').style.display = 'flex';
+    }
+
+    // PWA INSTALL LOGIC
+    let deferredPrompt;
+    const installBanner = document.getElementById('install-banner');
+    const installBtn = document.getElementById('install-btn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installBanner.style.display = 'flex';
+
+        installBtn.addEventListener('click', () => {
+            installBanner.style.display = 'none';
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                deferredPrompt = null;
+            });
+        });
+    });
+
+    // Service Worker registration
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js').catch(err => {
+                console.log('SW registration failed: ', err);
+            });
+        });
+    }
     function calculate() {
         const amount = document.getElementById('investRange').value;
         const annualRate = 0.15; 

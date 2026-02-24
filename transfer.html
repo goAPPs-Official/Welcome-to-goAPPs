@@ -289,6 +289,54 @@
 </div>
 
 <script>
+        // Connection Monitoring
+    window.addEventListener('online', () => {
+        document.getElementById('offline-screen').style.display = 'none';
+        
+        // Connection Restored Toast
+        const toast = document.createElement('div');
+        toast.style = "position:fixed; bottom:100px; left:50%; transform:translateX(-50%); background:#00d28d; color:white; padding:10px 20px; border-radius:30px; font-size:0.8rem; z-index:2000; box-shadow: 0 4px 12px rgba(0,0,0,0.2);";
+        toast.innerText = "⚡ Connection Restored!";
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    });
+    
+    window.addEventListener('offline', () => {
+        document.getElementById('offline-screen').style.display = 'flex';
+    });
+
+    // Initial check
+    if (!navigator.onLine) {
+        document.getElementById('offline-screen').style.display = 'flex';
+    }
+
+    // PWA INSTALL LOGIC
+    let deferredPrompt;
+    const installBanner = document.getElementById('install-banner');
+    const installBtn = document.getElementById('install-btn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installBanner.style.display = 'flex';
+
+        installBtn.addEventListener('click', () => {
+            installBanner.style.display = 'none';
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                deferredPrompt = null;
+            });
+        });
+    });
+
+    // Service Worker registration
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js').catch(err => {
+                console.log('SW registration failed: ', err);
+            });
+        });
+    }
     function checkTheme() {
         const savedTheme = localStorage.getItem('opayTheme');
         if (savedTheme === 'dark') {
