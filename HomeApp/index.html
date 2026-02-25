@@ -258,7 +258,70 @@
         grid-template-columns: repeat(2, 1fr);
       }
     }
-  </style>
+    /* Mobile responsiveness adjustments */
+@media (max-width: 600px) {
+  .phone-container {
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    border: none;
+    border-radius: 0;
+  }
+  
+  header {
+    padding: 15px 10px;
+  }
+  
+  .main-scroll {
+    padding: 10px 10px 80px;
+  }
+  
+  .balance-card {
+    padding: 15px;
+  }
+  
+  .section-title {
+    margin: 15px 0 5px;
+  }
+  
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+  }
+  
+  .service-item {
+    padding: 8px;
+    font-size: 0.7rem;
+  }
+  
+  nav {
+    padding: 10px 0;
+  }
+  
+  nav a {
+    font-size: 0.55rem;
+  }
+  
+  .modal-content {
+    width: 90%;
+    margin: 20% auto;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 400px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .service-item {
+    padding: 10px;
+  }
+}
+* {
+  box-sizing: border-box;
+}
+</style>
 </head>
 <body id="app-body">
 
@@ -872,3 +935,4 @@ function handleSlideClick(link) {
 </body>
 
 </html>
+
