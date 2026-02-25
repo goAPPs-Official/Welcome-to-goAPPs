@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>goAPPs | Secure Ecosystem</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #041a12;
+            --card: #0a3d2a;
+            --primary: #00d28d;
+            --primary-glow: rgba(0, 210, 141, 0.3);
+            --danger: #ff4d4d;
+            --text: #ffffff;
+            --gray: #a0aec0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: #111; color: var(--text); overflow-x: hidden; }
+
+        .phone-container {
+            width: 100%; max-width: 400px; min-height: 100vh;
+            background: var(--bg); margin: auto; position: relative;
+            display: flex; flex-direction: column; padding: 40px 25px;
+        }
+
+        /* UI Elements */
+        .login-header { text-align: center; margin-bottom: 30px; }
+        .logo-mark {
+            width: 60px; height: 60px; background: var(--primary);
+            border-radius: 18px; color: #062c1e; font-size: 2rem;
+            font-weight: 800; display: flex; align-items: center;
+            justify-content: center; margin: 0 auto 15px;
+            box-shadow: 0 10px 30px var(--primary-glow);
+        }
+        
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 0.7rem; color: var(--gray); margin-bottom: 8px; text-transform: uppercase; font-weight: 700; }
+        .input-group input {
+            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px; border-radius: 12px; color: white; outline: none; transition: 0.3s;
+        }
+        .input-group input:focus { border-color: var(--primary); background: rgba(0, 210, 141, 0.05); }
+
+        .btn-primary {
+            width: 100%; padding: 16px; border-radius: 12px; border: none;
+            background: var(--primary); color: #062c1e; font-weight: 800;
+            cursor: pointer; margin-top: 10px; transition: 0.2s;
+        }
+
+        .category-card {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+            padding: 20px; border-radius: 16px; display: flex; flex-direction: column;
+            align-items: center; gap: 10px; font-size: 0.8rem; font-weight: 600; cursor: pointer;
+        }
+        .txn-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .admin-section { margin-top: 30px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .scroll-box { background: rgba(0,0,0,0.3); border-radius: 12px; padding: 15px; max-height: 200px; overflow-y: auto; margin-top: 10px; }
+        .log-entry { font-size: 0.7rem; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; }
+        
+        .view-hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        
+        <div id="view-login">
+            <div class="login-header">
+                <div class="logo-mark">g</div>
+                <h1>Secure Sign In</h1>
+                <p>Access your encrypted environment.</p>
+            </div>
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" id="login-email" placeholder="admin@goapps.io">
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="login-pass" placeholder="••••••••">
+            </div>
+            <button class="btn-primary" onclick="handleLogin()">Authorize Access</button>
+            <p style="text-align:center; margin-top:20px; font-size:0.8rem; color:var(--gray)">
+                New here? <a href="#" onclick="switchView('view-register')" style="color:var(--primary)">Create Account</a>
+            </p>
+        </div>
+
+        <div id="view-register" class="view-hidden">
+            <div class="login-header">
+                <div class="logo-mark">G</div>
+                <h1>Join Ecosystem</h1>
+                <p>The first user becomes the System Admin.</p>
+            </div>
+            <div class="input-group">
+                <label>Full Name</label>
+                <input type="text" id="reg-name" placeholder="John Doe">
+            </div>
+            <div class="input-group">
+                <label>Email</label>
+                <input type="email" id="reg-email" placeholder="name@email.com">
+            </div>
+            <div class="input-group">
+                <label>Master Password</label>
+                <input type="password" id="reg-pass" placeholder="••••••••">
+            </div>
+            <button class="btn-primary" onclick="handleRegister()">Establish Identity</button>
+            <p style="text-align:center; margin-top:20px; font-size:0.8rem; color:var(--gray)">
+                Already a member? <a href="#" onclick="switchView('view-login')" style="color:var(--primary)">Sign In</a>
+            </p>
+        </div>
+
+        <div id="view-profile" class="view-hidden">
+            <div class="login-header">
+                <div id="profile-avatar" class="logo-mark" style="background: var(--card); color: var(--primary);">👤</div>
+                <h1 id="prof-name">User Name</h1>
+                <p id="prof-role" style="color:var(--primary); font-weight:800; text-transform:uppercase; font-size:0.7rem; letter-spacing:1px;"></p>
+            </div>
+
+            <div id="admin-panel" class="admin-section view-hidden">
+                <h3 style="font-size:0.9rem; margin-bottom:10px;">Audit Logs</h3>
+                <div id="audit-logs" class="scroll-box"></div>
+                <h3 style="font-size:0.9rem; margin-top:20px; margin-bottom:10px;">User Management</h3>
+                <div id="user-list" class="scroll-box"></div>
+            </div>
+
+            <div style="margin-top: auto; padding-top: 30px;">
+                <button class="btn-primary" onclick="navigateToDashboard()" style="box-shadow: 0 0 20px var(--primary-glow);">
+                    Go to Dashboard
+                </button>
+
+                <button class="btn-primary" 
+                    style="background: rgba(255,255,255,0.1); color: var(--text); margin-top: 15px;" 
+                    onclick="window.location.href='index.html'">
+                    Exit to Index
+                </button>
+
+                <button class="btn-primary" 
+                    style="background: transparent; border: 1px solid rgba(255,77,77,0.3); color: var(--danger); margin-top: 15px;" 
+                    onclick="CMS.logout()">
+                    Terminate Session
+                </button>
+            </div>
+        </div>
+
+        <div id="view-dashboard" class="view-hidden">
+            <div class="login-header" style="text-align: left; margin-bottom: 25px;">
+                <p style="font-size: 0.7rem; color: var(--primary); font-weight: 800; text-transform: uppercase;">Secure Vault</p>
+                <h1 style="font-size: 1.5rem;">Digital Assets</h1>
+            </div>
+            <div style="background: linear-gradient(135deg, var(--card), #062c1e); padding: 25px; border-radius: 20px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.1);">
+                <span style="font-size: 0.75rem; color: var(--gray);">Total Portfolio Value</span>
+                <h2 style="font-size: 2rem; margin: 10px 0;">$42,500.00</h2>
+                <span style="font-size: 0.7rem; background: rgba(0,210,141,0.2); color: var(--primary); padding: 4px 8px; border-radius: 6px;">+12.5%</span>
+            </div>
+            <h3 style="font-size: 0.9rem; margin-bottom: 15px;">Encrypted Categories</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="category-card" onclick="switchView('view-history')">📊 <span>Transactions</span></div>
+                <div class="category-card">🔑 <span>Passwords</span></div>
+                <div class="category-card">🖼️ <span>NFTs</span></div>
+                <div class="category-card">📜 <span>Deeds</span></div>
+            </div>
+            <button class="btn-primary" style="margin-top: auto; background: rgba(255,255,255,0.05); color: var(--text);" onclick="switchView('view-profile')">
+                Back to Profile
+            </button>
+        </div>
+
+        <div id="view-history" class="view-hidden">
+            <div class="login-header" style="text-align: left; margin-bottom: 25px;">
+                <h1 style="font-size: 1.5rem;">Transaction Log</h1>
+            </div>
+            <div id="txn-list" style="flex: 1; overflow-y: auto;"></div>
+            <button class="btn-primary" onclick="switchView('view-dashboard')">Return to Vault</button>
+        </div>
+
+    </div>
+
+    <script>
+        const CMS = {
+            getUsers: () => JSON.parse(localStorage.getItem('goapps_users')) || [],
+            saveUsers: (users) => localStorage.setItem('goapps_users', JSON.stringify(users)),
+            getSession: () => JSON.parse(localStorage.getItem('goapps_session')),
+            
+            register: function(name, email, password) {
+                let users = this.getUsers();
+                if (users.find(u => u.email === email)) return { success: false, msg: "User exists." };
+                const role = users.length === 0 ? 'admin' : 'standard';
+                users.push({ name, email, password, role, status: 'active', joined: new Date().toLocaleDateString() });
+                this.saveUsers(users);
+                return { success: true };
+            },
+
+            login: function(email, password) {
+                const user = this.getUsers().find(u => u.email === email && u.password === password);
+                if (!user) return { success: false, msg: "Invalid credentials." };
+                localStorage.setItem('goapps_session', JSON.stringify(user));
+                return { success: true };
+            },
+
+            logout: () => { localStorage.removeItem('goapps_session'); location.reload(); }
+        };
+
+        function switchView(viewId) {
+            document.querySelectorAll('.phone-container > div').forEach(div => div.classList.add('view-hidden'));
+            document.getElementById(viewId).classList.remove('view-hidden');
+            if(viewId === 'view-history') renderTxns();
+        }
+
+        function handleLogin() {
+            const res = CMS.login(document.getElementById('login-email').value, document.getElementById('login-pass').value);
+            if(res.success) loadProfile();
+            else alert("Failed");
+        }
+
+        function handleRegister() {
+            const res = CMS.register(document.getElementById('reg-name').value, document.getElementById('reg-email').value, document.getElementById('reg-pass').value);
+            if(res.success) switchView('view-login');
+        }
+
+        function loadProfile() {
+            const user = CMS.getSession();
+            if(!user) return switchView('view-login');
+            document.getElementById('prof-name').innerText = user.name;
+            document.getElementById('prof-role').innerText = user.role;
+            switchView('view-profile');
+            if(user.role === 'admin') document.getElementById('admin-panel').classList.remove('view-hidden');
+        }
+
+        function navigateToDashboard() {
+            const btn = event.target;
+            btn.innerHTML = "Decrypting...";
+            setTimeout(() => {
+                btn.innerHTML = "Go to Dashboard";
+                switchView('view-dashboard');
+            }, 800);
+        }
+
+        function renderTxns() {
+            const list = document.getElementById('txn-list');
+            const data = [
+                { label: "Cloud Storage", amt: "-$12.99" },
+                { label: "Dividend Payout", amt: "+$240.50" },
+                { label: "Vault Transfer", amt: "-$500.00" }
+            ];
+            list.innerHTML = data.map(i => `
+                <div class="txn-item">
+                    <span>${i.label}</span>
+                    <b style="color:${i.amt.includes('+') ? 'var(--primary)' : 'white'}">${i.amt}</b>
+                </div>
+            `).join('');
+        }
+
+        window.onload = loadProfile;
+    </script>
+</body>
+</html>
