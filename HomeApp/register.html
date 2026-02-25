@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>goAPPs | Register</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #062c1e;
+            --card: #0a3d2a;
+            --text: #ffffff;
+            --primary: #00d28d;
+            --primary-glow: rgba(0, 210, 141, 0.3);
+            --input-bg: #0d4d36;
+            --input-border: #16644a;
+            --gray: #a0aec0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: #041a12;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text);
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            background: var(--bg);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        @media (min-width: 500px) {
+            .phone-container {
+                height: 850px;
+                border-radius: 40px;
+                border: 8px solid #1a1a1a;
+            }
+        }
+
+        /* --- PHOTO UPLOAD STYLING --- */
+        .photo-upload-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .profile-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--input-bg);
+            border: 3px dashed var(--primary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .profile-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .upload-placeholder {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        #file-input { display: none; }
+
+        .header-section {
+            padding: 30px 25px 15px;
+            text-align: center;
+        }
+
+        .header-section h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .form-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 25px 40px;
+            scrollbar-width: none;
+        }
+        .form-scroll::-webkit-scrollbar { display: none; }
+
+        .input-group { margin-bottom: 18px; }
+
+        .input-group label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            background: var(--input-bg);
+            border: 2px solid var(--input-border);
+            border-radius: 14px;
+            padding: 14px 16px;
+            color: white;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .select-wrapper { position: relative; }
+        .select-wrapper::after {
+            content: '▼';
+            font-size: 0.7rem;
+            color: var(--primary);
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+
+        .input-group select { appearance: none; }
+
+        .btn-register {
+            width: 100%;
+            background: var(--primary);
+            color: #062c1e;
+            border: none;
+            padding: 18px;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 800;
+            box-shadow: 0 8px 20px var(--primary-glow);
+            cursor: pointer;
+        }
+
+        .footer-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: var(--gray);
+            padding-bottom: 20px;
+        }
+
+        .footer-link a { color: var(--primary); text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+
+    <div class="phone-container">
+        <div class="header-section">
+            <h2>Create Account</h2>
+            <p style="color: var(--gray); font-size: 0.85rem;">Join thousands of Nigerians on goAPPs.</p>
+        </div>
+
+        <div class="form-scroll">
+            <form id="regForm">
+                
+                <div class="photo-upload-container">
+                    <label for="file-input" class="profile-preview" id="preview-container">
+                        <span class="upload-placeholder" id="upload-icon">📸</span>
+                        <img id="image-output" src="" alt="Profile Preview">
+                    </label>
+                    <input type="file" id="file-input" accept="image/*" onchange="previewImage(event)">
+                    <p style="font-size: 0.65rem; color: var(--primary); margin-top: 8px; font-weight: 600;">UPLOAD PHOTO</p>
+                </div>
+
+                <div class="input-group">
+                    <label>Full Name</label>
+                    <input type="text" placeholder="John Doe" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" placeholder="name@domain.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Phone Number</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" value="🇳🇬 +234" style="width: 100px; text-align: center;" disabled>
+                        <input type="tel" placeholder="8123456789" style="flex: 1;" required>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>State of Residence</label>
+                    <div class="select-wrapper">
+                        <select required>
+                            <option value="" disabled selected>Select your state</option>
+                            <option value="Abuja">Abuja (FCT)</option>
+                            <option value="Lagos">Lagos</option>
+                            <option value="Rivers">Rivers</option>
+                            <option value="Kano">Kano</option>
+                            </select>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Security PIN</label>
+                    <input type="password" maxlength="4" placeholder="••••" required 
+                           style="letter-spacing: 12px; text-align: center; font-size: 1.2rem;" inputmode="numeric">
+                </div>
+
+                <button type="submit" class="btn-register">Create My Account</button>
+                
+                <div class="footer-link">
+                    Already a member? <a href="login.html">Log In</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Function to handle the image preview
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = document.getElementById('image-output');
+                const icon = document.getElementById('upload-icon');
+                const container = document.getElementById('preview-container');
+                
+                output.src = reader.result;
+                output.style.display = 'block';
+                icon.style.display = 'none';
+                container.style.borderStyle = 'solid'; // Change from dashed to solid
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+</body>
+</html>
