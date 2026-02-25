@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎓goCLASS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --opay-green: #00d28d;
+            --opay-gradient: linear-gradient(135deg, #00d28d 0%, #4b44e0 100%);
+            --text-dark: #333;
+            --text-light: #888;
+            --danger: #ff4d4d;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+
+        body {
+            background-color: #121212;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .phone-container {
+            width: 375px;
+            height: 750px;
+            background: white;
+            border-radius: 40px;
+            overflow: hidden;
+            position: relative;
+            border: 8px solid #333;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .menu-icon { width: 22px; height: 16px; border-top: 2px solid var(--opay-green); border-bottom: 2px solid var(--opay-green); position: relative; }
+        .menu-icon::after { content: ''; position: absolute; top: 5px; width: 100%; height: 2px; background: var(--opay-green); }
+        .user-avatar { width: 35px; height: 35px; border-radius: 50%; background: #eee; overflow: hidden; }
+        .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+        .balance-card {
+            margin: 0 15px;
+            padding: 22px;
+            background: var(--opay-gradient);
+            border-radius: 20px;
+            color: white;
+            position: relative;
+        }
+
+        .username { font-size: 1.4rem; font-weight: 800; margin-bottom: 15px; }
+        .total-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 1.6rem; font-weight: 800; }
+        
+        .add-btn {
+            width: 42px; height: 42px; background: var(--opay-green); color: white; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; font-size: 1.8rem;
+            border: 4px solid white; position: absolute; bottom: -21px; left: 50%; transform: translateX(-50%);
+        }
+
+        .info-banner {
+            margin: 30px 15px 10px; padding: 12px; background: #fff; border-radius: 12px;
+            display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            font-size: 0.7rem; color: var(--text-light);
+        }
+
+        .main-scroll { flex: 1; overflow-y: auto; padding: 0 15px 80px; }
+        .section-title { font-weight: 800; margin: 20px 0 10px; font-size: 1.1rem; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        .service-item {
+            background: white; padding: 12px; border-radius: 12px;
+            display: flex; align-items: center; gap: 10px; border: 1px solid #f2f2f2;
+            position: relative;
+        }
+
+        .service-item.highlight { background: var(--opay-green); color: white; border: none; }
+        .service-info b { font-size: 0.8rem; display: block; }
+        .service-info small { font-size: 0.6rem; opacity: 0.7; }
+        
+        /* FOOTER NAVIGATION */
+        nav { 
+            display: flex; 
+            justify-content: space-around; 
+            padding: 12px 0; 
+            background: white; 
+            border-top: 1px solid #eee; 
+            position: absolute; 
+            bottom: 0; 
+            width: 100%; 
+        }
+
+        /* Link specific styling */
+        nav a {
+            text-decoration: none;
+            color: var(--text-light);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            font-size: 0.6rem;
+            transition: color 0.3s ease;
+        }
+
+        nav a.active {
+            color: var(--opay-green);
+        }
+
+        .nav-icon { display: block; font-size: 1.2rem; margin-bottom: 2px; }
+        .service-item:active {
+    transform: scale(0.95);
+    transition: transform 0.1s;
+}
+    </style>
+</head>
+<body>
+    <div id="offline-screen" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:white; z-index:1000; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:20px;">
+        <div style="font-size: 4rem; margin-bottom: 20px;">📡</div>
+        <h2 style="color: var(--text-dark); margin-bottom: 10px;">Oops! You're Offline</h2>
+        <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 30px;">Please check your internet connection to continue using 🚀goAPPs.</p>
+        <button style="background:var(--opay-green); color:white; border:none; padding:12px; border-radius:10px; width:200px;" onclick="window.location.reload()">Reload Page</button>
+    </div>
+
+<div class="phone-container">
+    <header>
+        <div class="menu-icon"></div>
+        <div style="font-weight: 800; font-size: 1.1rem;">🎓goCLASS</div>
+        <div class="user-avatar"><img src="https://i.pravatar.cc/100" alt="user"></div>
+    </header>
+
+    <div class="main-scroll">
+        <div class="balance-card">
+            <p style="font-size: 0.7rem; opacity: 0.8;">Welcome to Class,</p>
+            <p class="username">Digital</p>
+            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; opacity: 0.9;">
+                <span>Balance</span><span>₦5,600</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; opacity: 0.9;">
+                <span>Bonus</span><span>🏆2.00gc</span>
+            </div>
+            <div class="total-row">
+                <span style="font-size: 0.8rem; font-weight: 400;">💰Total Token</span>
+                <span>₦5,600</span>
+            </div>
+            <div class="add-btn">+</div>
+        </div>
+
+        <div class="info-banner">
+            <span style="font-size: 1.2rem;">ℹ️</span>
+            <p>Enjoy millions of educational materials, contents and resources.</p>
+        </div>
+
+        <h3 class="section-title">Select an Option:</h3>
+        <a href="tv-subscription.html" style="text-decoration: none; color: inherit;">
+            <div class="service-item highlight">
+                <span>⚠️</span>
+                <div class="service-info">
+                    <b>Update PROFILE</b>
+                    <small>Stay Connected.</small>
+                </div>
+            </div>
+        </a>
+        
+        <a href="[practice]class_selector.html" style="text-decoration: none; color: inherit;">
+            <div class="grid">
+            <div class="service-item">
+                <span style="color:var(--opay-green)">🧠</span>
+                <div class="service-info"><b>Practice Exam</b><small>Start Test</small></div>
+            </div>
+        </a>
+        <a href="[EnterClass]class_selector.html" style="text-decoration: none; color: inherit;">
+            <div class="service-item">
+                <span style="color:var(--opay-green)">📝</span>
+                <div class="service-info"><b>Enter Class</b><small>Start Learning</small></div>
+            </div>
+        </a>
+        <a href="tv-subscription.html" style="text-decoration: none; color: inherit;">
+            <div class="service-item">
+                <span style="color:var(--opay-green)">📬</span>
+                <div class="service-info"><b>Result Checker</b><small>Check Now</small></div>
+            </div>
+        </a>
+        <a href="tv-subscription.html" style="text-decoration: none; color: inherit;">
+            <div class="service-item highlight">
+                <span>🔢</span>
+                <div class="service-info"><b>Purchase PIN</b><small>Buy NOW</small></div>
+            </div>
+        </a>
+        <a href="tv-subscription.html" style="text-decoration: none; color: inherit;">
+            <div class="service-item">
+                <span style="color:var(--opay-green)">📂</span>
+                <div class="service-info"><b>Class Task</b><small>Submit NOW</small></div>
+            </div>
+        </a>
+        <a href="tv-subscription.html" style="text-decoration: none; color: inherit;">
+            <div class="service-item">
+                <span class="ride-icon">🗓️</span>
+                <div class="service-info"><b>Timetable</b><small>Check Schedule</small></div>
+            </div>
+        </a>
+        <a href="tv-subscription.html" style="text-decoration: none; color: inherit;">
+            <div class="service-item">
+                <span style="color:var(--opay-green)">🔐</span>
+                <div class="service-info"><b>Facilitator</b><small>Admin Login</small></div>
+            </div>
+        </a>
+        <a href="tv-subscription.html" style="text-decoration: none; color: inherit;">
+            <div class="service-item" style="border:none; background:transparent; justify-content:flex-end;">
+                <span class="badge-red">Get coupons now!</span>
+            </div>
+        </a>
+        </div>
+    </div>
+
+    <nav>
+        
+        <a href="reward.html" class="nav-item">
+            <span class="nav-icon">🎁</span>Rewards
+        </a>
+        <a href="balance.html" class="nav-item">
+            <span class="nav-icon">💰</span>Wallet
+        </a>
+        <a href="index.html" class="nav-item active">
+            <span class="nav-icon">🏧</span>Home
+        </a>
+        <a href="transfer.html" class="nav-item">
+            <span class="nav-icon">📊</span>Market
+        </a>
+        <a href="settings.html" class="nav-item">
+            <span class="nav-icon">⚙️</span>Settings
+        </a>
+    </nav>
+
+</div>
+<script>
+    // Connection Monitoring
+    window.addEventListener('online', () => {
+        document.getElementById('offline-screen').style.display = 'none';
+        
+        // Connection Restored Toast
+        const toast = document.createElement('div');
+        toast.style = "position:fixed; bottom:100px; left:50%; transform:translateX(-50%); background:#00d28d; color:white; padding:10px 20px; border-radius:30px; font-size:0.8rem; z-index:2000; box-shadow: 0 4px 12px rgba(0,0,0,0.2);";
+        toast.innerText = "⚡ Connection Restored!";
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    });
+    
+    window.addEventListener('offline', () => {
+        document.getElementById('offline-screen').style.display = 'flex';
+    });
+
+    // Initial check
+    if (!navigator.onLine) {
+        document.getElementById('offline-screen').style.display = 'flex';
+    }
+
+    // PWA INSTALL LOGIC
+    let deferredPrompt;
+    const installBanner = document.getElementById('install-banner');
+    const installBtn = document.getElementById('install-btn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installBanner.style.display = 'flex';
+
+        installBtn.addEventListener('click', () => {
+            installBanner.style.display = 'none';
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                deferredPrompt = null;
+            });
+        });
+    });
+
+    // Service Worker registration
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js').catch(err => {
+                console.log('SW registration failed: ', err);
+            });
+        });
+    }
+</script>
+</body>
+</html>
