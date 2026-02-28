@@ -1114,8 +1114,24 @@ function openVideo(id) {
         });
 
         window.onload = updateProgress;
+    function reportError(topicName) {
+    const email = "gocbtinfo@gmail.com";
+    const subject = encodeURIComponent(`Error Report: ${topicName}`);
+    const body = encodeURIComponent(`Hello goCBT Team,\n\nI found an error in the ${topicName} paper.\n\nDetails of the error:\n(Please describe the issue here...)`);
+    
+    // UI Feedback: Show a quick toast before opening email
+    const toast = document.createElement('div');
+    toast.style = "position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#333; color:white; padding:10px 20px; border-radius:30px; font-size:0.75rem; z-index:4000;";
+    toast.innerText = "Opening Email Report...";
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2000);
+
+    // Launch email client
+    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+}
 </script>
 </body>
 </html>
+
 
 
