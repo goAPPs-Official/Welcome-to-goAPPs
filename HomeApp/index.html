@@ -179,149 +179,88 @@
 
 .close-modal {
   float: right;
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f9f9f9;
-      color: #333;
-    }
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
 
-    header {
-      background: #008751;
-      color: #fff;
-      padding: 1rem;
-      text-align: center;
-    }
+/* Input Fields */
+#loginForm input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  background: #1e1e1e;
+  border: 1px solid #444;
+  color: white;
+  border-radius: 6px;
+}
 
-    .wallet {
-      background: #fff;
-      margin: 1rem;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
+.btn-submit {
+  width: 100%;
+  padding: 12px;
+  background: #00d4ff;
+  color: black;
+  border: none;
+  font-weight: bold;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.image-slider {
+    height: 120px; /* Adjusted height for images */
+    padding: 0; /* Remove padding to let images go edge-to-edge */
+    border-radius: 20px;
+    position: relative;
+}
 
-    .wallet h2 {
-      margin: 0 0 0.5rem;
-    }
+.insight-item.has-bg {
+    min-width: 100%;
+    height: 120px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: flex-end; /* Text at the bottom */
+}
 
-    .balance {
-      font-size: 1.5rem;
-      font-weight: bold;
-      margin-bottom: 1rem;
-    }
+/* Gradient overlay to make text pop */
+.insight-item.has-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(6, 44, 30, 0.9) 10%, transparent 90%);
+    border-radius: 20px;
+}
 
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    .actions button {
-      flex: 1 1 45%;
-      padding: 0.75rem;
-      border: none;
-      border-radius: 6px;
-      background: #008751;
-      color: #fff;
-      font-size: 1rem;
-      cursor: pointer;
-    }
-
-    nav {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-      gap: 0.5rem;
-      margin: 1rem;
-    }
-
-    nav a {
-      background: #fff;
-      padding: 1rem;
-      text-align: center;
-      border-radius: 6px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      text-decoration: none;
-      color: #333;
-      font-size: 0.9rem;
-    }
-
-    / Mobile adjustments /
-    @media (max-width: 600px) {
-      .actions button {
-        flex: 1 1 100%;
-      }
-
-      nav {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-    /* Mobile responsiveness adjustments */
-@media (max-width: 600px) {
-  .phone-container {
-    width: 100vw;
-    height: 100vh;
-    margin: 0;
-    border: none;
-    border-radius: 0;
-  }
-  
-  header {
-    padding: 15px 10px;
-  }
-  
-  .main-scroll {
-    padding: 10px 10px 80px;
-  }
-  
-  .balance-card {
+.insight-item .image-content {
+    position: relative;
+    z-index: 2;
     padding: 15px;
-  }
-  
-  .section-title {
-    margin: 15px 0 5px;
-  }
-  
-  .grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 5px;
-  }
-  
-  .service-item {
-    padding: 8px;
-    font-size: 0.7rem;
-  }
-  
-  nav {
-    padding: 10px 0;
-  }
-  
-  nav a {
-    font-size: 0.55rem;
-  }
-  
-  .modal-content {
-    width: 90%;
-    margin: 20% auto;
-    padding: 20px;
-  }
+    width: 100%;
 }
 
-@media (max-width: 400px) {
-  .grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .service-item {
-    padding: 10px;
-  }
+.slider-dots {
+    position: absolute;
+    bottom: 8px;
+    right: 15px;
+    display: flex;
+    gap: 5px;
+    z-index: 5;
 }
-* {
-  box-sizing: border-box;
+
+.dot {
+    width: 6px;
+    height: 6px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    transition: 0.3s;
 }
-</style>
+
+.dot.active {
+    background: var(--primary);
+    width: 15px;
+    border-radius: 10px;
+}
+    </style>
 </head>
 <body id="app-body">
 
@@ -533,9 +472,6 @@
                 </a>
                 <a href="google.com" style="text-decoration: none; color: inherit;">
                     <div class="service-item"><span>🚌</span><small><b>goMETRO</b></small></div>
-                </a>
-                <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/goCBT.html" style="text-decoration: none; color: inherit;">
-                    <div class="service-item"><span>🎓</span><small><b>goCBT</b></small></div>
                 </a>
                 <a href="google.com" style="text-decoration: none; color: inherit;">
                     <div class="service-item"><span>⚡</span><small><b>goUTILITY</b></small></div>
@@ -875,16 +811,12 @@ form.addEventListener('submit', e => {
     });
 });
 const sliderImages = [
-    { url: "https://images.unsplash.com/photo-1621504450181-5d356f63d3ee?auto=format&fit=crop&w=400", label: "Promo", text: "10% Cashback on goMETRO", link: "https://google.com" },
-    { url: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=400", label: "New", text: "Order goFOOD from Island", link: "#food" },
-    { url: "https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&w=400", label: "Ad", text: "Upgrade to goPremium", link: "#premium" },
-    { url: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=400", label: "Finance", text: "Naira Rate: ₦1,520/$", link: "#rates" },
-    { url: "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=400", label: "Tech", text: "Secure FaceID Enabled", link: "#security" },
-    { url: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=400", label: "Update", text: "New goKEKE Hub in Ikeja", link: "#keke" },
-    { url: "https://images.unsplash.com/photo-1556742044-3c52d6e88c62?auto=format&fit=crop&w=400", label: "Rewards", text: "Claim your weekly 🏆gc", link: "#rewards" },
-    { url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=400", label: "Business", text: "Accept goPAY at your shop", link: "#merchant" },
-    { url: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=400", label: "Utility", text: "Pay Electricity with 0 fees", link: "#utility" },
-    { url: "https://images.unsplash.com/photo-1580519542036-c47de6196ba5?auto=format&fit=crop&w=400", label: "Safety", text: "Protect your Digital Vault", link: "#vault" }
+    { url: "https://images.unsplash.com/photo-1621504450181-5d356f63d3ee?auto=format&fit=crop&w=400", label: "Promo", text: "10% Cashback on goMETRO" },
+    { url: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=400", label: "New", text: "Order goFOOD from Island" },
+    { url: "https://images.unsplash.com/photo-1512428559087-560fa5ceab42?auto=format&fit=crop&w=400", label: "Ad", text: "Upgrade to goPremium" },
+    { url: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=400", label: "Finance", text: "Naira Rate: ₦1,520/$" },
+    // Add up to 10 items here...
+    { url: "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=400", label: "Tech", text: "Secure FaceID Enabled" }
 ];
 
 let currentSlide = 0;
@@ -893,10 +825,9 @@ function initImageSlider() {
     const track = document.getElementById('insight-track');
     const dotsContainer = document.getElementById('slider-dots');
     
+    // Generate Slides
     track.innerHTML = sliderImages.map(img => `
-        <div class="insight-item has-bg" 
-             style="background-image: url('${img.url}'); cursor: pointer;" 
-             onclick="handleSlideClick('${img.link}')">
+        <div class="insight-item has-bg" style="background-image: url('${img.url}')">
             <div class="image-content">
                 <b style="color: var(--primary); font-size: 0.65rem; text-transform: uppercase;">${img.label}</b>
                 <div style="font-size: 0.85rem; font-weight: 600; color: white;">${img.text}</div>
@@ -904,24 +835,28 @@ function initImageSlider() {
         </div>
     `).join('');
 
+    // Generate Dots
     dotsContainer.innerHTML = sliderImages.map((_, i) => `<div class="dot ${i === 0 ? 'active' : ''}"></div>`).join('');
+
     const dots = document.querySelectorAll('.dot');
 
     setInterval(() => {
         currentSlide = (currentSlide + 1) % sliderImages.length;
+        
+        // Move track
         track.style.transform = `translateX(-${currentSlide * 100}%)`;
-        dots.forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
+        
+        // Update dots
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === currentSlide);
+        });
     }, 5000);
 }
 
-function handleSlideClick(link) {
-    triggerHaptic();
-    if(link.startsWith('http')) {
-        window.open(link, '_blank');
-    } else {
-        triggerPushNotify("App Route", "Navigating to: " + link.replace('#', ''));
-    }
-}
+// Call inside your DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+    initImageSlider();
+});
     </script>
     <div id="loginModal" class="modal">
         <div class="modal-content">
@@ -936,7 +871,4 @@ function handleSlideClick(link) {
         </div>
       </div>
 </body>
-
 </html>
-
-
