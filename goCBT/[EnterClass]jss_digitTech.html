@@ -28,14 +28,13 @@
         .balance-card { margin: 15px; padding: 20px; background: var(--opay-gradient); border-radius: 20px; color: white; box-shadow: 0 10px 20px rgba(0,210,141,0.2); }
         .main-scroll { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 100px; scroll-behavior: smooth; }
 
-        /* Topic Card Styles */
         .topic-card { 
             background: white; border-radius: 18px; padding: 15px; margin-bottom: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05); transition: 0.3s; border: 1px solid #eee;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eee;
         }
         .topic-card.locked { opacity: 0.5; filter: grayscale(1); pointer-events: none; }
 
-        /* --- CUSTOM AUDIO PLAYER UI --- */
+        /* Custom Audio Player */
         .custom-audio-wrapper {
             background: #f1f3f9; padding: 10px; border-radius: 12px;
             display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
@@ -45,17 +44,32 @@
             border: none; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
             font-size: 0.8rem; flex-shrink: 0;
         }
-        .audio-progress-container {
-            flex-grow: 1; height: 6px; background: #ddd; border-radius: 10px; position: relative; overflow: hidden;
-        }
-        .audio-progress-bar {
-            position: absolute; left: 0; top: 0; height: 100%; 
-            background: var(--opay-green); width: 0%; transition: width 0.1s linear;
-        }
+        .audio-progress-container { flex-grow: 1; height: 6px; background: #ddd; border-radius: 10px; position: relative; overflow: hidden; }
+        .audio-progress-bar { position: absolute; left: 0; top: 0; height: 100%; background: var(--opay-green); width: 0%; transition: width 0.1s linear; }
         .time-display { font-size: 0.65rem; color: var(--text-light); font-weight: 600; min-width: 30px; }
 
-        /* Buttons */
-        .btn-row { display: flex; flex-direction: column; gap: 8px; }
+        /* Accordion Effect */
+        .assessment-section { border-top: 1px dashed #ddd; margin-top: 15px; padding-top: 10px; }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; }
+        .accordion-content.open { max-height: 100px; }
+        .accordion-trigger { 
+            width: 100%; text-align: left; background: none; border: none; 
+            color: var(--opay-purple); font-weight: 800; font-size: 0.75rem; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+
+        /* Pulsating Timer */
+        #timer-display { 
+            font-size: 1.8rem; font-weight: 800; color: var(--danger); 
+            background: #fff0f0; padding: 15px; border-radius: 15px; 
+            margin: 15px 0; text-align: center;
+            animation: pulse 1s infinite alternate;
+        }
+        @keyframes pulse {
+            from { transform: scale(1); box-shadow: 0 0 0 rgba(255, 77, 77, 0); }
+            to { transform: scale(1.05); box-shadow: 0 0 15px rgba(255, 77, 77, 0.3); }
+        }
+
         .btn { padding: 12px; border-radius: 10px; border: none; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s; }
         .btn-video { background: var(--text-dark); color: white; width: 100%; }
         .btn-task { background: var(--opay-green); color: white; }
@@ -66,10 +80,11 @@
             display: none; z-index: 1000; align-items: center; justify-content: center; 
             backdrop-filter: blur(8px);
         }
-        .modal-content { background: white; width: 90%; border-radius: 25px; padding: 25px; position: relative; }
+        .modal-content { background: white; width: 92%; border-radius: 25px; padding: 20px; position: relative; max-height: 90%; overflow-y: auto; }
         .video-box { width: 90%; max-width: 340px; background: #000; border-radius: 20px; overflow: hidden; }
 
-        #timer-display { font-size: 1.5rem; font-weight: 800; color: var(--danger); background: #fff0f0; padding: 10px; border-radius: 10px; margin: 10px 0; text-align: center; }
+        /* Iframe for Forms */
+        .form-iframe { width: 100%; height: 500px; border: none; border-radius: 15px; background: white; }
 
         nav { position: absolute; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #eee; }
         .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; margin: 0 auto; }
@@ -98,9 +113,7 @@
         <div class="video-box">
             <iframe id="video-player" width="100%" height="200" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
             <div style="padding: 15px; background: #1a1a1a;">
-                <button onclick="triggerTaskFromVideo()" class="btn btn-task" style="width: 100%">
-                    ⏭️ Finish & Submit Task
-                </button>
+                <button onclick="triggerTaskFromVideo()" class="btn btn-task" style="width: 100%">⏭️ Finish & Submit Task</button>
                 <center><p onclick="closeModals()" style="color: #666; cursor: pointer; font-size: 0.7rem; margin-top: 10px;">Close Player</p></center>
             </div>
         </div>
@@ -108,19 +121,29 @@
 
     <div id="task-modal" class="modal-overlay">
         <div class="modal-content">
-            <h3 id="task-name" style="margin-bottom: 5px;">Submit Lesson Task</h3>
+            <h3 id="task-name">Submit Lesson Task</h3>
             <div id="timer-display">24:00:00</div>
             <div id="submit-area">
                 <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; border: 2px dashed #ddd; text-align: center; margin-bottom: 15px;">
                     <span style="font-size: 1.5rem;">🎙️</span>
-                    <p style="font-size: 0.7rem; font-weight: 700;">Record Your Summary</p>
+                    <p style="font-size: 0.7rem; font-weight: 700;">Final Review Completed?</p>
                 </div>
-                <button onclick="finalSubmit(this)" class="btn btn-task" style="width: 100%; height: 50px;">
+                <button id="mainSubmitBtn" onclick="finalSubmit(this)" class="btn btn-task" style="width: 100%; height: 50px;">
                     <span class="btn-text">Sync to Teacher's Drive</span>
                     <div class="spinner"></div>
                 </button>
             </div>
             <center><small onclick="closeModals()" style="display:block; margin-top: 15px; color: var(--text-light); cursor: pointer;">Cancel</small></center>
+        </div>
+    </div>
+
+    <div id="form-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="font-size: 1rem;">📝 Lesson Assessment</h3>
+                <button onclick="closeModals()" style="background:none; border:none; font-size:1.2rem; cursor:pointer;">&times;</button>
+            </div>
+            <iframe id="form-iframe" class="form-iframe" src="">Loading form...</iframe>
         </div>
     </div>
 
@@ -132,110 +155,95 @@
 </div>
 
 <script>
-    // HELPER: Automatically converts Google Drive 'view' links to 'direct' links
-function getDirectDriveLink(url) {
-    if (url.includes('drive.google.com')) {
-        const fileId = url.split('/d/')[1]?.split('/')[0];
-        return `https://drive.google.com/uc?export=download&id=${fileId}`;
+    const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform?embedded=true"; 
+
+    function getDirectDriveLink(url) {
+        if (url.includes('drive.google.com')) {
+            const fileId = url.split('/d/')[1]?.split('/')[0];
+            return `https://drive.google.com/uc?export=download&id=${fileId}`;
+        }
+        return url;
     }
-    return url; // Return as-is if it's not a Drive link
-}
 
     const topics = [
-    { id: 1, title: "What is a Computer?", vid: "Cu3R5it4cQs", aud: "https://drive.google.com/file/d/1ksav6wtfi2-JDKTepa9pvG2SIqQTVFPs/view?usp=drivesdk" },
-    { id: 2, title: "Hardware vs Software", vid: "HB4I2CgkcCo", aud: "https://drive.google.com/file/d/11bGtbAWOUoTf52MsuQXz7u_KVXtY2hGo/view?usp=drivesdk" },
-    { id: 3, title: "Input Devices", vid: "mLgTnkw558w", aud: "https://drive.google.com/file/d/1XcVG92X-L64_mgZdIwvOGtFM_THV5yQq/view?usp=drivesdk" },
-    { id: 4, title: "Output Devices", vid: "4y2v7Y7T9oY", aud: "https://drive.google.com/file/d/YOUR_ID_4/view" },
-    { id: 5, title: "The CPU Core", vid: "HB4I2CgkcCo", aud: "https://drive.google.com/file/d/YOUR_ID_5/view" },
-    { id: 6, title: "Memory & Storage", vid: "6YV_vKnd9q0", aud: "https://drive.google.com/file/d/YOUR_ID_6/view" },
-    { id: 7, title: "Operating Systems", vid: "pT7V_D_0Usc", aud: "https://drive.google.com/file/d/YOUR_ID_7/view" },
-    { id: 8, title: "Web Navigation", vid: "hXU02R7m9_k", aud: "https://drive.google.com/file/d/YOUR_ID_8/view" },
-    { id: 9, title: "Cyber Security", vid: "yvH_k-D_S_k", aud: "https://drive.google.com/file/d/YOUR_ID_9/view" },
-    { id: 10, title: "Cloud Computing", vid: "uH-SscXp_P8", aud: "https://drive.google.com/file/d/YOUR_ID_10/view" },
-    { id: 11, title: "Data Privacy", vid: "6O8X_9vS_q8", aud: "https://drive.google.com/file/d/YOUR_ID_11/view" },
-    { id: 12, title: "Social Media Safety", vid: "mYm-S_K0-X4", aud: "https://drive.google.com/file/d/YOUR_ID_12/view" },
-    { id: 13, title: "Digital Footprint", vid: "ottnH427as8", aud: "https://drive.google.com/file/d/YOUR_ID_13/view" },
-    { id: 14, title: "Binary Basics", vid: "CxGSnA-RTsA", aud: "https://drive.google.com/file/d/YOUR_ID_14/view" },
-    { id: 15, title: "AI Introduction", vid: "5p248yoa3oE", aud: "https://drive.google.com/file/d/YOUR_ID_15/view" },
-    { id: 16, title: "Final Tech Review", vid: "8fCQ_ZuL2TY", aud: "https://drive.google.com/file/d/YOUR_ID_16/view" }
-];
+        { id: 1, title: "What is a Computer?", vid: "Cu3R5it4cQs", aud: "https://drive.google.com/file/d/1ksav6wtfi2-JDKTepa9pvG2SIqQTVFPs/view" },
+        { id: 2, title: "Hardware vs Software", vid: "HB4I2CgkcCo", aud: "https://drive.google.com/file/d/11bGtbAWOUoTf52MsuQXz7u_KVXtY2hGo/view" },
+        { id: 3, title: "Input Devices", vid: "mLgTnkw558w", aud: "https://drive.google.com/file/d/1XcVG92X-L64_mgZdIwvOGtFM_THV5yQq/view" },
+        { id: 4, title: "Output Devices", vid: "4y2v7Y7T9oY", aud: "https://drive.google.com/file/d/YOUR_ID_4/view" },
+        { id: 5, title: "The CPU Core", vid: "HB4I2CgkcCo", aud: "https://drive.google.com/file/d/YOUR_ID_5/view" },
+        { id: 6, title: "Memory & Storage", vid: "6YV_vKnd9q0", aud: "https://drive.google.com/file/d/YOUR_ID_6/view" },
+        { id: 7, title: "Operating Systems", vid: "pT7V_D_0Usc", aud: "https://drive.google.com/file/d/YOUR_ID_7/view" },
+        { id: 8, title: "Web Navigation", vid: "hXU02R7m9_k", aud: "https://drive.google.com/file/d/YOUR_ID_8/view" },
+        { id: 9, title: "Cyber Security", vid: "yvH_k-D_S_k", aud: "https://drive.google.com/file/d/YOUR_ID_9/view" },
+        { id: 10, title: "Cloud Computing", vid: "uH-SscXp_P8", aud: "https://drive.google.com/file/d/YOUR_ID_10/view" },
+        { id: 11, title: "Data Privacy", vid: "6O8X_9vS_q8", aud: "https://drive.google.com/file/d/YOUR_ID_11/view" },
+        { id: 12, title: "Social Media Safety", vid: "mYm-S_K0-X4", aud: "https://drive.google.com/file/d/YOUR_ID_12/view" },
+        { id: 13, title: "Digital Footprint", vid: "ottnH427as8", aud: "https://drive.google.com/file/d/YOUR_ID_13/view" },
+        { id: 14, title: "Binary Basics", vid: "CxGSnA-RTsA", aud: "https://drive.google.com/file/d/YOUR_ID_14/view" },
+        { id: 15, title: "AI Introduction", vid: "5p248yoa3oE", aud: "https://drive.google.com/file/d/YOUR_ID_15/view" },
+        { id: 16, title: "Final Tech Review", vid: "8fCQ_ZuL2TY", aud: "https://drive.google.com/file/d/YOUR_ID_16/view" }
+    ];
 
     let activeTopicId = null;
     let activeTopicTitle = "";
+    let currentAudio = null;
+    let currentPlayBtn = null;
+    let countdownInterval = null;
 
     function renderTopics() {
         const container = document.getElementById('topicsContainer');
         container.innerHTML = '';
-        
         topics.forEach((t, index) => {
             const isFinished = localStorage.getItem(`topic_${t.id}_done`);
             const isPrevDone = index === 0 || localStorage.getItem(`topic_${topics[index-1].id}_done`);
-            
             const card = document.createElement('div');
             card.className = `topic-card ${!isPrevDone ? 'locked' : ''}`;
-            // Use the converter here
-        const directAudioUrl = getDirectDriveLink(t.aud);
+            const directAudioUrl = getDirectDriveLink(t.aud);
 
-        card.innerHTML = `
-            <div style="padding: 15px;">
-                <b style="display:block; margin-bottom:12px; font-size: 0.9rem;">${index + 1}. ${t.title}</b>
-                
-                <div class="custom-audio-wrapper">
-                    <button class="play-btn" onclick="toggleAudio(this, '${directAudioUrl}')">▶</button>
-                    <div class="audio-progress-container">
-                        <div class="audio-progress-bar"></div>
+            card.innerHTML = `
+                <div style="padding: 15px;">
+                    <b style="display:block; margin-bottom:12px; font-size: 0.9rem;">${index + 1}. ${t.title}</b>
+                    <div class="custom-audio-wrapper">
+                        <button class="play-btn" onclick="toggleAudio(this, '${directAudioUrl}')">▶</button>
+                        <div class="audio-progress-container"><div class="audio-progress-bar"></div></div>
+                        <span class="time-display">0:00</span>
                     </div>
-                    <span class="time-display">0:00</span>
+                    <div class="btn-row">
+                        <button class="btn btn-video" onclick="openVideo('${t.vid}', ${t.id}, '${t.title}')">
+                            ${isFinished ? '▶ Review Lesson' : '▶ Start Lesson'}
+                        </button>
+                    </div>
+                    ${isFinished ? `
+                        <div class="assessment-section">
+                            <button class="accordion-trigger" onclick="this.nextElementSibling.classList.toggle('open')">
+                                📝 Take Assessment <span>▼</span>
+                            </button>
+                            <div class="accordion-content">
+                                <button class="btn btn-task" style="width:100%; margin-top:10px;" onclick="openForm()">Open Assessment</button>
+                            </div>
+                        </div>
+                    ` : ''}
                 </div>
-
-                <div class="btn-row">
-                    <button class="btn btn-video" onclick="openVideo('${t.vid}', ${t.id}, '${t.title}')">
-                        ${isFinished ? '▶ Review Lesson' : '▶ Start Lesson'}
-                    </button>
-                </div>
-                ${isFinished ? '<small style="color:var(--opay-green); font-weight:800; display:block; margin-top:10px;">✅ Topic Completed</small>' : ''}
-            </div>
-        `;
-        container.appendChild(card);
-    });
-    updateProgressUI();
-}
-
-// ... (Rest of your toggleAudio, openVideo, and submit functions)
-
-    // CUSTOM AUDIO LOGIC
-    let currentAudio = null;
-    let currentPlayBtn = null;
+            `;
+            container.appendChild(card);
+        });
+        updateProgressUI();
+    }
 
     function toggleAudio(btn, src) {
         if (currentAudio && !currentAudio.paused && currentPlayBtn === btn) {
-            currentAudio.pause();
-            btn.innerText = "▶";
+            currentAudio.pause(); btn.innerText = "▶";
         } else {
-            if (currentAudio) {
-                currentAudio.pause();
-                if (currentPlayBtn) currentPlayBtn.innerText = "▶";
-            }
-            currentAudio = new Audio(src);
-            currentPlayBtn = btn;
-            currentAudio.play();
-            btn.innerText = "⏸";
-
+            if (currentAudio) { currentAudio.pause(); if (currentPlayBtn) currentPlayBtn.innerText = "▶"; }
+            currentAudio = new Audio(src); currentPlayBtn = btn; currentAudio.play(); btn.innerText = "⏸";
             const progressBar = btn.parentElement.querySelector('.audio-progress-bar');
             const timeDisplay = btn.parentElement.querySelector('.time-display');
-
             currentAudio.ontimeupdate = () => {
                 const pct = (currentAudio.currentTime / currentAudio.duration) * 100;
                 progressBar.style.width = pct + "%";
-                
                 const mins = Math.floor(currentAudio.currentTime / 60);
                 const secs = Math.floor(currentAudio.currentTime % 60).toString().padStart(2, '0');
                 timeDisplay.innerText = `${mins}:${secs}`;
-            };
-
-            currentAudio.onended = () => {
-                btn.innerText = "▶";
-                progressBar.style.width = "0%";
             };
         }
     }
@@ -253,22 +261,50 @@ function getDirectDriveLink(url) {
         document.getElementById('video-modal').style.display = 'none';
         document.getElementById('task-name').innerText = activeTopicTitle;
         document.getElementById('task-modal').style.display = 'flex';
-        // Timer logic can be added here if needed
+        startCountdown();
+    }
+
+    function startCountdown() {
+        let timeLeft = 24 * 60 * 60;
+        clearInterval(countdownInterval);
+        countdownInterval = setInterval(() => {
+            timeLeft--;
+            if (timeLeft <= 0) {
+                clearInterval(countdownInterval);
+                document.getElementById('timer-display').innerText = "EXPIRED";
+            } else {
+                const hours = Math.floor(timeLeft / 3600).toString().padStart(2, '0');
+                const mins = Math.floor((timeLeft % 3600) / 60).toString().padStart(2, '0');
+                const secs = (timeLeft % 60).toString().padStart(2, '0');
+                document.getElementById('timer-display').innerText = `${hours}:${mins}:${secs}`;
+            }
+        }, 1000);
     }
 
     function finalSubmit(btn) {
         btn.querySelector('.btn-text').style.display = 'none';
         btn.querySelector('.spinner').style.display = 'block';
+        
+        localStorage.setItem(`topic_${activeTopicId}_done`, 'true');
+        
         setTimeout(() => {
-            localStorage.setItem(`topic_${activeTopicId}_done`, 'true');
+            clearInterval(countdownInterval);
             closeModals();
             renderTopics();
-        }, 2000);
+            openForm(); // Auto-open form iframe after clicking submit
+        }, 1500);
+    }
+
+    function openForm() {
+        document.getElementById('form-iframe').src = GOOGLE_FORM_URL;
+        document.getElementById('form-modal').style.display = 'flex';
     }
 
     function closeModals() {
         document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
         document.getElementById('video-player').src = "";
+        document.getElementById('form-iframe').src = "";
+        clearInterval(countdownInterval);
     }
 
     function updateProgressUI() {
@@ -278,10 +314,7 @@ function getDirectDriveLink(url) {
         document.getElementById('progress-text').innerText = pct + '% Completed';
     }
 
-    function resetAll() {
-        if(confirm("Wipe all progress?")) { localStorage.clear(); renderTopics(); }
-    }
-
+    function resetAll() { if(confirm("Reset all progress?")) { localStorage.clear(); renderTopics(); } }
     window.onload = renderTopics;
 </script>
 </body>
