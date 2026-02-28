@@ -52,61 +52,33 @@
         }
 
         .username { font-size: 1.4rem; font-weight: 800; margin-bottom: 15px; }
+        .total-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 1.6rem; font-weight: 800; }
         
-        .info-banner {
-            margin: 20px 15px 10px; padding: 12px; background: #fff; border-radius: 12px;
-            display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            font-size: 15px; color: var(--text-light);
+        .add-btn {
+            width: 42px; height: 42px; background: var(--opay-green); color: white; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center; font-size: 1.8rem;
+            border: 4px solid white; position: absolute; bottom: -21px; left: 50%; transform: translateX(-50%);
         }
 
-        .main-scroll { flex: 1; overflow-y: auto; padding: 0 15px 100px; } /* Increased padding for nav safety */
+        .info-banner {
+            margin: 30px 15px 10px; padding: 12px; background: #fff; border-radius: 12px;
+            display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            font-size: 0.7rem; color: var(--text-light);
+        }
+
+        .main-scroll { flex: 1; overflow-y: auto; padding: 0 15px 80px; }
         .section-title { font-weight: 800; margin: 20px 0 10px; font-size: 1.1rem; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 
         .service-item {
             background: white; padding: 12px; border-radius: 12px;
             display: flex; align-items: center; gap: 10px; border: 1px solid #f2f2f2;
-            margin-bottom: 10px;
-            transition: transform 0.1s;
+            position: relative;
         }
 
-        .service-item:active { transform: scale(0.98); }
-        .service-info b { font-size: 0.8rem; display: block; margin-bottom: 2px; }
+        .service-item.highlight { background: var(--opay-green); color: white; border: none; }
+        .service-info b { font-size: 0.8rem; display: block; }
         .service-info small { font-size: 0.6rem; opacity: 0.7; }
-
-/* Pulse Animation */
-        @keyframes live-pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 210, 141, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(0, 210, 141, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 210, 141, 0); }
-        }
-
-        /* Card & UI Elements */
-        .topic-card {
-            background: white; border-radius: 18px; padding: 18px; margin-bottom: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06); position: relative; border: 1px solid #eee;
-        }
-        .filter-btn {
-            padding: 8px 18px; border-radius: 20px; border: 1px solid #eee; background: white;
-            font-size: 0.8rem; font-weight: 600; cursor: pointer; white-space: nowrap;
-        }
-        .filter-btn.active { background: var(--opay-green); color: white; border-color: var(--opay-green); }
-        
-        .score-badge { position: absolute; top: 15px; right: 15px; padding: 4px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 800; }
-        .score-high { background: #e6fcf5; color: #00d28d; }
-        .score-mid { background: #fff9db; color: #f08c00; }
-
-        /* Video Lightbox Overlay */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 9999; display: none; align-items: center; justify-content: center;
-        }
-        
-        .action-icon {
-            width: 35px; height: 35px; background: #f0f2f5; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
-            transition: 0.3s;
-        }
-        .action-icon:hover { background: var(--opay-green); color: white; }
         
         /* FOOTER NAVIGATION */
         nav { 
@@ -118,9 +90,9 @@
             position: absolute; 
             bottom: 0; 
             width: 100%; 
-            z-index: 10;
         }
 
+        /* Link specific styling */
         nav a {
             text-decoration: none;
             color: var(--text-light);
@@ -129,1148 +101,142 @@
             align-items: center;
             flex: 1;
             font-size: 0.6rem;
+            transition: color 0.3s ease;
         }
 
-        nav a.active { color: var(--opay-green); }
+        nav a.active {
+            color: var(--opay-green);
+        }
+
         .nav-icon { display: block; font-size: 1.2rem; margin-bottom: 2px; }
-
-        /* Modal Overlay */
-.modal-overlay {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: none; /* Hidden by default */
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-    backdrop-filter: blur(4px);
+        .service-item:active {
+    transform: scale(0.95);
+    transition: transform 0.1s;
 }
-
-/* Modal Box */
-.modal-content {
-    background: white;
-    width: 90%;
-    padding: 25px;
-    border-radius: 25px;
-    text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-
-.modal-header h2 { font-size: 1.2rem; color: var(--text-dark); }
-.modal-header p { font-size: 0.7rem; color: var(--text-light); margin-bottom: 20px; }
-
-/* File Input Area */
-.file-drop-area {
-    border: 2px dashed #ddd;
-    border-radius: 15px;
-    padding: 30px;
-    position: relative;
-    margin-bottom: 20px;
-    background: #f9f9f9;
-}
-
-.file-drop-area input {
-    position: absolute;
-    inset: 0; opacity: 0; cursor: pointer;
-}
-
-.upload-icon { font-size: 2rem; display: block; margin-bottom: 10px; }
-
-.modal-submit-btn {
-    background: var(--opay-gradient);
-    color: white; border: none; width: 100%;
-    padding: 15px; border-radius: 12px;
-    font-weight: 800; cursor: pointer;
-}
-
-/* Success Header Notification */
-.success-notification {
-    position: absolute;
-    top: -100px; left: 0; width: 100%;
-    background: var(--opay-green);
-    color: white;
-    padding: 15px;
-    z-index: 2000;
-    transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.success-notification.show { top: 0; }
-.success-content { display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 600; }
-
-.close-modal { float: right; font-size: 1.5rem; cursor: pointer; color: #aaa; }
-/* Hide audio and buttons by default */
-.expandable-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease-out, opacity 0.3s ease;
-    opacity: 0;
-    width: 100%;
-}
-
-/* Class to show content */
-.service-item.active .expandable-content {
-    max-height: 250px; /* Adjust based on content size */
-    opacity: 1;
-    margin-top: 15px;
-}
-
-/* Optional: Rotate the icon when active */
-.service-item.active .status-icon {
-    transform: rotate(90deg);
-    transition: transform 0.3s;
-}
-
-.status-icon {
-    transition: transform 0.3s;
-    font-size: 0.8rem;
-    color: var(--text-light);
-}
-/* Container for the hidden part */
-.expandable-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: all 0.3s ease-in-out;
-    opacity: 0;
-    width: 100%;
-}
-
-.service-item.active .expandable-content {
-    max-height: 160px; /* Kept tight for mobile */
-    opacity: 1;
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 1px solid #f9f9f9;
-}
-
-/* Slim Audio Player for Mobile */
-audio.compact-player {
-    width: 100%;
-    height: 36px; /* Narrower height */
-    outline: none;
-    border-radius: 8px;
-}
-
-/* Mobile-First Button Row */
-.button-row {
-    display: flex;
-    gap: 8px;
-    margin-top: 12px;
-}
-
-.btn-mobile {
-    flex: 1;
-    height: 44px; /* Standard touch target size */
-    border-radius: 10px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: none;
-    cursor: pointer;
-    transition: background 0.2s;
-}
-
-.btn-practice { background: #f0f2f5; color: var(--text-dark); }
-.btn-submit { background: var(--opay-green); color: white; }
-.filter-btn {
-    padding: 8px 20px;
-    border-radius: 20px;
-    border: 1px solid #eee;
-    background: white;
-    font-size: 0.8rem;
-    font-weight: 600;
-    white-space: nowrap;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.filter-btn.active {
-    background: var(--opay-green);
-    color: white;
-    border-color: var(--opay-green);
-    box-shadow: 0 4px 10px rgba(0, 210, 141, 0.3);
-}
-
-.category-scroll::-webkit-scrollbar { display: none; } /* Hide scrollbar for clean look */
-/* Badge Base Style */
-.score-badge {
-    background: #f0f2f5; /* Default */
-    color: #666;
-}
-
-/* Color Coding based on performance */
-.score-high { background: #e6fcf5; color: #00d28d; border: 1px solid #00d28d; }
-.score-mid { background: #fff9db; color: #f08c00; border: 1px solid #f08c00; }
-.score-low { background: #fff5f5; color: #fa5252; border: 1px solid #fa5252; }
-</style>
+    </style>
 </head>
 <body>
+    <div id="offline-screen" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:white; z-index:1000; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:20px;">
+        <div style="font-size: 4rem; margin-bottom: 20px;">📡</div>
+        <h2 style="color: var(--text-dark); margin-bottom: 10px;">Oops! You're Offline</h2>
+        <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 30px;">Please check your internet connection to continue using 🚀goAPPs.</p>
+        <button style="background:var(--opay-green); color:white; border:none; padding:12px; border-radius:10px; width:200px;" onclick="window.location.reload()">Reload Page</button>
+    </div>
 
 <div class="phone-container">
     <header>
         <div class="menu-icon"></div>
-        <div style="font-weight: 800; font-size: 1.1rem;">🎓goCBT</div>
+        <div style="font-weight: 800; font-size: 1.1rem;">🎓goCLASS</div>
         <div class="user-avatar"><img src="https://i.pravatar.cc/100" alt="user"></div>
     </header>
-    
+
     <div class="main-scroll">
         <div class="balance-card">
-            <p style="font-size: 0.7rem; opacity: 0.8;">Welcome to</p>
-            <p class="username">Digital Technologies</p>
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 15px;">
-            <span style="width: 10px; height: 10px; background: var(--opay-green); border-radius: 50%; animation: live-pulse 2s infinite;"></span>
-            <span id="last-updated" style="font-size: 0.7rem; color: white; font-weight: 700;">LIBRARY UPDATED: FEB 2026</span>
-        </div>
-            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                <small style="font-weight: 700;">Total Course Progress</small>
-                <small id="progress-percent" style="color: var(--opay-green); font-weight: 800;">0%</small>
+            <p style="font-size: 0.7rem; opacity: 0.8;">Welcome to Class,</p>
+            <p class="username">Digital</p>
+            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; opacity: 0.9;">
+                <span>Balance</span><span>₦5,600</span>
             </div>
-            
-            <div style="width: 100%; height: 8px; background: #eee; border-radius: 10px; overflow: hidden;">
-                <div id="progress-fill" style="width: 0%; height: 100%; background: var(--opay-green); transition: 0.5s;"></div>
+            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; opacity: 0.9;">
+                <span>Bonus</span><span>🏆2.00gc</span>
             </div>
-                    
-        <div class="info-banner" style="margin: 0; background: rgba(255,255,255,0.2); color: white;">
-                <h3 style="font-size: 0.8rem;">📂 Understand and use digital devices effectively.</h3>
-                
+            <div class="total-row">
+                <span style="font-size: 0.8rem; font-weight: 400;">💰Total Token</span>
+                <span>₦5,600</span>
+            </div>
+            <div class="add-btn">+</div>
         </div>
-            <button id="download-cert-btn" disabled style="width: 100%; margin-top: 15px; padding: 10px; border-radius: 10px; border: none; background: #ddd; color: white; font-weight: 700; font-size: 0.75rem;">
-                🎓 Unlock Certificate (100%)
-            </button>
+
+        <div class="info-banner">
+            <span style="font-size: 1.2rem;">ℹ️</span>
+            <p>Enjoy millions of educational materials, contents and resources.</p>
         </div>
+
+        <h3 class="section-title">Select an Option:</h3>
+        <a href="tv-subscription.html" style="text-decoration: none; color: inherit;">
+            <div class="service-item highlight">
+                <span>⚠️</span>
+                <div class="service-info">
+                    <b>Update PROFILE</b>
+                    <small>Stay Connected.</small>
+                </div>
+            </div>
+        </a>
         
-        <div style="margin: 25px 0 10px;">
-            <h3 class="section-title" style="margin-bottom: 5px;">📂 Click ▶️ to Listen:</h3>
-            <small style="color: var(--text-light); margin-left: 2px;">Filter by class or search below.</small>
-            <div class="category-scroll" style="display: flex; gap: 8px; overflow-x: auto; padding-bottom: 15px; scrollbar-width: none;">
-                <button class="filter-btn active" onclick="filterClass('all', this)">All</button>
-                <button class="filter-btn" onclick="filterClass('jss1', this)">JSS 1</button>
-                <button class="filter-btn" onclick="filterClass('jss2', this)">JSS 2</button>
-                <button class="filter-btn" onclick="filterClass('jss3', this)">JSS 3</button>
+        <a href="[practice]class_selector.html" style="text-decoration: none; color: inherit;">
+            <div class="grid">
+            <div class="service-item">
+                <span style="color:var(--opay-green)">🧠</span>
+                <div class="service-info"><b>Practice Exam</b><small>Start Test</small></div>
             </div>
-        </div>
-        
-        <div style="margin: 0 0 20px; position: relative;">
-            <input type="text" id="topicSearch" placeholder="Search topics or papers..." 
-                   style="width: 100%; padding: 12px 15px 12px 40px; border-radius: 12px; border: 1px solid #eee; background: #f9f9f9; font-size: 0.9rem; outline: none;">
-            <span style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); opacity: 0.5;">🔍</span>
-        </div>
-        
-        <div class="topics-list" id="topicsContainer">
-            <div class="service-item topic-card" data-class="jss1" onclick="toggleTopic(this)" 
-                <div class="topic-card" data-class="jss1" data-score="85">
-                <span class="score-badge score-high">[Featured]</span>
-                <b style="display: block; font-size: 0.95rem; max-width: 80%;">Computer Software</b>
+        </a>
+        <a href="[EnterClass]class_selector.html" style="text-decoration: none; color: inherit;">
+            <div class="service-item">
+                <span style="color:var(--opay-green)">📝</span>
+                <div class="service-info"><b>Enter Class</b><small>Start Learning</small></div>
             </div>
-        
-            <div class="service-item topic-card" data-class="jss2" onclick="toggleTopic(this)" 
-                <div class="topic-card" data-class="jss1" data-score="85">
-                <span class="score-badge score-high">[Featured]</span>
-                <b style="display: block; font-size: 0.95rem; max-width: 80%;">Computer Software</b>
+        </a>
+        <a href="#" style="text-decoration: none; color: inherit;">
+            <div class="service-item">
+                <span style="color:var(--opay-green)">📬</span>
+                <div class="service-info"><b>Result Checker</b><small>Check Now</small></div>
             </div>
-        </div>
-                            
-        <div id="upload-modal" class="modal-overlay">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <span class="close-modal" onclick="closeModal()">&times;</span>
-                    <h2>Upload Assignment</h2>
-                    <p>Supported: PDF, JPEG, JPG, DOCX, XLSX</p>
-                </div>
-                
-                <form id="task-form" action="https://formspree.io/f/gocbtinfo@gmail.com" method="POST" enctype="multipart/form-data">
-                    <div class="file-drop-area">
-                        <span class="upload-icon">📁</span>
-                        <input type="file" name="assignment" id="file-input" accept=".pdf,.jpg,.jpeg,.docx,.xlsx" required>
-                        <p id="file-name">Tap to select file</p>
-                    </div>
-                    <button type="submit" class="modal-submit-btn">Submit to goCBT</button>
-                </form>
+        </a>
+        <a href="#" style="text-decoration: none; color: inherit;">
+            <div class="service-item highlight">
+                <span>🔢</span>
+                <div class="service-info"><b>Purchase PIN</b><small>Buy NOW</small></div>
             </div>
-        </div>
-        
-        <div id="success-header" class="success-notification">
-            <div class="success-content">
-                <span>✅</span>
-                <p>Submission Successful!</p>
+        </a>
+        <a href="#" style="text-decoration: none; color: inherit;">
+            <div class="service-item">
+                <span style="color:var(--opay-green)">📂</span>
+                <div class="service-info"><b>Class Task</b><small>Submit NOW</small></div>
             </div>
-        </div>
-
-        <div class="topics-list">
-            <div class="service-item topic-card" data-class="jss1" data-score="85" onclick="toggleTopic(this)" 
-     style="flex-direction: column; align-items: flex-start; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-radius: 15px; background: white; position: relative;">
-    
-    <div id="topicsContainer">
-        <div class="topic-card" data-class="jss1" data-score="85">
-            <span class="score-badge score-high">[85%✅]</span>
-            <b style="display: block; font-size: 0.95rem; max-width: 80%;">What is a Computer?</b>
-            <small style="display: block; color: var(--text-light); margin-top: 4px;">Last Attempt: 2 days ago</small>
-            <small style="color: var(--text-light); display: block; margin: 4px 0 12px;">⭐ 5.0 | 879k in Class</small>
-            
-            <audio controls style="width: 100%; height: 35px; margin-bottom: 15px;">
-                <source src="https://github.com/goAPPs-Official/Welcome-to-goAPPs/blob/main/01%20%20what%20is%20a%20computer%20%20%20Work%20With%20Computers%20%20Microsoft%20Digital%20Literacy..mp3" type="audio/mpeg">
-            </audio>
-
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <button onclick="openVideo('dQw4w9WgXcQ')" style="background: #333; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-                    ▶️ Watch Video
-                </button>
-                <div class="action-icon" onclick="showTaskPanel('Introduction to Computer')">
-                    <span style="font-size: 1.2rem;">📂</span>
-                </div>
+        </a>
+        <a href="#" style="text-decoration: none; color: inherit;">
+            <div class="service-item">
+                <span class="ride-icon">🗓️</span>
+                <div class="service-info"><b>Timetable</b><small>Check Schedule</small></div>
             </div>
-            <span class="completion-status" data-video-id="dQw4w9WgXcQ" style="display:none; font-size: 0.6rem; color: var(--opay-green); margin-top: 8px;"></span>
-        </div>
-
-        </div>
-
-    <div id="video-popup" class="modal-overlay">
-        <div style="width: 90%; max-width: 500px; position: relative;">
-            <span onclick="closeVideo()" style="position: absolute; top: -40px; right: 0; color: white; font-size: 2.5rem; cursor: pointer;">&times;</span>
-            <iframe id="video-iframe" width="100%" style="aspect-ratio: 16/9; border-radius: 12px;" src="" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
+        </a>
+        <a href="#" style="text-decoration: none; color: inherit;">
+            <div class="service-item">
+                <span style="color:var(--opay-green)">🔐</span>
+                <div class="service-info"><b>Facilitator</b><small>Admin Login</small></div>
             </div>
-        </div>
-    </div>
-    
-    <div id="topicsContainer">
-        <div class="topic-card" data-class="jss1" data-score="85">
-            <span class="score-badge score-high">[85%✅]</span>
-            <b style="display: block; font-size: 0.95rem; max-width: 80%;">Parts of a Computer</b>
-            <small style="display: block; color: var(--text-light); margin-top: 4px;">Last Attempt: 2 days ago</small>
-            <small style="color: var(--text-light); display: block; margin: 4px 0 12px;">⭐ 5.0 | 879k in Class</small>
-            
-            <audio controls style="width: 100%; height: 35px; margin-bottom: 15px;">
-                <source src="https://github.com/goAPPs-Official/Welcome-to-goAPPs/blob/main/02%20%20Parts%20of%20Computer%20%20Work%20With%20Computers%20%20Microsoft%20Digital%20Literacy..mp3" type="audio/mpeg">
-            </audio>
-
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <button onclick="openVideo('dQw4w9WgXcQ')" style="background: #333; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-                    ▶️ Watch Video
-                </button>
-                <div class="action-icon" onclick="showTaskPanel('Parts of a Computer')">
-                    <span style="font-size: 1.2rem;">📂</span>
-                </div>
+        </a>
+        <a href="#" style="text-decoration: none; color: inherit;">
+            <div class="service-item" style="border:none; background:transparent; justify-content:flex-end;">
+                <span class="badge-red">Get coupons now!</span>
             </div>
-            <span class="completion-status" data-video-id="dQw4w9WgXcQ" style="display:none; font-size: 0.6rem; color: var(--opay-green); margin-top: 8px;"></span>
+        </a>
         </div>
-
-        </div>
-
-    <div id="video-popup" class="modal-overlay">
-        <div style="width: 90%; max-width: 500px; position: relative;">
-            <span onclick="closeVideo()" style="position: absolute; top: -40px; right: 0; color: white; font-size: 2.5rem; cursor: pointer;">&times;</span>
-            <iframe id="video-iframe" width="100%" style="aspect-ratio: 16/9; border-radius: 12px;" src="" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-        <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="topicsContainer">
-        <div class="topic-card" data-class="jss1" data-score="85">
-            <span class="score-badge score-high">[85%✅]</span>
-            <b style="display: block; font-size: 0.95rem; max-width: 80%;">Types of Personal Computer</b>
-            <small style="display: block; color: var(--text-light); margin-top: 4px;">Last Attempt: 2 days ago</small>
-            <small style="color: var(--text-light); display: block; margin: 4px 0 12px;">⭐ 5.0 | 879k in Class</small>
-            
-            <audio controls style="width: 100%; height: 35px; margin-bottom: 15px;">
-                <source src="https://github.com/goAPPs-Official/Welcome-to-goAPPs/blob/main/03%20%20Types%20of%20Personal%20Computers%20%20Work%20With%20Computers%20%20Microsoft%20Digital%20Literacy..mp3" type="audio/mpeg">
-            </audio>
-
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <button onclick="openVideo('dQw4w9WgXcQ')" style="background: #333; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-                    ▶️ Watch Video
-                </button>
-                <div class="action-icon" onclick="showTaskPanel('Types of Personal Computers')">
-                    <span style="font-size: 1.2rem;">📂</span>
-                </div>
-            </div>
-            <span class="completion-status" data-video-id="dQw4w9WgXcQ" style="display:none; font-size: 0.6rem; color: var(--opay-green); margin-top: 8px;"></span>
-        </div>
-
-        </div>
-
-    <div id="video-popup" class="modal-overlay">
-        <div style="width: 90%; max-width: 500px; position: relative;">
-            <span onclick="closeVideo()" style="position: absolute; top: -40px; right: 0; color: white; font-size: 2.5rem; cursor: pointer;">&times;</span>
-            <iframe id="video-iframe" width="100%" style="aspect-ratio: 16/9; border-radius: 12px;" src="" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-        <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="topicsContainer">
-        <div class="topic-card" data-class="jss1" data-score="85">
-            <span class="score-badge score-high">[85%✅]</span>
-            <b style="display: block; font-size: 0.95rem; max-width: 80%;">Operating Systems</b>
-            <small style="display: block; color: var(--text-light); margin-top: 4px;">Last Attempt: 2 days ago</small>
-            <small style="color: var(--text-light); display: block; margin: 4px 0 12px;">⭐ 5.0 | 879k in Class</small>
-            
-            <audio controls style="width: 100%; height: 35px; margin-bottom: 15px;">
-                <source src="https://github.com/goAPPs-Official/Welcome-to-goAPPs/blob/main/04%20%20What%20is%20an%20Operating%20System%20%20%20Work%20With%20Computers%20%20Microsoft%20Digital%20Literacy..mp3" type="audio/mpeg">
-            </audio>
-
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <button onclick="openVideo('dQw4w9WgXcQ')" style="background: #333; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-                    ▶️ Watch Video
-                </button>
-                <div class="action-icon" onclick="showTaskPanel('Parts of a Computer')">
-                    <span style="font-size: 1.2rem;">📂</span>
-                </div>
-            </div>
-            <span class="completion-status" data-video-id="dQw4w9WgXcQ" style="display:none; font-size: 0.6rem; color: var(--opay-green); margin-top: 8px;"></span>
-        </div>
-
-        </div>
-
-    <div id="video-popup" class="modal-overlay">
-        <div style="width: 90%; max-width: 500px; position: relative;">
-            <span onclick="closeVideo()" style="position: absolute; top: -40px; right: 0; color: white; font-size: 2.5rem; cursor: pointer;">&times;</span>
-            <iframe id="video-iframe" width="100%" style="aspect-ratio: 16/9; border-radius: 12px;" src="" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-        <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="topicsContainer">
-        <div class="topic-card" data-class="jss1" data-score="85">
-            <span class="score-badge score-high">[85%✅]</span>
-            <b style="display: block; font-size: 0.95rem; max-width: 80%;">Know your Operating System</b>
-            <small style="display: block; color: var(--text-light); margin-top: 4px;">Last Attempt: 2 days ago</small>
-            <small style="color: var(--text-light); display: block; margin: 4px 0 12px;">⭐ 5.0 | 879k in Class</small>
-            
-            <audio controls style="width: 100%; height: 35px; margin-bottom: 15px;">
-                <source src="https://github.com/goAPPs-Official/Welcome-to-goAPPs/blob/main/05%20%20Get%20to%20Know%20Operating%20System%20%20%20Work%20With%20Computers%20%20Microsoft%20Digital%20Literacy..mp3" type="audio/mpeg">
-            </audio>
-
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <button onclick="openVideo('dQw4w9WgXcQ')" style="background: #333; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-                    ▶️ Watch Video
-                </button>
-                <div class="action-icon" onclick="showTaskPanel('Operating System')">
-                    <span style="font-size: 1.2rem;">📂</span>
-                </div>
-            </div>
-            <span class="completion-status" data-video-id="dQw4w9WgXcQ" style="display:none; font-size: 0.6rem; color: var(--opay-green); margin-top: 8px;"></span>
-        </div>
-
-        </div>
-
-    <div id="video-popup" class="modal-overlay">
-        <div style="width: 90%; max-width: 500px; position: relative;">
-            <span onclick="closeVideo()" style="position: absolute; top: -40px; right: 0; color: white; font-size: 2.5rem; cursor: pointer;">&times;</span>
-            <iframe id="video-iframe" width="100%" style="aspect-ratio: 16/9; border-radius: 12px;" src="" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-        <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="topicsContainer">
-        <div class="topic-card" data-class="jss1" data-score="85">
-            <span class="score-badge score-high">[85%✅]</span>
-            <b style="display: block; font-size: 0.95rem; max-width: 80%;">Files & Folders in Windows</b>
-            <small style="display: block; color: var(--text-light); margin-top: 4px;">Last Attempt: 2 days ago</small>
-            <small style="color: var(--text-light); display: block; margin: 4px 0 12px;">⭐ 5.0 | 879k in Class</small>
-            
-            <audio controls style="width: 100%; height: 35px; margin-bottom: 15px;">
-                <source src="https://github.com/goAPPs-Official/Welcome-to-goAPPs/blob/main/06%20%20Work%20With%20Files%20Folders%20%20%20Work%20With%20Computers%20%20Microsoft%20Digital%20Literacy..mp3" type="audio/mpeg">
-            </audio>
-
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <button onclick="openVideo('dQw4w9WgXcQ')" style="background: #333; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-                    ▶️ Watch Video
-                </button>
-                <div class="action-icon" onclick="showTaskPanel('Parts of a Computer')">
-                    <span style="font-size: 1.2rem;">📂</span>
-                </div>
-            </div>
-            <span class="completion-status" data-video-id="dQw4w9WgXcQ" style="display:none; font-size: 0.6rem; color: var(--opay-green); margin-top: 8px;"></span>
-        </div>
-
-        </div>
-
-    <div id="video-popup" class="modal-overlay">
-        <div style="width: 90%; max-width: 500px; position: relative;">
-            <span onclick="closeVideo()" style="position: absolute; top: -40px; right: 0; color: white; font-size: 2.5rem; cursor: pointer;">&times;</span>
-            <iframe id="video-iframe" width="100%" style="aspect-ratio: 16/9; border-radius: 12px;" src="" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-        <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="topicsContainer">
-        <div class="topic-card" data-class="jss1" data-score="85">
-            <span class="score-badge score-high">[85%✅]</span>
-            <b style="display: block; font-size: 0.95rem; max-width: 80%;">Understanding the Right Click on a Mouse</b>
-            <small style="display: block; color: var(--text-light); margin-top: 4px;">Last Attempt: 2 days ago</small>
-            <small style="color: var(--text-light); display: block; margin: 4px 0 12px;">⭐ 5.0 | 879k in Class</small>
-            
-            <audio controls style="width: 100%; height: 35px; margin-bottom: 15px;">
-                <source src="https://github.com/goAPPs-Official/Welcome-to-goAPPs/blob/main/07%20%20Understand%20Right%20Click%20%20Work%20With%20Computers%20%20Microsoft%20Digital%20Literacy..mp3" type="audio/mpeg">
-            </audio>
-
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <button onclick="openVideo('dQw4w9WgXcQ')" style="background: #333; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-                    ▶️ Watch Video
-                </button>
-                <div class="action-icon" onclick="showTaskPanel('Computer Mouse Right Click')">
-                    <span style="font-size: 1.2rem;">📂</span>
-                </div>
-            </div>
-            <span class="completion-status" data-video-id="dQw4w9WgXcQ" style="display:none; font-size: 0.6rem; color: var(--opay-green); margin-top: 8px;"></span>
-        </div>
-
-        </div>
-
-    <div id="video-popup" class="modal-overlay">
-        <div style="width: 90%; max-width: 500px; position: relative;">
-            <span onclick="closeVideo()" style="position: absolute; top: -40px; right: 0; color: white; font-size: 2.5rem; cursor: pointer;">&times;</span>
-            <iframe id="video-iframe" width="100%" style="aspect-ratio: 16/9; border-radius: 12px;" src="" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-        <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="topicsContainer">
-        <div class="topic-card" data-class="jss1" data-score="85">
-            <span class="score-badge score-high">[85%✅]</span>
-            <b style="display: block; font-size: 0.95rem; max-width: 80%;">Windows Interface</b>
-            <small style="display: block; color: var(--text-light); margin-top: 4px;">Last Attempt: 2 days ago</small>
-            <small style="color: var(--text-light); display: block; margin: 4px 0 12px;">⭐ 5.0 | 879k in Class</small>
-            
-            <audio controls style="width: 100%; height: 35px; margin-bottom: 15px;">
-                <source src="https://github.com/goAPPs-Official/Welcome-to-goAPPs/blob/main/08%20%20Work%20with%20windows%20%20Work%20With%20Computers%20%20Microsoft%20Digital%20Literacy..mp3" type="audio/mpeg">
-            </audio>
-
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <button onclick="openVideo('dQw4w9WgXcQ')" style="background: #333; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-                    ▶️ Watch Video
-                </button>
-                <div class="action-icon" onclick="showTaskPanel('Parts of a Computer')">
-                    <span style="font-size: 1.2rem;">📂</span>
-                </div>
-            </div>
-            <span class="completion-status" data-video-id="dQw4w9WgXcQ" style="display:none; font-size: 0.6rem; color: var(--opay-green); margin-top: 8px;"></span>
-        </div>
-
-        </div>
-
-    <div id="video-popup" class="modal-overlay">
-        <div style="width: 90%; max-width: 500px; position: relative;">
-            <span onclick="closeVideo()" style="position: absolute; top: -40px; right: 0; color: white; font-size: 2.5rem; cursor: pointer;">&times;</span>
-            <iframe id="video-iframe" width="100%" style="aspect-ratio: 16/9; border-radius: 12px;" src="" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-        <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="topicsContainer">
-        <div class="topic-card" data-class="jss1" data-score="85">
-            <span class="score-badge score-high">[85%✅]</span>
-            <b style="display: block; font-size: 0.95rem; max-width: 80%;">Personalizing your Computer.</b>
-            <small style="display: block; color: var(--text-light); margin-top: 4px;">Last Attempt: 2 days ago</small>
-            <small style="color: var(--text-light); display: block; margin: 4px 0 12px;">⭐ 5.0 | 879k in Class</small>
-            
-            <audio controls style="width: 100%; height: 35px; margin-bottom: 15px;">
-                <source src="https://github.com/goAPPs-Official/Welcome-to-goAPPs/blob/main/09%20%20Personalize%20Your%20Desktop%20%20Work%20With%20Computers%20%20Microsoft%20Digital%20Literacy..mp3" type="audio/mpeg">
-            </audio>
-
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <button onclick="openVideo('dQw4w9WgXcQ')" style="background: #333; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-                    ▶️ Watch Video
-                </button>
-                <div class="action-icon" onclick="showTaskPanel('Parts of a Computer')">
-                    <span style="font-size: 1.2rem;">📂</span>
-                </div>
-            </div>
-            <span class="completion-status" data-video-id="dQw4w9WgXcQ" style="display:none; font-size: 0.6rem; color: var(--opay-green); margin-top: 8px;"></span>
-        </div>
-
-        </div>
-
-    <div id="video-popup" class="modal-overlay">
-        <div style="width: 90%; max-width: 500px; position: relative;">
-            <span onclick="closeVideo()" style="position: absolute; top: -40px; right: 0; color: white; font-size: 2.5rem; cursor: pointer;">&times;</span>
-            <iframe id="video-iframe" width="100%" style="aspect-ratio: 16/9; border-radius: 12px;" src="" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-        <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="topicsContainer">
-        <div class="topic-card" data-class="jss1" data-score="85">
-            <span class="score-badge score-high">[85%✅]</span>
-            <b style="display: block; font-size: 0.95rem; max-width: 80%;">Using Window Accessibility Features</b>
-            <small style="display: block; color: var(--text-light); margin-top: 4px;">Last Attempt: 2 days ago</small>
-            <small style="color: var(--text-light); display: block; margin: 4px 0 12px;">⭐ 5.0 | 879k in Class</small>
-            
-            <audio controls style="width: 100%; height: 35px; margin-bottom: 15px;">
-                <source src="https://github.com/goAPPs-Official/Welcome-to-goAPPs/blob/main/11%20%20Use%20accessibility%20features%20%20Work%20With%20Computers%20%20Microsoft%20Digital%20Literacy..mp3" type="audio/mpeg">
-            </audio>
-
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <button onclick="openVideo('dQw4w9WgXcQ')" style="background: #333; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-                    ▶️ Watch Video
-                </button>
-                <div class="action-icon" onclick="showTaskPanel('Parts of a Computer')">
-                    <span style="font-size: 1.2rem;">📂</span>
-                </div>
-            </div>
-            <span class="completion-status" data-video-id="dQw4w9WgXcQ" style="display:none; font-size: 0.6rem; color: var(--opay-green); margin-top: 8px;"></span>
-        </div>
-
-        </div>
-
-    <div id="video-popup" class="modal-overlay">
-        <div style="width: 90%; max-width: 500px; position: relative;">
-            <span onclick="closeVideo()" style="position: absolute; top: -40px; right: 0; color: white; font-size: 2.5rem; cursor: pointer;">&times;</span>
-            <iframe id="video-iframe" width="100%" style="aspect-ratio: 16/9; border-radius: 12px;" src="" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-        <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="topicsContainer">
-        <div class="topic-card" data-class="jss1" data-score="85">
-            <span class="score-badge score-high">[85%✅]</span>
-            <b style="display: block; font-size: 0.95rem; max-width: 80%;">Parts of a Computer</b>
-            <small style="display: block; color: var(--text-light); margin-top: 4px;">Last Attempt: 2 days ago</small>
-            <small style="color: var(--text-light); display: block; margin: 4px 0 12px;">⭐ 5.0 | 879k in Class</small>
-            
-            <audio controls style="width: 100%; height: 35px; margin-bottom: 15px;">
-                <source src="https://github.com/goAPPs-Official/Welcome-to-goAPPs/blob/main/02%20%20Parts%20of%20Computer%20%20Work%20With%20Computers%20%20Microsoft%20Digital%20Literacy..mp3" type="audio/mpeg">
-            </audio>
-
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <button onclick="openVideo('dQw4w9WgXcQ')" style="background: #333; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-                    ▶️ Watch Video
-                </button>
-                <div class="action-icon" onclick="showTaskPanel('Parts of a Computer')">
-                    <span style="font-size: 1.2rem;">📂</span>
-                </div>
-            </div>
-            <span class="completion-status" data-video-id="dQw4w9WgXcQ" style="display:none; font-size: 0.6rem; color: var(--opay-green); margin-top: 8px;"></span>
-        </div>
-
-        </div>
-
-    <div id="video-popup" class="modal-overlay">
-        <div style="width: 90%; max-width: 500px; position: relative;">
-            <span onclick="closeVideo()" style="position: absolute; top: -40px; right: 0; color: white; font-size: 2.5rem; cursor: pointer;">&times;</span>
-            <iframe id="video-iframe" width="100%" style="aspect-ratio: 16/9; border-radius: 12px;" src="" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-        <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="topicsContainer">
-        <div class="topic-card" data-class="jss1" data-score="85">
-            <span class="score-badge score-high">[85%✅]</span>
-            <b style="display: block; font-size: 0.95rem; max-width: 80%;">Parts of a Computer</b>
-            <small style="display: block; color: var(--text-light); margin-top: 4px;">Last Attempt: 2 days ago</small>
-            <small style="color: var(--text-light); display: block; margin: 4px 0 12px;">⭐ 5.0 | 879k in Class</small>
-            
-            <audio controls style="width: 100%; height: 35px; margin-bottom: 15px;">
-                <source src="https://github.com/goAPPs-Official/Welcome-to-goAPPs/blob/main/02%20%20Parts%20of%20Computer%20%20Work%20With%20Computers%20%20Microsoft%20Digital%20Literacy..mp3" type="audio/mpeg">
-            </audio>
-
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <button onclick="openVideo('dQw4w9WgXcQ')" style="background: #333; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-                    ▶️ Watch Video
-                </button>
-                <div class="action-icon" onclick="showTaskPanel('Parts of a Computer')">
-                    <span style="font-size: 1.2rem;">📂</span>
-                </div>
-            </div>
-            <span class="completion-status" data-video-id="dQw4w9WgXcQ" style="display:none; font-size: 0.6rem; color: var(--opay-green); margin-top: 8px;"></span>
-        </div>
-
-        </div>
-
-    <div id="video-popup" class="modal-overlay">
-        <div style="width: 90%; max-width: 500px; position: relative;">
-            <span onclick="closeVideo()" style="position: absolute; top: -40px; right: 0; color: white; font-size: 2.5rem; cursor: pointer;">&times;</span>
-            <iframe id="video-iframe" width="100%" style="aspect-ratio: 16/9; border-radius: 12px;" src="" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-        <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="topicsContainer">
-        <div class="topic-card" data-class="jss1" data-score="85">
-            <span class="score-badge score-high">[85%✅]</span>
-            <b style="display: block; font-size: 0.95rem; max-width: 80%;">Parts of a Computer</b>
-            <small style="display: block; color: var(--text-light); margin-top: 4px;">Last Attempt: 2 days ago</small>
-            <small style="color: var(--text-light); display: block; margin: 4px 0 12px;">⭐ 5.0 | 879k in Class</small>
-            
-            <audio controls style="width: 100%; height: 35px; margin-bottom: 15px;">
-                <source src="https://github.com/goAPPs-Official/Welcome-to-goAPPs/blob/main/02%20%20Parts%20of%20Computer%20%20Work%20With%20Computers%20%20Microsoft%20Digital%20Literacy..mp3" type="audio/mpeg">
-            </audio>
-
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <button onclick="openVideo('dQw4w9WgXcQ')" style="background: #333; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-                    ▶️ Watch Video
-                </button>
-                <div class="action-icon" onclick="showTaskPanel('Parts of a Computer')">
-                    <span style="font-size: 1.2rem;">📂</span>
-                </div>
-            </div>
-            <span class="completion-status" data-video-id="dQw4w9WgXcQ" style="display:none; font-size: 0.6rem; color: var(--opay-green); margin-top: 8px;"></span>
-        </div>
-
-        </div>
-
-    <div id="video-popup" class="modal-overlay">
-        <div style="width: 90%; max-width: 500px; position: relative;">
-            <span onclick="closeVideo()" style="position: absolute; top: -40px; right: 0; color: white; font-size: 2.5rem; cursor: pointer;">&times;</span>
-            <iframe id="video-iframe" width="100%" style="aspect-ratio: 16/9; border-radius: 12px;" src="" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-        <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="topicsContainer">
-        <div class="topic-card" data-class="jss1" data-score="85">
-            <span class="score-badge score-high">[85%✅]</span>
-            <b style="display: block; font-size: 0.95rem; max-width: 80%;">Parts of a Computer</b>
-            <small style="display: block; color: var(--text-light); margin-top: 4px;">Last Attempt: 2 days ago</small>
-            <small style="color: var(--text-light); display: block; margin: 4px 0 12px;">⭐ 5.0 | 879k in Class</small>
-            
-            <audio controls style="width: 100%; height: 35px; margin-bottom: 15px;">
-                <source src="https://github.com/goAPPs-Official/Welcome-to-goAPPs/blob/main/02%20%20Parts%20of%20Computer%20%20Work%20With%20Computers%20%20Microsoft%20Digital%20Literacy..mp3" type="audio/mpeg">
-            </audio>
-
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <button onclick="openVideo('dQw4w9WgXcQ')" style="background: #333; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-                    ▶️ Watch Video
-                </button>
-                <div class="action-icon" onclick="showTaskPanel('Parts of a Computer')">
-                    <span style="font-size: 1.2rem;">📂</span>
-                </div>
-            </div>
-            <span class="completion-status" data-video-id="dQw4w9WgXcQ" style="display:none; font-size: 0.6rem; color: var(--opay-green); margin-top: 8px;"></span>
-        </div>
-
-        </div>
-
-    <div id="video-popup" class="modal-overlay">
-        <div style="width: 90%; max-width: 500px; position: relative;">
-            <span onclick="closeVideo()" style="position: absolute; top: -40px; right: 0; color: white; font-size: 2.5rem; cursor: pointer;">&times;</span>
-            <iframe id="video-iframe" width="100%" style="aspect-ratio: 16/9; border-radius: 12px;" src="" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-        <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="topicsContainer">
-        <div class="topic-card" data-class="jss1" data-score="85">
-            <span class="score-badge score-high">[85%✅]</span>
-            <b style="display: block; font-size: 0.95rem; max-width: 80%;">Parts of a Computer</b>
-            <small style="display: block; color: var(--text-light); margin-top: 4px;">Last Attempt: 2 days ago</small>
-            <small style="color: var(--text-light); display: block; margin: 4px 0 12px;">⭐ 5.0 | 879k in Class</small>
-            
-            <audio controls style="width: 100%; height: 35px; margin-bottom: 15px;">
-                <source src="https://github.com/goAPPs-Official/Welcome-to-goAPPs/blob/main/02%20%20Parts%20of%20Computer%20%20Work%20With%20Computers%20%20Microsoft%20Digital%20Literacy..mp3" type="audio/mpeg">
-            </audio>
-
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <button onclick="openVideo('dQw4w9WgXcQ')" style="background: #333; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-                    ▶️ Watch Video
-                </button>
-                <div class="action-icon" onclick="showTaskPanel('Parts of a Computer')">
-                    <span style="font-size: 1.2rem;">📂</span>
-                </div>
-            </div>
-            <span class="completion-status" data-video-id="dQw4w9WgXcQ" style="display:none; font-size: 0.6rem; color: var(--opay-green); margin-top: 8px;"></span>
-        </div>
-
-        </div>
-
-    <div id="video-popup" class="modal-overlay">
-        <div style="width: 90%; max-width: 500px; position: relative;">
-            <span onclick="closeVideo()" style="position: absolute; top: -40px; right: 0; color: white; font-size: 2.5rem; cursor: pointer;">&times;</span>
-            <iframe id="video-iframe" width="100%" style="aspect-ratio: 16/9; border-radius: 12px;" src="" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-        <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-    <div id="topicsContainer">
-        <div class="topic-card" data-class="jss1" data-score="85">
-            <span class="score-badge score-high">[85%✅]</span>
-            <b style="display: block; font-size: 0.95rem; max-width: 80%;">Parts of a Computer</b>
-            <small style="display: block; color: var(--text-light); margin-top: 4px;">Last Attempt: 2 days ago</small>
-            <small style="color: var(--text-light); display: block; margin: 4px 0 12px;">⭐ 5.0 | 879k in Class</small>
-            
-            <audio controls style="width: 100%; height: 35px; margin-bottom: 15px;">
-                <source src="https://github.com/goAPPs-Official/Welcome-to-goAPPs/blob/main/02%20%20Parts%20of%20Computer%20%20Work%20With%20Computers%20%20Microsoft%20Digital%20Literacy..mp3" type="audio/mpeg">
-            </audio>
-
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <button onclick="openVideo('dQw4w9WgXcQ')" style="background: #333; color: white; border: none; padding: 8px 15px; border-radius: 8px; font-size: 0.75rem; font-weight: 600; cursor: pointer;">
-                    ▶️ Watch Video
-                </button>
-                <div class="action-icon" onclick="showTaskPanel('Parts of a Computer')">
-                    <span style="font-size: 1.2rem;">📂</span>
-                </div>
-            </div>
-            <span class="completion-status" data-video-id="dQw4w9WgXcQ" style="display:none; font-size: 0.6rem; color: var(--opay-green); margin-top: 8px;"></span>
-        </div>
-
-        </div>
-
-    <div id="video-popup" class="modal-overlay">
-        <div style="width: 90%; max-width: 500px; position: relative;">
-            <span onclick="closeVideo()" style="position: absolute; top: -40px; right: 0; color: white; font-size: 2.5rem; cursor: pointer;">&times;</span>
-            <iframe id="video-iframe" width="100%" style="aspect-ratio: 16/9; border-radius: 12px;" src="" frameborder="0" allowfullscreen></iframe>
-        </div>
-    </div>
-
-    <div id="task-panel" class="modal-overlay" style="background: rgba(0,0,0,0.6);">
-        <div style="background: white; width: 85%; padding: 25px; border-radius: 20px; text-align: center;">
-            <h3 id="task-title" style="margin-top: 0;">Task Dashboard</h3>
-            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
-                <button onclick="window.location.href='#'" style="padding: 15px; border-radius: 12px; border: none; background: #f0f2f5; font-weight: 700;">📝 Start Practice Quiz</button>
-                <button onclick="alert('Open Upload Modal')" style="padding: 15px; border-radius: 12px; border: none; background: var(--opay-green); color: white; font-weight: 700;">📤 Submit Task</button>
-                <button onclick="document.getElementById('task-panel').style.display='none'" style="margin-top: 10px; background: none; border: none; color: var(--text-light);">Close</button>
-            </div>
-        </div>
-    </div>
-    
-            </div>
-            <div class="service-item" onclick="toggleTopic(this)" 
-                 style="flex-direction: column; align-items: flex-start; padding: 15px; margin-bottom: 15px; 
-                        box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #f0f0f0;">
-                <div class="service-item topic-card" data-class="jss1" data-score="85" onclick="toggleTopic(this)" 
-                style="flex-direction: column; align-items: flex-start; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-radius: 15px; background: white; position: relative;">
-               
-               <div class="score-badge" style="position: absolute; top: 12px; right: 12px; padding: 4px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 800;">
-                   85%✅
-               </div>
-               
-               <b class="topic-name" style="max-width: 80%;">🗃️ Next Class</b>
-               <small style="display: block; color: var(--text-light);">Introduction to Computer. The ABC's and getting to know your computer for the first time.</small>
-               
-                <div class="expandable-content">
-                    <div style="display: flex; gap: 10px; margin-top: 12px; width: 100%;">
-                        <button class="stop-prop" onclick="window.location.href='https://official-gocbt.github.io/-goCBT-Room-of-Excellence/Digital_Tech/JSS/'" 
-                                style="flex: 1; height: 40px; background: #f2f2f2; border: none; border-radius: 10px; font-weight: 600; font-size: 0.8rem; cursor: pointer;">
-                            Practice
-                        </button>
-                        <button class="stop-prop" onclick="openUploadModal()" 
-                                style="flex: 1; height: 40px; background: var(--opay-green); color: white; border: none; border-radius: 10px; font-weight: 600; font-size: 0.8rem; cursor: pointer;">
-                            Submit Task
-                        </button>
-                    </div>
-                </div>
-               </div>
-       
-            
-           
     </div>
 
     <nav>
-        <a href="#"><span class="nav-icon">🎁</span>Rewards</a>
-        <a href="#"><span class="nav-icon">💰</span>Wallet</a>
-        <a href="C:\xampp\htdocs\gocbt\Code Files set\goAPPs\index.html" class="active"><span class="nav-icon">🏧</span>Home</a>
-        <a href="#"><span class="nav-icon">📊</span>Market</a>
-        <a href="#"><span class="nav-icon">⚙️</span>Settings</a>
+        
+        <a href="reward.html" class="nav-item">
+            <span class="nav-icon">🎁</span>Rewards
+        </a>
+        <a href="balance.html" class="nav-item">
+            <span class="nav-icon">💰</span>Wallet
+        </a>
+        <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp" class="nav-item active">
+            <span class="nav-icon">🏧</span>Home
+        </a>
+        <a href="transfer.html" class="nav-item">
+            <span class="nav-icon">📊</span>Market
+        </a>
+        <a href="settings.html" class="nav-item">
+            <span class="nav-icon">⚙️</span>Settings
+        </a>
     </nav>
-</div>
 
+</div>
 <script>
     // Connection Monitoring
-    window.addEventListener('online', () => {
+    //window.addEventListener('online', () => {
         document.getElementById('offline-screen').style.display = 'none';
         
         // Connection Restored Toast
@@ -1280,181 +246,43 @@ audio.compact-player {
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 3000);
     });
-    // Stop link redirect when clicking audio or buttons
-    const stopElements = document.querySelectorAll('.stop-prop');
-    stopElements.forEach(el => {
-        el.addEventListener('click', (e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            if(el.tagName === 'BUTTON') {
-                alert(el.innerText + " clicked!");
-            }
-        });
+    
+    window.addEventListener('offline', () => {
+        document.getElementById('offline-screen').style.display = 'flex';
     });
 
-    // Function to open the Modal
-function openUploadModal() {
-    document.getElementById('upload-modal').style.display = 'flex';
-}
-
-function closeModal() {
-    document.getElementById('upload-modal').style.display = 'none';
-}
-
-// Update file name display when selected
-document.getElementById('file-input').addEventListener('change', function(e) {
-    const fileName = e.target.files[0] ? e.target.files[0].name : "Tap to select file";
-    document.getElementById('file-name').innerText = fileName;
-});
-
-// Handle Form Submission
-document.getElementById('task-form').addEventListener('submit', function(e) {
-    e.preventDefault(); // Stop page reload for demo
-    
-    // 1. Hide the modal
-    closeModal();
-    
-    // 2. Show the Success Header
-    const successHeader = document.getElementById('success-header');
-    successHeader.classList.add('show');
-    
-    // 3. Hide header after 4 seconds
-    setTimeout(() => {
-        successHeader.classList.remove('show');
-    }, 4000);
-
-    // Note: In a live environment, you would use fetch() to send the file 
-    // to your backend or service like EmailJS / Formspree here.
-});
-
-// Update your Submit Task button to trigger the modal
-// Change your button to: <button onclick="openUploadModal()" class="stop-prop"...
-function toggleTopic(element) {
-    // 1. Check if the clicked item is already active
-    const isActive = element.classList.contains('active');
-
-    // 2. Close all other service-items
-    document.querySelectorAll('.service-item').forEach(item => {
-        item.classList.remove('active');
-        // Optional: Pause any playing audio when closing
-        const audio = item.querySelector('audio');
-        if(audio) audio.pause();
-    });
-
-    // 3. If the clicked item wasn't active, open it
-    if (!isActive) {
-        element.classList.add('active');
+    // Initial check
+    if (!navigator.onLine) {
+        document.getElementById('offline-screen').style.display = 'flex';
     }
-}
 
-// Ensure buttons and audio don't trigger the toggleTopic function
-document.querySelectorAll('.stop-prop').forEach(el => {
-    el.addEventListener('click', (e) => {
-        e.stopPropagation();
-    });
-});
-document.getElementById('topicSearch').addEventListener('input', function(e) {
-    const term = e.target.value.toLowerCase();
-    const cards = document.querySelectorAll('.topic-card');
+    // PWA INSTALL LOGIC
+    let deferredPrompt;
+    const installBanner = document.getElementById('install-banner');
+    const installBtn = document.getElementById('install-btn');
 
-    cards.forEach(card => {
-        const title = card.querySelector('.topic-name').innerText.toLowerCase();
-        if (title.includes(term)) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-});
-function filterClass(className, btn) {
-    // 1. Update active button style
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        installBanner.style.display = 'flex';
 
-    // 2. Filter cards
-    const cards = document.querySelectorAll('.topic-card');
-    cards.forEach(card => {
-        const cardClass = card.getAttribute('data-class');
-        if (className === 'all' || cardClass === className) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-}
-function colorizeBadges() {
-    const cards = document.querySelectorAll('.topic-card');
-    cards.forEach(card => {
-        const score = parseInt(card.getAttribute('data-score'));
-        const badge = card.querySelector('.score-badge');
-        
-        if (score >= 70) {
-            badge.classList.add('score-high');
-        } else if (score >= 45) {
-            badge.classList.add('score-mid');
-        } else {
-            badge.classList.add('score-low');
-        }
-    });
-}
-// Run on load
-window.onload = colorizeBadges;
-function openVideo(id) {
-            const modal = document.getElementById('video-popup');
-            document.getElementById('video-iframe').src = `https://www.youtube.com/embed/${id}?autoplay=1`;
-            modal.style.display = 'flex';
-            window.currentVid = id;
-        }
-
-        function closeVideo() {
-            document.getElementById('video-popup').style.display = 'none';
-            document.getElementById('video-iframe').src = "";
-            localStorage.setItem(`video_${window.currentVid}_done`, 'true');
-            updateProgress();
-        }
-
-        function showTaskPanel(title) {
-            document.getElementById('task-title').innerText = title;
-            document.getElementById('task-panel').style.display = 'flex';
-        }
-
-        function filterClass(cls, btn) {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.querySelectorAll('.topic-card').forEach(card => {
-                card.style.display = (cls === 'all' || card.dataset.class === cls) ? 'block' : 'none';
-            });
-        }
-
-        function updateProgress() {
-            const cards = document.querySelectorAll('.topic-card');
-            let done = 0;
-            cards.forEach(card => {
-                const vidId = card.querySelector('button').getAttribute('onclick').match(/'([^']+)'/)[1];
-                if (localStorage.getItem(`video_${vidId}_done`)) {
-                    done++;
-                    card.querySelector('.completion-status').style.display = 'block';
-                    card.querySelector('.completion-status').innerText = '✅ Completed';
-                }
-            });
-            const percent = Math.round((done / cards.length) * 100);
-            document.getElementById('progress-fill').style.width = percent + '%';
-            document.getElementById('progress-percent').innerText = percent + '%';
-            if(percent === 100) {
-                const btn = document.getElementById('download-cert-btn');
-                btn.disabled = false; btn.style.background = '#00d28d'; btn.innerText = '🏆 Download Certificate';
-            }
-        }
-
-        document.getElementById('topicSearch').addEventListener('input', (e) => {
-            const val = e.target.value.toLowerCase();
-            document.querySelectorAll('.topic-card').forEach(card => {
-                const title = card.querySelector('b').innerText.toLowerCase();
-                card.style.display = title.includes(val) ? 'block' : 'none';
+        installBtn.addEventListener('click', () => {
+            installBanner.style.display = 'none';
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then((choiceResult) => {
+                deferredPrompt = null;
             });
         });
+    });
 
-        window.onload = updateProgress;
+    // Service Worker registration
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js').catch(err => {
+                console.log('SW registration failed: ', err);
+            });
+        });
+    }
 </script>
 </body>
 </html>
