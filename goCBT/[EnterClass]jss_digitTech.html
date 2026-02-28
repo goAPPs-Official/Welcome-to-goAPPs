@@ -126,7 +126,7 @@
             <div id="submit-area">
                 <div style="background: #f8f9fa; padding: 20px; border-radius: 15px; border: 2px dashed #ddd; text-align: center; margin-bottom: 15px;">
                     <span style="font-size: 1.5rem;">🎙️</span>
-                    <h4 style="font-size: 0.7rem; font-weight: 700;">Click on the rotating cirle</h4>
+                    <p style="font-size: 0.7rem; font-weight: 700;">Final Review Completed?</p>
                 </div>
                 <button id="mainSubmitBtn" onclick="finalSubmit(this)" class="btn btn-task" style="width: 100%; height: 50px;">
                     <span class="btn-text">Sync to Teacher's Drive</span>
@@ -155,7 +155,7 @@
 </div>
 
 <script>
-    const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScdS2JUmJlU9Vrbi7R4rSeVq1PHw0m4xCukRoFzPejzChxo4g/viewform?usp=header"; 
+    const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform?embedded=true"; 
 
     function getDirectDriveLink(url) {
         if (url.includes('drive.google.com')) {
@@ -296,7 +296,7 @@
     }
 
     function openForm() {
-        document.getElementById('form-iframe').src = https://docs.google.com/forms/d/e/1FAIpQLScdS2JUmJlU9Vrbi7R4rSeVq1PHw0m4xCukRoFzPejzChxo4g/viewform?usp=header;
+        document.getElementById('form-iframe').src = GOOGLE_FORM_URL;
         document.getElementById('form-modal').style.display = 'flex';
     }
 
@@ -319,6 +319,3 @@
 </script>
 </body>
 </html>
-
-
-
