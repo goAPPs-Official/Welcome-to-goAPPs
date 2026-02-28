@@ -454,16 +454,22 @@
                 <div class="slider-dots" id="slider-dots"></div>
             </div>
 
-            <div class="balance-card">
-                <small>Token Balance</small>
-                <h2 id="balance-display" style="font-size: 1.8rem; margin: 5px 0;">💰100.00</h2>
-                <div style="display: flex; justify-content: space-between; font-size: 0.8rem; opacity: 0.9;">
-                    <span>Bonus: 🏆2.00gc</span>
-                </div>
-                <button onclick="openModal('send-modal')" style="width: 100%; margin-top: 15px; padding: 12px; border-radius: 12px; border: none; background: rgba(255,255,255,0.25); color: white; font-weight: 800; cursor: pointer;">📤 Send Tokens</button>
-                <div onclick="openModal('topup-modal')" style="width: 44px; height: 44px; background: white; color: #00d28d; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; position: absolute; bottom: -22px; left: 50%; transform: translateX(-50%); box-shadow: 0 5px 15px rgba(0,0,0,0.2); cursor: pointer; z-index: 10;">+</div>
-                
-            </div>
+            <div class="balance-card" style="position: relative; padding: 20px; border-radius: 20px; background: var(--opay-green); color: white; box-shadow: 0 10px 20px rgba(0,210,141,0.2);">
+    <small>Token Balance</small>
+    
+    <div style="display: flex; align-items: center; gap: 10px; margin: 5px 0;">
+        <h2 id="balance-display" style="font-size: 1.8rem; margin: 0;">💰 *</h2>
+        <div onclick="openModal('reveal-modal')" style="cursor: pointer; font-size: 1.2rem; opacity: 0.8;">👁️</div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; font-size: 0.8rem; opacity: 0.9;">
+        <span>Bonus: 🏆2.00gc</span>
+    </div>
+
+    <button onclick="openModal('send-details-modal')" style="width: 100%; margin-top: 15px; padding: 12px; border-radius: 12px; border: none; background: rgba(255,255,255,0.25); color: white; font-weight: 800; cursor: pointer;">📤 Send Tokens</button>
+    
+    <div onclick="openModal('topup-modal')" style="width: 44px; height: 44px; background: white; color: #00d28d; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; position: absolute; bottom: -22px; left: 50%; transform: translateX(-50%); box-shadow: 0 5px 15px rgba(0,0,0,0.2); cursor: pointer; z-index: 10;">+</div>
+</div>
 
             <h3 class="section-title">Ready to Connect</h3>
             <div class="grid">
@@ -876,6 +882,7 @@ document.addEventListener('DOMContentLoaded', () => {
 </body>
 
 </html>
+
 
 
 
