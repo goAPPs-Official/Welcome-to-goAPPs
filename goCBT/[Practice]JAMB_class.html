@@ -29,18 +29,22 @@
         .sticky-action { padding: 10px 15px; background: #fff; z-index: 10; border-bottom: 1px solid #eee; }
         .btn-purchase { background: var(--text-dark); color: white; width: 100%; padding: 12px; border-radius: 12px; font-weight: 800; border: none; cursor: pointer; font-size: 0.9rem; }
 
-        .balance-card { margin: 15px; padding: 20px; background: var(--opay-gradient); border-radius: 20px; color: white; }
-        .main-scroll { flex: 1; overflow-y: auto; padding: 10px 15px; padding-bottom: 100px; }
+        /* Readiness Tracker Styles */
+        .readiness-card { margin: 15px 15px 5px 15px; padding: 15px; background: white; border-radius: 20px; border: 1px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .readiness-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+        #readiness-status { font-size: 0.7rem; font-weight: 800; padding: 4px 10px; border-radius: 12px; text-transform: uppercase; }
+        .progress-container { width: 100%; height: 8px; background: #f0f0f0; border-radius: 10px; overflow: hidden; }
+        #readiness-bar { height: 100%; width: 0%; transition: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 
-        /* Categorized Headers */
+        .balance-card { margin: 10px 15px; padding: 20px; background: var(--opay-gradient); border-radius: 20px; color: white; }
+        .main-scroll { flex: 1; overflow-y: auto; padding: 10px 15px; padding-bottom: 120px; }
+
         .dept-header { font-size: 0.75rem; font-weight: 800; color: var(--opay-purple); margin: 20px 0 10px 5px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Subject Cards */
         .topic-card { background: white; border-radius: 18px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eee; }
         .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
         .subject-title { font-size: 0.95rem; font-weight: 800; color: var(--text-dark); }
         .rating { color: var(--warning); font-size: 0.7rem; margin-top: 2px; }
-        
         .subject-desc { font-size: 0.7rem; color: #777; line-height: 1.4; margin-bottom: 12px; }
 
         .cta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
@@ -48,9 +52,19 @@
 
         .btn-main { background: var(--opay-green); color: white; width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; }
 
+        .fab-pill {
+            position: absolute; bottom: 85px; right: 20px; 
+            padding: 12px 24px; background: var(--opay-purple); 
+            color: white; border-radius: 30px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 8px 25px rgba(75, 68, 224, 0.4); border: none;
+            cursor: pointer; z-index: 50; font-size: 0.85rem; font-weight: 800; transition: 0.3s;
+        }
+
         .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.92); display: none; z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
-        .modal-content { background: white; width: 90%; border-radius: 25px; padding: 25px; }
-        
+        .modal-content { background: white; width: 92%; border-radius: 25px; padding: 20px; position: relative; }
+        iframe { width: 100%; height: 450px; border-radius: 15px; overflow: hidden; border: 1px solid #eee; }
+
         #timer-display { font-size: 1.8rem; font-weight: 800; color: var(--danger); text-align: center; margin: 15px 0; }
         input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; outline: none; }
         #pin-input { text-align: center; font-size: 1.5rem; letter-spacing: 10px; margin-top: 10px; }
@@ -67,26 +81,49 @@
     </header>
 
     <div class="sticky-action">
-        <button class="btn-purchase" onclick="alert('Redirecting...')">💳 PURCHASE LESSON PIN</button>
+        <button class="btn-purchase" onclick="alert('Contacting Admin...')">💳 PURCHASE LESSON PIN</button>
+    </div>
+
+    <div class="readiness-card">
+        <div class="readiness-header">
+            <span style="font-weight:800; font-size:0.8rem; color:var(--text-dark)">Exam Readiness</span>
+            <span id="readiness-status">Critical</span>
+        </div>
+        <div class="progress-container">
+            <div id="readiness-bar"></div>
+        </div>
+        <div style="margin-top:8px; font-size:0.65rem; color:#888; text-align:right;" id="readiness-text">0/8 Topics Done</div>
     </div>
 
     <div class="balance-card">
-        <small>Virtual Wallet Balance</small>
+        <small>Practice PIN left:</small>
         <h2 id="wallet-display">₦2,000.00</h2>
-        <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 10px; margin-top: 10px;">
-            <div id="usage-bar" style="width: 0%; height: 100%; background: white; border-radius: 10px;"></div>
+        <div class="progress-container" style="background: rgba(255,255,255,0.2); margin-top: 10px; height: 4px;">
+            <div id="usage-bar" style="width: 100%; height: 100%; background: white;"></div>
         </div>
     </div>
 
     <div class="main-scroll" id="topicsContainer"></div>
 
+    <button class="fab-pill" onclick="openAddExam()">+ ADD EXAM</button>
+
+    <div id="exam-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <h4 style="color:var(--opay-purple)">Add Exam Record</h4>
+                <button onclick="closeModals()" style="background:none; border:none; font-size:1.5rem; color:#888;">&times;</button>
+            </div>
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScdS2JUmJlU9Vrbi7R4rSeVq1PHw0m4xCukRoFzPejzChxo4g/viewform?embedded=true"></iframe>
+        </div>
+    </div>
+
     <div id="task-modal" class="modal-overlay">
         <div class="modal-content">
             <h3 id="task-name">Submission</h3>
-            <div id="timer-display">24:00:00</div>
-            <input type="email" id="student-email" placeholder="Student Email" required>
+            <div id="timer-display">23:59:59</div>
+            <input type="email" id="student-email" placeholder="Enter Registered Email" required>
             <button class="btn-main" onclick="requestPin()">📤 Finalize Assignment</button>
-            <center><p onclick="closeModals()" style="margin-top:15px; font-size:0.75rem; cursor:pointer;">Cancel</p></center>
+            <center><p onclick="closeModals()" style="margin-top:15px; font-size:0.75rem; cursor:pointer; color:#888;">Cancel</p></center>
         </div>
     </div>
 
@@ -100,7 +137,7 @@
 
     <nav>
         <a href="#">🏠</a>
-        <a href="#" class="active">📚</a>
+        <a href="#" class="active" style="color:var(--opay-purple)">📚</a>
         <a href="#" onclick="resetAll()">🔄</a>
     </nav>
 </div>
@@ -113,27 +150,44 @@
 
     const subjects = [
         { dept: "Core Subjects", list: [
-            { id: 1, title: "Mathematics", desc: "Algebra, Calculus, and Trigonometry fundamentals.", rate: "⭐⭐⭐⭐⭐" },
-            { id: 2, title: "English Language", desc: "Grammar, Oral English, and Creative Writing.", rate: "⭐⭐⭐⭐⭐" },
-            { id: 3, title: "Civic Education", desc: "Rights, duties, and social responsibilities.", rate: "⭐⭐⭐" }
+            { id: 1, title: "Mathematics", desc: "Advanced algebraic solutions.", rate: "⭐⭐⭐⭐⭐" },
+            { id: 2, title: "English Language", desc: "Lexis, structures, and essays.", rate: "⭐⭐⭐⭐⭐" },
+            { id: 3, title: "Civic Education", desc: "Constitutional and social law.", rate: "⭐⭐⭐" }
         ]},
-        { dept: "Science Department", list: [
-            { id: 4, title: "Physics", desc: "Mechanics, Optics, and Nuclear Physics.", rate: "⭐⭐⭐⭐" },
-            { id: 5, title: "Chemistry", desc: "Organic chemistry and stoichiometry.", rate: "⭐⭐⭐⭐" },
-            { id: 6, title: "Biology", desc: "Genetics, Ecology, and Human Anatomy.", rate: "⭐⭐⭐⭐" },
-            { id: 7, title: "Further Mathematics", desc: "Advanced logic and coordinate geometry.", rate: "⭐⭐⭐⭐⭐" }
+        { dept: "Science", list: [
+            { id: 4, title: "Physics", desc: "Fields, Forces and Energy.", rate: "⭐⭐⭐⭐" },
+            { id: 5, title: "Chemistry", desc: "Periodicity and Kinetics.", rate: "⭐⭐⭐⭐" },
+            { id: 6, title: "Biology", desc: "Metabolism and Reproduction.", rate: "⭐⭐⭐⭐" }
         ]},
-        { dept: "Commercial Department", list: [
-            { id: 8, title: "Financial Accounting", desc: "Ledgers, balance sheets, and audit basics.", rate: "⭐⭐⭐⭐" },
-            { id: 9, title: "Economics", desc: "Demand, supply, and macro-economics.", rate: "⭐⭐⭐⭐" },
-            { id: 10, title: "Commerce", desc: "Trade, banking, and insurance systems.", rate: "⭐⭐⭐" }
-        ]},
-        { dept: "Arts Department", list: [
-            { id: 11, title: "Literature-in-English", desc: "Drama, prose, and poetry analysis.", rate: "⭐⭐⭐⭐" },
-            { id: 12, title: "Government", desc: "Political systems and constitutions.", rate: "⭐⭐⭐⭐" },
-            { id: 13, title: "Christian Rel. Studies", desc: "Biblical history and ethical teachings.", rate: "⭐⭐⭐" }
-        ]}
+        { dept: "Art / Commercial", list: [
+            { id: 7, title: "Economics", desc: "Markets and Elasticity.", rate: "⭐⭐⭐⭐" },
+            { id: 8, title: "Government", desc: "Nationalism and Power.", rate: "⭐⭐⭐⭐" }
+        ] }
     ];
+
+    function updateReadiness() {
+        let total = 0;
+        let completed = 0;
+        subjects.forEach(cat => cat.list.forEach(s => {
+            total++;
+            if(localStorage.getItem(`topic_${s.id}_done`)) completed++;
+        }));
+
+        const percent = Math.round((completed / total) * 100);
+        const bar = document.getElementById('readiness-bar');
+        const status = document.getElementById('readiness-status');
+        
+        bar.style.width = percent + '%';
+        document.getElementById('readiness-text').innerText = `${completed} / ${total} Topics Completed`;
+
+        if (percent <= 25) {
+            status.innerText = 'Critical'; status.style.background = '#ffebeb'; status.style.color = '#ff4d4d'; bar.style.background = '#ff4d4d';
+        } else if (percent <= 75) {
+            status.innerText = 'Improving'; status.style.background = '#fff9eb'; status.style.color = '#ffb800'; bar.style.background = '#ffb800';
+        } else {
+            status.innerText = 'Exam Ready'; status.style.background = '#ebfffa'; status.style.color = '#00d28d'; bar.style.background = '#00d28d';
+        }
+    }
 
     function renderTopics() {
         const container = document.getElementById('topicsContainer');
@@ -144,89 +198,66 @@
                 const isDone = localStorage.getItem(`topic_${s.id}_done`);
                 container.innerHTML += `
                     <div class="topic-card">
-                        <div class="card-header">
-                            <div class="subject-title">${s.title}</div>
-                            <div class="rating">${s.rate}</div>
-                        </div>
+                        <div class="card-header"><div class="subject-title">${s.title}</div><div class="rating">${s.rate}</div></div>
                         <div class="subject-desc">${s.desc}</div>
                         <div class="cta-grid">
-                            <button class="btn-cta" onclick="alert('Loading Timetable...')">📅 Timetable</button>
+                            <button class="btn-cta" onclick="alert('Loading...')">📅 Timetable</button>
                             <a href="https://google.com" target="_blank" class="btn-cta">📝 Practice</a>
                         </div>
                         <button class="btn-main" onclick="handleStart(${s.id}, '${s.title}')" 
                                 style="background:${isDone ? '#eee' : '#00d28d'}; color:${isDone ? '#888' : '#fff'}">
                             ${isDone ? '✓ Completed' : 'Start Lesson (-₦200)'}
                         </button>
-                    </div>
-                `;
+                    </div>`;
             });
         });
         updateWalletUI();
+        updateReadiness();
     }
 
     function handleStart(id, title) {
-        if (localStorage.getItem(`topic_${id}_done`)) return alert("Already completed!");
+        if (localStorage.getItem(`topic_${id}_done`)) return;
         if (wallet < 200) return alert("Insufficient Balance!");
-        activeId = id;
-        wallet -= 200;
-        subjectsUnlocked += 1;
-        updateWalletUI();
+        activeId = id; wallet -= 200; subjectsUnlocked += 1; updateWalletUI();
         document.getElementById('task-name').innerText = title;
         document.getElementById('task-modal').style.display = 'flex';
-        startTimer();
     }
 
-    function requestPin() {
+    function openAddExam() { document.getElementById('exam-modal').style.display = 'flex'; }
+    
+    function requestPin() { 
         const email = document.getElementById('student-email').value;
         if (!email.includes('@')) return alert("Enter valid email");
-        if (subjectsUnlocked > 3) {
-            document.getElementById('pin-modal').style.display = 'flex';
-        } else {
-            finalizeSubject();
-        }
+        if (subjectsUnlocked > 3) document.getElementById('pin-modal').style.display = 'flex'; 
+        else finalizeSubject(); 
     }
 
-    function verifyFinalPin() {
-        if (document.getElementById('pin-input').value === "1234") {
-            finalizeSubject();
-        } else {
-            alert("Incorrect PIN!");
-        }
+    function verifyFinalPin() { 
+        if (document.getElementById('pin-input').value === "1234") finalizeSubject(); 
+        else alert("Wrong PIN (1234)"); 
     }
 
-    function finalizeSubject() {
-        localStorage.setItem(`topic_${activeId}_done`, 'true');
-        closeModals();
-        renderTopics();
-        window.open(GOOGLE_FORM_URL, '_blank');
+    function finalizeSubject() { 
+        localStorage.setItem(`topic_${activeId}_done`, 'true'); 
+        closeModals(); 
+        renderTopics(); 
+        window.open(GOOGLE_FORM_URL, '_blank'); 
     }
 
-    function startTimer() {
-        let t = 86400;
-        const display = document.getElementById('timer-display');
-        const itv = setInterval(() => {
-            t--;
-            const h = Math.floor(t/3600).toString().padStart(2,'0');
-            const m = Math.floor((t%3600)/60).toString().padStart(2,'0');
-            const s = (t%60).toString().padStart(2,'0');
-            display.innerText = `${h}:${m}:${s}`;
-            if (document.getElementById('task-modal').style.display === 'none') clearInterval(itv);
-        }, 1000);
-    }
-
-    function updateWalletUI() {
-        document.getElementById('wallet-display').innerText = `₦${wallet.toLocaleString()}.00`;
+    function updateWalletUI() { 
+        document.getElementById('wallet-display').innerText = `₦${wallet.toLocaleString()}.00`; 
+        document.getElementById('usage-bar').style.width = (wallet/2000*100)+'%'; 
         localStorage.setItem('wallet_bal', wallet);
         localStorage.setItem('unlocked_count', subjectsUnlocked);
-        document.getElementById('usage-bar').style.width = (wallet / 2000 * 100) + '%';
     }
 
-    function closeModals() {
-        document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
-        document.getElementById('pin-input').value = "";
+    function closeModals() { 
+        document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); 
+        document.getElementById('pin-input').value = ""; 
     }
 
-    function resetAll() { if(confirm("Reset all?")) { localStorage.clear(); location.reload(); } }
+    function resetAll() { if(confirm("Clear all?")) { localStorage.clear(); location.reload(); } }
+    
     window.onload = renderTopics;
 </script>
 </body>
