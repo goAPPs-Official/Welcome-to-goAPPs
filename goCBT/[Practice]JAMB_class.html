@@ -26,70 +26,32 @@
 
         header { padding: 20px; background: white; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; }
         
+        .stats-badges { display: flex; gap: 8px; align-items: center; }
+        .badge { font-size: 0.65rem; font-weight: 800; padding: 5px 10px; border-radius: 20px; cursor: pointer; }
+        .rank-badge { background: #e6fcf5; color: var(--opay-green); }
+        .streak-badge { background: #fff5f5; color: var(--danger); border: 1px solid #ffe3e3; }
+
         .search-wrapper { padding: 10px 15px; background: white; border-bottom: 1px solid #eee; }
-        #topicSearch { 
-            width: 100%; padding: 12px 15px; border-radius: 12px; border: 1px solid #ddd; 
-            font-size: 0.85rem; outline: none;
-        }
+        #topicSearch { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; outline: none; font-size: 0.85rem; }
 
         .balance-card { margin: 15px; padding: 20px; background: var(--opay-gradient); border-radius: 20px; color: white; box-shadow: 0 10px 20px rgba(0,210,141,0.2); }
         .main-scroll { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 100px; scroll-behavior: smooth; }
 
-        .topic-card { 
-            background: white; border-radius: 18px; padding: 15px; margin-bottom: 15px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eee; position: relative;
-        }
+        .topic-card { background: white; border-radius: 18px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eee; }
         .topic-card.locked { opacity: 0.5; filter: grayscale(1); pointer-events: none; }
 
-        /* Next Level Card */
-        .next-level-card {
-            background: #fff; border: 2px dashed var(--opay-purple); border-radius: 18px;
-            padding: 30px 20px; text-align: center; margin-top: 20px; display: none;
-        }
-
-        /* Custom Audio Player */
-        .custom-audio-wrapper {
-            background: #f1f3f9; padding: 10px; border-radius: 12px;
-            display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
-        }
-        .play-btn {
-            width: 35px; height: 35px; border-radius: 50%; background: var(--opay-purple);
-            border: none; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center;
-        }
-        .audio-progress-container { flex-grow: 1; height: 6px; background: #ddd; border-radius: 10px; position: relative; overflow: hidden; }
-        .audio-progress-bar { position: absolute; left: 0; top: 0; height: 100%; background: var(--opay-green); width: 0%; transition: width 0.1s linear; }
-        .time-display { font-size: 0.65rem; color: var(--text-light); font-weight: 600; min-width: 30px; }
-
-        /* Accordion */
-        .assessment-section { border-top: 1px dashed #ddd; margin-top: 15px; padding-top: 10px; }
-        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; }
-        .accordion-content.open { max-height: 100px; }
-        .accordion-trigger { 
-            width: 100%; text-align: left; background: none; border: none; 
-            color: var(--opay-purple); font-weight: 800; font-size: 0.75rem; cursor: pointer;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-
-        /* Pulsating Timer */
-        #timer-display { 
-            font-size: 1.8rem; font-weight: 800; color: var(--danger); 
-            background: #fff0f0; padding: 15px; border-radius: 15px; 
-            margin: 15px 0; text-align: center;
-            animation: pulse 1s infinite alternate;
-        }
-        @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.05); } }
-
-        .btn { padding: 12px; border-radius: 10px; border: none; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s; }
-        .btn-video { background: var(--text-dark); color: white; width: 100%; }
+        .btn { padding: 12px; border-radius: 10px; border: none; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s; width: 100%; }
+        .btn-video { background: var(--text-dark); color: white; }
         .btn-task { background: var(--opay-green); color: white; }
 
-        .modal-overlay { 
-            position: absolute; inset: 0; background: rgba(0,0,0,0.92); 
-            display: none; z-index: 1000; align-items: center; justify-content: center; 
-            backdrop-filter: blur(8px);
-        }
+        .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.92); display: none; z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
         .modal-content { background: white; width: 92%; border-radius: 25px; padding: 20px; position: relative; max-height: 90%; overflow-y: auto; }
-        .form-iframe { width: 100%; height: 500px; border: none; border-radius: 15px; background: white; }
+        
+        #timer-display { font-size: 1.8rem; font-weight: 800; color: var(--danger); background: #fff0f0; padding: 15px; border-radius: 15px; margin: 15px 0; text-align: center; animation: pulse 1s infinite alternate; }
+        @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.05); } }
+
+        .leader-item { display: flex; justify-content: space-between; padding: 12px; border-radius: 12px; margin-bottom: 8px; background: #f8f9fa; font-size: 0.8rem; }
+        .leader-item.me { background: #e6fcf5; border: 1px solid var(--opay-green); }
 
         nav { position: absolute; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #eee; }
         .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; margin: 0 auto; }
@@ -101,7 +63,10 @@
 <div class="phone-container">
     <header>
         <div style="font-weight: 800; color: var(--opay-purple); font-size: 1.1rem;">🎓 goCBT CLASS</div>
-        <div style="font-size: 0.7rem; font-weight: 800; background: #e6fcf5; color: var(--opay-green); padding: 5px 10px; border-radius: 20px;">Rank #4</div>
+        <div class="stats-badges">
+            <div id="streak-badge" class="badge streak-badge">🔥 0 Days</div>
+            <div id="rank-badge" class="badge rank-badge" onclick="openLeaderboard()">Rank #--</div>
+        </div>
     </header>
 
     <div class="search-wrapper">
@@ -110,8 +75,8 @@
 
     <div class="balance-card">
         <small style="opacity: 0.9;">JAMB PREPARATORY CLASS</small>
-        <h5>⏳Readiness Tracker</h5>
-        <h3 id="progress-text">🏆0% Completed</h3>
+        <h5 style="margin-top:5px;">⏳ Readiness Tracker</h5>
+        <h3 id="progress-text">🏆 0% Completed</h3>
         <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 10px; margin-top: 5px;">
             <div id="global-progress" style="width: 0%; height: 100%; background: white; border-radius: 10px; transition: 1s;"></div>
         </div>
@@ -119,26 +84,45 @@
 
     <div class="main-scroll" id="topicsContainer"></div>
 
-    <div id="video-modal" class="modal-overlay"><div class="modal-content" style="background:#000; padding:0; overflow:hidden;"><iframe id="video-player" width="100%" height="220" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><div style="padding:15px;"><button onclick="triggerTaskFromVideo()" class="btn btn-task" style="width:100%">Submit Task</button></div></div></div>
+    <div id="video-modal" class="modal-overlay">
+        <div class="modal-content" style="background:#000; padding:0; overflow:hidden;">
+            <iframe id="video-player" width="100%" height="220" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+            <div style="padding:15px;"><button onclick="triggerTaskFromVideo()" class="btn btn-task">Submit Task</button></div>
+        </div>
+    </div>
     
     <div id="task-modal" class="modal-overlay">
         <div class="modal-content">
-            <h3 id="task-name">Task Submission</h3>
+            <h3 id="task-name">Submit Assignment</h3>
             <div id="timer-display">24:00:00</div>
-            <button onclick="finalSubmit(this)" class="btn btn-task" style="width: 100%; height: 50px;">
-                <span class="btn-text">📤Submit Assignment</span>
-                <div class="spinner"></div>
-            </button>
+            <form id="submissionForm" action="https://formspree.io/f/YOUR_ID_HERE" method="POST">
+                <input type="hidden" name="Subject" id="hiddenTopic">
+                <input type="email" name="email" placeholder="Your Student Email" required style="width:100%; padding:12px; margin-bottom:15px; border-radius:10px; border:1px solid #ddd;">
+                <button type="submit" class="btn btn-task" id="submitBtn">
+                    <span class="btn-text">📤 Submit to Teacher's Drive</span>
+                    <div class="spinner"></div>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="leaderboard-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom:15px;">
+                <h3>🏆 Live Rankings</h3>
+                <button onclick="closeModals()" style="background:none; border:none; font-size:1.5rem;">&times;</button>
+            </div>
+            <div id="leaderboard-list"></div>
         </div>
     </div>
 
     <div id="form-modal" class="modal-overlay">
         <div class="modal-content">
             <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <b>Lesson Assessment</b>
+                <b>Exam Portal</b>
                 <button onclick="closeModals()" style="background:none; border:none; font-size:1.5rem;">&times;</button>
             </div>
-            <iframe id="form-iframe" class="form-iframe" src=""></iframe>
+            <iframe id="form-iframe" style="width:100%; height:500px; border:none;" src=""></iframe>
         </div>
     </div>
 
@@ -150,100 +134,76 @@
 </div>
 
 <script>
-    // YOUR GOOGLE FORM LINK
     const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScdS2JUmJlU9Vrbi7R4rSeVq1PHw0m4xCukRoFzPejzChxo4g/viewform?embedded=true";
-    
-    // Audio Effect Links
-    const COMPLETE_SOUND = "https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3"; // Level Up Sound
+    const COMPLETE_SOUND = "https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3";
 
-    function getDirectDriveLink(url) {
-        if (url.includes('drive.google.com')) {
-            const fileId = url.split('/d/')[1]?.split('/')[0];
-            return `https://drive.google.com/uc?export=download&id=${fileId}`;
-        }
-        return url;
-    }
+    const competitors = [
+        { name: "Adebayo R.", status: 15 },
+        { name: "Chidi O.", status: 12 },
+        { name: "Blessing W.", status: 9 },
+        { name: "Musa A.", status: 4 }
+    ];
 
     const topics = [
-        { id: 1, title: "What is a Computer?", vid: "Cu3R5it4cQs", aud: "https://drive.google.com/file/d/1ksav6wtfi2-JDKTepa9pvG2SIqQTVFPs/view" },
-        { id: 2, title: "Hardware vs Software", vid: "HB4I2CgkcCo", aud: "https://drive.google.com/file/d/11bGtbAWOUoTf52MsuQXz7u_KVXtY2hGo/view" },
-        { id: 3, title: "Input Devices", vid: "mLgTnkw558w", aud: "https://drive.google.com/file/d/1XcVG92X-L64_mgZdIwvOGtFM_THV5yQq/view" },
-        { id: 4, title: "Output Devices", vid: "4y2v7Y7T9oY", aud: "" },
-        { id: 5, title: "The CPU Core", vid: "HB4I2CgkcCo", aud: "" },
-        { id: 6, title: "Memory & Storage", vid: "6YV_vKnd9q0", aud: "" },
-        { id: 7, title: "Operating Systems", vid: "pT7V_D_0Usc", aud: "" },
-        { id: 8, title: "Web Navigation", vid: "hXU02R7m9_k", aud: "" },
-        { id: 9, title: "Cyber Security", vid: "yvH_k-D_S_k", aud: "" },
-        { id: 10, title: "Cloud Computing", vid: "uH-SscXp_P8", aud: "" },
-        { id: 11, title: "Data Privacy", vid: "6O8X_9vS_q8", aud: "" },
-        { id: 12, title: "Social Media Safety", vid: "mYm-S_K0-X4", aud: "" },
-        { id: 13, title: "Digital Footprint", vid: "ottnH427as8", aud: "" },
-        { id: 14, title: "Binary Basics", vid: "CxGSnA-RTsA", aud: "" },
-        { id: 15, title: "AI Introduction", vid: "5p248yoa3oE", aud: "" },
-        { id: 16, title: "Final Tech Review", vid: "8fCQ_ZuL2TY", aud: "" }
+        { id: 1, title: "Mathematics Core", db: "Mathematics_Core_Final_DB_Archive_Feb26", vid: "Cu3R5it4cQs" },
+        { id: 2, title: "English Language", db: "English_Language_Final_DB_Archive_QB_Feb26", vid: "HB4I2CgkcCo" },
+        { id: 3, title: "Physics Mastery", db: "Physics_Final_db_qb_Feb26", vid: "mLgTnkw558w" },
+        { id: 4, title: "Chemistry Hub", db: "Chemistry_Final_DB_Archive_QBank_Feb26", vid: "4y2v7Y7T9oY" },
+        { id: 5, title: "Biology Archive", db: "Biology_Final_DB_Archive_QBank_Feb26", vid: "HB4I2CgkcCo" },
+        { id: 6, title: "Memory & Storage", vid: "6YV_vKnd9q0" },
+        { id: 7, title: "Operating Systems", vid: "pT7V_D_0Usc" },
+        { id: 8, title: "Web Navigation", vid: "hXU02R7m9_k" },
+        { id: 9, title: "Cyber Security", vid: "yvH_k-D_S_k" },
+        { id: 10, title: "Cloud Computing", vid: "uH-SscXp_P8" },
+        { id: 11, title: "Data Privacy", vid: "6O8X_9vS_q8" },
+        { id: 12, title: "Social Media Safety", vid: "mYm-S_K0-X4" },
+        { id: 13, title: "Digital Footprint", vid: "ottnH427as8" },
+        { id: 14, title: "Binary Basics", vid: "CxGSnA-RTsA" },
+        { id: 15, title: "AI Introduction", vid: "5p248yoa3oE" },
+        { id: 16, title: "Final Tech Review", vid: "8fCQ_ZuL2TY" }
     ];
 
     let activeTopicId = null;
     let countdownInterval = null;
 
+    function checkStreak() {
+        const last = localStorage.getItem('last_study');
+        const today = new Date().toDateString();
+        let streak = parseInt(localStorage.getItem('user_streak') || '0');
+        if (last && last !== today) {
+            const diff = (new Date(today) - new Date(last)) / 86400000;
+            streak = diff === 1 ? streak + 1 : 1;
+        } else if (!last) streak = 1;
+        localStorage.setItem('last_study', today);
+        localStorage.setItem('user_streak', streak);
+        document.getElementById('streak-badge').innerText = `🔥 ${streak} Days`;
+    }
+
     function renderTopics() {
         const query = document.getElementById('topicSearch').value.toLowerCase();
         const container = document.getElementById('topicsContainer');
         container.innerHTML = '';
-        
         topics.forEach((t, index) => {
             if (!t.title.toLowerCase().includes(query)) return;
-            const isFinished = localStorage.getItem(`topic_${t.id}_done`);
-            const isPrevDone = index === 0 || localStorage.getItem(`topic_${topics[index-1].id}_done`);
-            const card = document.createElement('div');
-            card.className = `topic-card ${!isPrevDone ? 'locked' : ''}`;
-            
-            card.innerHTML = `
-                <div style="padding:15px;">
-                    <b style="display:block; margin-bottom:10px;">${index + 1}. ${t.title}</b>
-                    <div class="btn-row">
+            const isDone = localStorage.getItem(`topic_${t.id}_done`);
+            const isLocked = index !== 0 && !localStorage.getItem(`topic_${topics[index-1].id}_done`);
+            container.innerHTML += `
+                <div class="topic-card ${isLocked ? 'locked' : ''}">
+                    <b style="font-size:0.9rem;">${index+1}. ${t.title}</b>
+                    <div style="margin-top:10px;">
                         <button class="btn btn-video" onclick="openVideo('${t.vid}', ${t.id}, '${t.title}')">
-                            ${isFinished ? 'Review Lesson' : 'Start Lesson'}
+                            ${isDone ? 'Review Lesson' : 'Start Lesson'}
                         </button>
                     </div>
-                    ${isFinished ? `
-                        <div class="assessment-section">
-                            <button class="accordion-trigger" onclick="this.nextElementSibling.classList.toggle('open')">
-                                📝 Assessment Ready <span>▼</span>
-                            </button>
-                            <div class="accordion-content">
-                                <button class="btn btn-task" style="width:100%; margin-top:10px;" onclick="openForm()">Take this Exam</button>
-                            </div>
-                        </div>
-                    ` : ''}
+                    ${isDone ? `<div class="assessment-section"><button class="btn btn-task" style="margin-top:10px" onclick="openForm()">Take this Exam</button></div>` : ''}
                 </div>
             `;
-            container.appendChild(card);
         });
-
-        // Add Next Level Card
-        const doneCount = topics.filter(t => localStorage.getItem(`topic_${t.id}_done`)).length;
-        if (doneCount === topics.length) {
-            const nextLevel = document.createElement('div');
-            nextLevel.className = 'next-level-card';
-            nextLevel.style.display = 'block';
-            nextLevel.innerHTML = `
-                <h2 style="color:var(--opay-purple)">🏆 Level 1 Complete!</h2>
-                <p style="font-size:0.8rem; margin:10px 0; color:#666">You've mastered the basics. Ready for Level 2?</p>
-                <button class="btn btn-task" onclick="alert('Level 2 coming soon!')">Unlock Next Level</button>
-            `;
-            container.appendChild(nextLevel);
-        }
-        updateProgressUI();
-    }
-
-    function playSuccessSound() {
-        const audio = new Audio(COMPLETE_SOUND);
-        audio.play();
+        updateUI();
     }
 
     function openVideo(vid, id, title) {
-        activeTopicId = id;
+        activeTopicId = id; document.getElementById('hiddenTopic').value = title;
         document.getElementById('video-player').src = `https://www.youtube.com/embed/${vid}?autoplay=1`;
         document.getElementById('video-modal').style.display = 'flex';
     }
@@ -251,53 +211,58 @@
     function triggerTaskFromVideo() {
         document.getElementById('video-modal').style.display = 'none';
         document.getElementById('task-modal').style.display = 'flex';
-        startCountdown();
-    }
-
-    function startCountdown() {
-        let timeLeft = 86400; 
+        let time = 86400;
         clearInterval(countdownInterval);
         countdownInterval = setInterval(() => {
-            timeLeft--;
-            const h = Math.floor(timeLeft/3600).toString().padStart(2,'0');
-            const m = Math.floor((timeLeft%3600)/60).toString().padStart(2,'0');
-            const s = (timeLeft%60).toString().padStart(2,'0');
+            time--;
+            const h = Math.floor(time/3600).toString().padStart(2,'0');
+            const m = Math.floor((time%3600)/60).toString().padStart(2,'0');
+            const s = (time%60).toString().padStart(2,'0');
             document.getElementById('timer-display').innerText = `${h}:${m}:${s}`;
         }, 1000);
     }
 
-    function finalSubmit(btn) {
+    document.getElementById('submissionForm').onsubmit = function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        btn.querySelector('.btn-text').style.display = 'none';
         btn.querySelector('.spinner').style.display = 'block';
-        localStorage.setItem(`topic_${activeTopicId}_done`, 'true');
-        playSuccessSound();
-        setTimeout(() => {
-            clearInterval(countdownInterval);
-            closeModals();
-            renderTopics();
-            openForm();
-        }, 1500);
+
+        fetch(e.target.action, { method: 'POST', body: new FormData(e.target), headers: {'Accept': 'application/json'} })
+        .then(() => {
+            localStorage.setItem(`topic_${activeTopicId}_done`, 'true');
+            new Audio(COMPLETE_SOUND).play();
+            closeModals(); renderTopics(); openForm();
+        }).finally(() => {
+            btn.querySelector('.btn-text').style.display = 'block';
+            btn.querySelector('.spinner').style.display = 'none';
+        });
+    };
+
+    function openLeaderboard() {
+        const list = document.getElementById('leaderboard-list');
+        const done = topics.filter(t => localStorage.getItem(`topic_${t.id}_done`)).length;
+        list.innerHTML = '';
+        const all = [...competitors, { name: "You (Student)", status: done, isMe: true }].sort((a,b) => b.status - a.status);
+        all.forEach((p, i) => {
+            list.innerHTML += `<div class="leader-item ${p.isMe?'me':''}"><span>#${i+1} ${p.name}</span><span>${p.status}/16</span></div>`;
+        });
+        document.getElementById('leaderboard-modal').style.display = 'flex';
     }
 
-    function openForm() {
-        document.getElementById('form-iframe').src = GOOGLE_FORM_URL;
-        document.getElementById('form-modal').style.display = 'flex';
-    }
-
-    function closeModals() {
-        document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
-        document.getElementById('video-player').src = "";
-    }
-
-    function updateProgressUI() {
-        const doneCount = topics.filter(t => localStorage.getItem(`topic_${t.id}_done`)).length;
-        const pct = Math.round((doneCount / topics.length) * 100);
+    function openForm() { document.getElementById('form-iframe').src = GOOGLE_FORM_URL; document.getElementById('form-modal').style.display = 'flex'; }
+    function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); document.getElementById('video-player').src = ""; }
+    function updateUI() {
+        const done = topics.filter(t => localStorage.getItem(`topic_${t.id}_done`)).length;
+        const pct = Math.round((done / 16) * 100);
         document.getElementById('global-progress').style.width = pct + '%';
-        document.getElementById('progress-text').innerText = pct + '% Completed';
+        document.getElementById('progress-text').innerText = `🏆 ${pct}% Completed`;
+        let rank = done >= 16 ? 1 : done >= 12 ? 2 : done >= 8 ? 3 : 4;
+        document.getElementById('rank-badge').innerText = `Rank #${rank}`;
     }
 
-    function resetAll() { if(confirm("Clear progress?")) { localStorage.clear(); renderTopics(); } }
-    window.onload = renderTopics;
+    function resetAll() { if(confirm("Reset progress?")) { localStorage.clear(); location.reload(); } }
+    window.onload = () => { checkStreak(); renderTopics(); };
 </script>
 </body>
 </html>
-
