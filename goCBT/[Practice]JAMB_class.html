@@ -10,136 +10,190 @@
             --opay-green: #00d28d;
             --opay-purple: #4b44e0;
             --opay-gradient: linear-gradient(135deg, #00d28d 0%, #4b44e0 100%);
-            --text-dark: #333;
-            --bg-dark: #121212;
             --danger: #ff4d4d;
             --warning: #ffb800;
+            
+            /* Light Theme Variables */
+            --bg-body: #121212;
+            --bg-app: #f8f9fa;
+            --bg-card: #ffffff;
+            --text-main: #333333;
+            --text-sub: #777777;
+            --border-color: #eeeeee;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--bg-dark); display: flex; justify-content: center; min-height: 100vh; }
+        /* Dark Mode Class */
+        body.dark-mode {
+            --bg-app: #1a1a1a;
+            --bg-card: #252525;
+            --text-main: #ffffff;
+            --text-sub: #aaaaaa;
+            --border-color: #333333;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; transition: background 0.3s, color 0.3s; }
+        body { background-color: var(--bg-body); display: flex; justify-content: center; min-height: 100vh; }
 
         .phone-container {
-            width: 375px; height: 812px; background: #f8f9fa; border-radius: 40px;
+            width: 375px; height: 812px; background: var(--bg-app); border-radius: 40px;
             overflow: hidden; position: relative; border: 8px solid #333; display: flex; flex-direction: column;
         }
 
-        header { padding: 15px 20px; background: white; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; }
+        header { padding: 15px 20px; background: var(--bg-card); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
         
-        .sticky-action { padding: 10px 15px; background: #fff; z-index: 10; border-bottom: 1px solid #eee; }
-        .btn-purchase { background: var(--text-dark); color: white; width: 100%; padding: 12px; border-radius: 12px; font-weight: 800; border: none; cursor: pointer; font-size: 0.9rem; }
+        .sticky-action { padding: 12px 15px; background: var(--bg-card); z-index: 10; border-bottom: 1px solid var(--border-color); display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        
+        .btn-purchase { 
+            background: var(--text-main); color: var(--bg-card); padding: 12px; 
+            border-radius: 12px; font-weight: 800; border: none; cursor: pointer; 
+            font-size: 0.75rem; text-decoration: none; display: block; text-align: center;
+        }
 
-        /* Readiness Tracker Styles */
-        .readiness-card { margin: 15px 15px 5px 15px; padding: 15px; background: white; border-radius: 20px; border: 1px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-        .readiness-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        #readiness-status { font-size: 0.7rem; font-weight: 800; padding: 4px 10px; border-radius: 12px; text-transform: uppercase; }
-        .progress-container { width: 100%; height: 8px; background: #f0f0f0; border-radius: 10px; overflow: hidden; }
-        #readiness-bar { height: 100%; width: 0%; transition: 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .btn-verify {
+            background: transparent; color: var(--opay-purple); padding: 10px;
+            border-radius: 12px; font-weight: 800; border: 2px solid var(--opay-purple);
+            cursor: pointer; font-size: 0.75rem; text-align: center; text-decoration: none;
+            display: flex; align-items: center; justify-content: center;
+        }
 
+        /* Wallet Card with Topup */
         .balance-card { margin: 10px 15px; padding: 20px; background: var(--opay-gradient); border-radius: 20px; color: white; }
-        .main-scroll { flex: 1; overflow-y: auto; padding: 10px 15px; padding-bottom: 120px; }
+        .balance-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .btn-topup-action { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 6px 12px; border-radius: 8px; font-size: 0.65rem; font-weight: 800; cursor: pointer; }
+        .btn-topup-action:hover { background: white; color: var(--opay-purple); }
 
+        /* Readiness Tracker */
+        .readiness-card { margin: 15px 15px 5px 15px; padding: 15px; background: var(--bg-card); border-radius: 20px; border: 1px solid var(--border-color); box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .readiness-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; color: var(--text-main); }
+        #readiness-status { font-size: 0.7rem; font-weight: 800; padding: 4px 10px; border-radius: 12px; text-transform: uppercase; }
+        .progress-container { width: 100%; height: 8px; background: rgba(128,128,128,0.1); border-radius: 10px; overflow: hidden; }
+        #readiness-bar { height: 100%; width: 0%; transition: 0.8s; }
+
+        .main-scroll { flex: 1; overflow-y: auto; padding: 10px 15px; padding-bottom: 120px; }
         .dept-header { font-size: 0.75rem; font-weight: 800; color: var(--opay-purple); margin: 20px 0 10px 5px; text-transform: uppercase; letter-spacing: 1px; }
 
-        .topic-card { background: white; border-radius: 18px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eee; }
+        .topic-card { background: var(--bg-card); border-radius: 18px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid var(--border-color); }
         .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
-        .subject-title { font-size: 0.95rem; font-weight: 800; color: var(--text-dark); }
+        .subject-title { font-size: 0.95rem; font-weight: 800; color: var(--text-main); }
         .rating { color: var(--warning); font-size: 0.7rem; margin-top: 2px; }
-        .subject-desc { font-size: 0.7rem; color: #777; line-height: 1.4; margin-bottom: 12px; }
+        .subject-desc { font-size: 0.7rem; color: var(--text-sub); line-height: 1.4; margin-bottom: 12px; }
 
         .cta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-        .btn-cta { padding: 10px; border-radius: 8px; border: 1px solid #eee; font-size: 0.7rem; font-weight: 700; cursor: pointer; background: #f9f9f9; text-decoration: none; color: inherit; text-align: center; }
+        .btn-cta { padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.7rem; font-weight: 700; cursor: pointer; background: rgba(128,128,128,0.05); text-decoration: none; color: var(--text-main); text-align: center; }
 
         .btn-main { background: var(--opay-green); color: white; width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; }
 
         .fab-pill {
             position: absolute; bottom: 85px; right: 20px; 
             padding: 12px 24px; background: var(--opay-purple); 
-            color: white; border-radius: 30px;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 8px 25px rgba(75, 68, 224, 0.4); border: none;
-            cursor: pointer; z-index: 50; font-size: 0.85rem; font-weight: 800; transition: 0.3s;
+            color: white; border-radius: 30px; border: none;
+            cursor: pointer; z-index: 50; font-size: 0.85rem; font-weight: 800;
         }
 
         .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.92); display: none; z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
-        .modal-content { background: white; width: 92%; border-radius: 25px; padding: 20px; position: relative; }
-        iframe { width: 100%; height: 450px; border-radius: 15px; overflow: hidden; border: 1px solid #eee; }
+        .modal-content { background: var(--bg-card); width: 92%; border-radius: 25px; padding: 25px; color: var(--text-main); }
+        
+        /* Topup Method Styles */
+        .method-item { display: flex; align-items: center; padding: 15px; background: rgba(128,128,128,0.05); border-radius: 15px; margin-bottom: 10px; cursor: pointer; border: 1px solid var(--border-color); }
+        .method-item:hover { border-color: var(--opay-purple); background: rgba(75, 68, 224, 0.05); }
+        .method-icon { font-size: 1.2rem; margin-right: 15px; }
+        .method-info b { font-size: 0.85rem; display: block; }
+        .method-info span { font-size: 0.65rem; color: var(--text-sub); }
 
-        #timer-display { font-size: 1.8rem; font-weight: 800; color: var(--danger); text-align: center; margin: 15px 0; }
-        input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; outline: none; }
-        #pin-input { text-align: center; font-size: 1.5rem; letter-spacing: 10px; margin-top: 10px; }
-
-        nav { position: absolute; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #eee; }
+        nav { position: absolute; bottom: 0; width: 100%; background: var(--bg-card); display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid var(--border-color); }
+        .theme-toggle { cursor: pointer; font-size: 1.2rem; }
     </style>
 </head>
-<body>
+<body class="light-mode">
 
 <div class="phone-container">
     <header>
         <div style="font-weight: 800; color: var(--opay-purple); font-size: 1.1rem;">🎓 goCBT CLASS</div>
-        <div style="font-size: 0.7rem; font-weight: 800; background: #fff5f5; color: var(--danger); padding: 5px 10px; border-radius: 20px;">🔥 1 Day</div>
+        <div class="theme-toggle" onclick="toggleDarkMode()">🌓</div>
     </header>
 
     <div class="sticky-action">
-        <button class="btn-purchase" onclick="alert('Contacting Admin...')">💳 PURCHASE LESSON PIN</button>
+        <a href="https://wa.me/2348000000000?text=Hello%20Admin,%20I%20want%20to%20purchase%20a%20goCBT%20Lesson%20PIN." target="_blank" class="btn-purchase">💳 BUY PIN</a>
+        <a href="https://wa.me/2348000000000?text=Hello%20Admin,%20I%20have%20made%20a%20payment.%20Here%20is%20my%20proof%20of%20payment%20(screenshot)%20for%20verification." target="_blank" class="btn-verify">📄 VERIFY</a>
     </div>
 
     <div class="readiness-card">
         <div class="readiness-header">
-            <span style="font-weight:800; font-size:0.8rem; color:var(--text-dark)">Exam Readiness</span>
+            <span style="font-weight:800; font-size:0.8rem;">Exam Readiness</span>
             <span id="readiness-status">Critical</span>
         </div>
-        <div class="progress-container">
-            <div id="readiness-bar"></div>
-        </div>
-        <div style="margin-top:8px; font-size:0.65rem; color:#888; text-align:right;" id="readiness-text">0/8 Topics Done</div>
+        <div class="progress-container"><div id="readiness-bar"></div></div>
+        <div style="margin-top:8px; font-size:0.65rem; color:var(--text-sub); text-align:right;" id="readiness-text">0/8 Topics Done</div>
     </div>
 
     <div class="balance-card">
-        <small>Practice PIN left:</small>
-        <h2 id="wallet-display">₦2,000.00</h2>
-        <div class="progress-container" style="background: rgba(255,255,255,0.2); margin-top: 10px; height: 4px;">
+        <div class="balance-header">
+            <div>
+                <small style="opacity:0.9">Practice PIN left:</small>
+                <h2 id="wallet-display" style="margin-top:5px;">₦2,000.00</h2>
+            </div>
+            <button class="btn-topup-action" onclick="openModal('topup-modal')">➕ TOPUP PIN</button>
+        </div>
+        <div class="progress-container" style="background: rgba(255,255,255,0.2); margin-top: 15px; height: 4px;">
             <div id="usage-bar" style="width: 100%; height: 100%; background: white;"></div>
         </div>
     </div>
 
     <div class="main-scroll" id="topicsContainer"></div>
 
-    <button class="fab-pill" onclick="openAddExam()">+ ADD EXAM</button>
+    <button class="fab-pill" onclick="openModal('exam-modal')">+ ADD EXAM</button>
+
+    <div id="topup-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 style="margin-bottom:20px;">Choose Top-up Method</h3>
+            <div class="method-item" onclick="handleTopup('Card')">
+                <span class="method-icon">💳</span>
+                <div class="method-info"><b>Via Card</b><span>Instant topup via secure gateway</span></div>
+            </div>
+            <div class="method-item" onclick="handleTopup('Bank')">
+                <span class="method-icon">🏦</span>
+                <div class="method-info"><b>Via Bank</b><span>Pay directly from your bank app</span></div>
+            </div>
+            <div class="method-item" onclick="handleTopup('Transfer')">
+                <span class="method-icon">📲</span>
+                <div class="method-info"><b>Via Transfer</b><span>Manual transfer to Admin account</span></div>
+            </div>
+            <div class="method-item" onclick="handleTopup('Keychain')">
+                <span class="method-icon">🔑</span>
+                <div class="method-info"><b>Via Keychain</b><span>Redeem pre-paid license key</span></div>
+            </div>
+            <center><p onclick="closeModals()" style="margin-top:15px; font-size:0.75rem; cursor:pointer; color:var(--text-sub);">Cancel</p></center>
+        </div>
+    </div>
 
     <div id="exam-modal" class="modal-overlay">
         <div class="modal-content">
             <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                 <h4 style="color:var(--opay-purple)">Add Exam Record</h4>
-                <button onclick="closeModals()" style="background:none; border:none; font-size:1.5rem; color:#888;">&times;</button>
+                <button onclick="closeModals()" style="background:none; border:none; font-size:1.5rem; color:var(--text-sub);">&times;</button>
             </div>
-            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScdS2JUmJlU9Vrbi7R4rSeVq1PHw0m4xCukRoFzPejzChxo4g/viewform?embedded=true"></iframe>
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScdS2JUmJlU9Vrbi7R4rSeVq1PHw0m4xCukRoFzPejzChxo4g/viewform?embedded=true" style="width:100%; height:450px; border-radius:15px; border:1px solid var(--border-color);"></iframe>
         </div>
     </div>
 
     <div id="task-modal" class="modal-overlay">
         <div class="modal-content">
             <h3 id="task-name">Submission</h3>
-            <div id="timer-display">23:59:59</div>
-            <input type="email" id="student-email" placeholder="Enter Registered Email" required>
+            <input type="email" id="student-email" placeholder="Enter Registered Email" style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--border-color); margin:15px 0; background:rgba(128,128,128,0.05); color:var(--text-main);">
             <button class="btn-main" onclick="requestPin()">📤 Finalize Assignment</button>
-            <center><p onclick="closeModals()" style="margin-top:15px; font-size:0.75rem; cursor:pointer; color:#888;">Cancel</p></center>
+            <center><p onclick="closeModals()" style="margin-top:15px; font-size:0.75rem; cursor:pointer; color:var(--text-sub);">Cancel</p></center>
         </div>
     </div>
 
     <div id="pin-modal" class="modal-overlay">
         <div class="modal-content">
             <h3 style="text-align:center;">Security PIN</h3>
-            <input type="password" id="pin-input" maxlength="4" placeholder="****">
+            <input type="password" id="pin-input" maxlength="4" placeholder="****" style="width:100%; text-align:center; font-size:1.5rem; letter-spacing:10px; margin:15px 0; border:1px solid var(--border-color); border-radius:10px; padding:12px; background:rgba(128,128,128,0.05); color:var(--text-main);">
             <button class="btn-main" onclick="verifyFinalPin()">Confirm & Unlock</button>
         </div>
     </div>
 
-    <nav>
-        <a href="#">🏠</a>
-        <a href="#" class="active" style="color:var(--opay-purple)">📚</a>
-        <a href="#" onclick="resetAll()">🔄</a>
-    </nav>
+    <nav><a href="#">🏠</a><a href="#" class="active" style="color:var(--opay-purple)">📚</a><a href="#" onclick="resetAll()">🔄</a></nav>
 </div>
 
 <script>
@@ -147,6 +201,13 @@
     let wallet = parseInt(localStorage.getItem('wallet_bal') || '2000');
     let subjectsUnlocked = parseInt(localStorage.getItem('unlocked_count') || '0');
     let activeId = null;
+
+    if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    }
 
     const subjects = [
         { dept: "Core Subjects", list: [
@@ -165,28 +226,25 @@
         ] }
     ];
 
+    function handleTopup(method) {
+        alert("Redirecting to " + method + " gateway...");
+        // You can link these to WhatsApp or specific URLs later
+    }
+
     function updateReadiness() {
-        let total = 0;
-        let completed = 0;
+        let total = 0, completed = 0;
         subjects.forEach(cat => cat.list.forEach(s => {
             total++;
             if(localStorage.getItem(`topic_${s.id}_done`)) completed++;
         }));
-
         const percent = Math.round((completed / total) * 100);
         const bar = document.getElementById('readiness-bar');
         const status = document.getElementById('readiness-status');
-        
         bar.style.width = percent + '%';
         document.getElementById('readiness-text').innerText = `${completed} / ${total} Topics Completed`;
-
-        if (percent <= 25) {
-            status.innerText = 'Critical'; status.style.background = '#ffebeb'; status.style.color = '#ff4d4d'; bar.style.background = '#ff4d4d';
-        } else if (percent <= 75) {
-            status.innerText = 'Improving'; status.style.background = '#fff9eb'; status.style.color = '#ffb800'; bar.style.background = '#ffb800';
-        } else {
-            status.innerText = 'Exam Ready'; status.style.background = '#ebfffa'; status.style.color = '#00d28d'; bar.style.background = '#00d28d';
-        }
+        if (percent <= 25) { status.innerText = 'Critical'; status.style.background = '#ffebeb'; status.style.color = '#ff4d4d'; bar.style.background = '#ff4d4d'; }
+        else if (percent <= 75) { status.innerText = 'Improving'; status.style.background = '#fff9eb'; status.style.color = '#ffb800'; bar.style.background = '#ffb800'; }
+        else { status.innerText = 'Exam Ready'; status.style.background = '#ebfffa'; status.style.color = '#00d28d'; bar.style.background = '#00d28d'; }
     }
 
     function renderTopics() {
@@ -201,8 +259,8 @@
                         <div class="card-header"><div class="subject-title">${s.title}</div><div class="rating">${s.rate}</div></div>
                         <div class="subject-desc">${s.desc}</div>
                         <div class="cta-grid">
-                            <button class="btn-cta" onclick="alert('Loading...')">📅 Timetable</button>
-                            <a href="https://google.com" target="_blank" class="btn-cta">📝 Practice</a>
+                            <button class="btn-cta" onclick="alert('Loading...')">📅 Date</button>
+                            <a href="https://google.com" target="_blank" class="btn-cta">📝 Quiz</a>
                         </div>
                         <button class="btn-main" onclick="handleStart(${s.id}, '${s.title}')" 
                                 style="background:${isDone ? '#eee' : '#00d28d'}; color:${isDone ? '#888' : '#fff'}">
@@ -217,30 +275,17 @@
 
     function handleStart(id, title) {
         if (localStorage.getItem(`topic_${id}_done`)) return;
-        if (wallet < 200) return alert("Insufficient Balance!");
+        if (wallet < 200) return alert("Insufficient Balance! Please top up.");
         activeId = id; wallet -= 200; subjectsUnlocked += 1; updateWalletUI();
         document.getElementById('task-name').innerText = title;
-        document.getElementById('task-modal').style.display = 'flex';
+        openModal('task-modal');
     }
 
-    function openAddExam() { document.getElementById('exam-modal').style.display = 'flex'; }
-    
-    function requestPin() { 
-        const email = document.getElementById('student-email').value;
-        if (!email.includes('@')) return alert("Enter valid email");
-        if (subjectsUnlocked > 3) document.getElementById('pin-modal').style.display = 'flex'; 
-        else finalizeSubject(); 
-    }
-
-    function verifyFinalPin() { 
-        if (document.getElementById('pin-input').value === "1234") finalizeSubject(); 
-        else alert("Wrong PIN (1234)"); 
-    }
-
+    function requestPin() { if (subjectsUnlocked > 3) openModal('pin-modal'); else finalizeSubject(); }
+    function verifyFinalPin() { if (document.getElementById('pin-input').value === "1234") finalizeSubject(); else alert("Wrong PIN (1234)"); }
     function finalizeSubject() { 
         localStorage.setItem(`topic_${activeId}_done`, 'true'); 
-        closeModals(); 
-        renderTopics(); 
+        closeModals(); renderTopics(); 
         window.open(GOOGLE_FORM_URL, '_blank'); 
     }
 
@@ -251,12 +296,9 @@
         localStorage.setItem('unlocked_count', subjectsUnlocked);
     }
 
-    function closeModals() { 
-        document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); 
-        document.getElementById('pin-input').value = ""; 
-    }
-
-    function resetAll() { if(confirm("Clear all?")) { localStorage.clear(); location.reload(); } }
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); }
+    function resetAll() { if(confirm("Clear Progress?")) { localStorage.clear(); location.reload(); } }
     
     window.onload = renderTopics;
 </script>
