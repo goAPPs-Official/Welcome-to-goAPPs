@@ -120,16 +120,30 @@
 
     <div id="video-modal" class="modal-overlay"><div class="modal-content" style="background:#000; padding:0; overflow:hidden;"><iframe id="video-player" width="100%" height="220" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe><div style="padding:15px;"><button onclick="triggerTaskFromVideo()" class="btn btn-task" style="width:100%">Submit Task</button></div></div></div>
     
-    <div id="task-modal" class="modal-overlay">
-        <div class="modal-content">
-            <h3 id="task-name">Task Submission</h3>
-            <div id="timer-display">24:00:00</div>
-            <button onclick="finalSubmit(this)" class="btn btn-task" style="width: 100%; height: 50px;">
+   <div id="task-modal" class="modal-overlay">
+    <div class="modal-content">
+        <h3 id="task-name">Submit Lesson Task</h3>
+        <div id="timer-display">24:00:00</div>
+        
+        <form id="submissionForm" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST">
+            <input type="hidden" name="Topic" id="hiddenTopic">
+            <input type="hidden" name="Timestamp" id="hiddenTime">
+            
+            <div style="margin-bottom: 15px;">
+                <label style="font-size: 0.7rem; font-weight: 700; color: #666;">STUDENT EMAIL</label>
+                <input type="email" name="student_email" placeholder="Enter your email" required 
+                       style="width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; margin-top: 5px;">
+            </div>
+
+            <button type="submit" id="mainSubmitBtn" class="btn btn-task" style="width: 100%; height: 50px;">
                 <span class="btn-text">Sync to Teacher's Drive</span>
-                <div class="spinner"></div>
+                <div class="spinner" id="formSpinner"></div>
             </button>
-        </div>
+        </form>
+        
+        <center><small onclick="closeModals()" style="display:block; margin-top: 15px; color: var(--text-light); cursor: pointer;">Cancel</small></center>
     </div>
+</div>
 
     <div id="form-modal" class="modal-overlay">
         <div class="modal-content">
@@ -149,6 +163,51 @@
 </div>
 
 <script>
+    // 1. UPDATE THIS WITH YOUR FORMSPREE ID
+    const FORMSPREE_ENDPOINT = "https://formspree.io/f/YOUR_FORMSPREE_ID";
+
+    const form = document.getElementById('submissionForm');
+    
+    form.addEventListener("submit", async function(event) {
+        event.preventDefault();
+        const btn = document.getElementById('mainSubmitBtn');
+        const spinner = document.getElementById('formSpinner');
+        const text = btn.querySelector('.btn-text');
+
+        // Show loading state
+        text.style.display = 'none';
+        spinner.style.display = 'block';
+
+        // Set hidden data
+        document.getElementById('hiddenTopic').value = activeTopicTitle;
+        document.getElementById('hiddenTime').value = new Date().toLocaleString();
+
+        const data = new FormData(event.target);
+
+        // Send to Formspree
+        fetch(event.target.action, {
+            method: form.method,
+            body: data,
+            headers: { 'Accept': 'application/json' }
+        }).then(response => {
+            if (response.ok) {
+                // Success Flow
+                localStorage.setItem(`topic_${activeTopicId}_done`, 'true');
+                playSuccessSound();
+                closeModals();
+                renderTopics();
+                openForm(); // Open the Assessment Iframe
+            } else {
+                alert("Submission failed. Please check your connection.");
+            }
+        }).catch(error => {
+            alert("Error: Could not reach the server.");
+        }).finally(() => {
+            text.style.display = 'block';
+            spinner.style.display = 'none';
+        });
+    });
+    
     // YOUR GOOGLE FORM LINK
     const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScdS2JUmJlU9Vrbi7R4rSeVq1PHw0m4xCukRoFzPejzChxo4g/viewform?embedded=true";
     
