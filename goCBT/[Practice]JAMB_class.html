@@ -121,8 +121,8 @@
     </header>
 
     <div class="sticky-action">
-        <a href="https://wa.me/2348000000000?text=Hello%20Admin,%20I%20want%20to%20purchase%20a%20goCBT%20Lesson%20PIN." target="_blank" class="btn-purchase">💳 BUY PIN</a>
-        <a href="https://wa.me/2348000000000?text=Hello%20Admin,%20I%20have%20made%20a%20payment.%20Here%20is%20my%20proof%20of%20payment%20(screenshot)%20for%20verification." target="_blank" class="btn-verify">📄 VERIFY</a>
+        <a href="https://wa.me/2348157505037?text=Hello%20Admin,%20I%20want%20to%20purchase%20a%20goCBT%20Lesson%20PIN." target="_blank" class="btn-purchase">💳 BUY PIN</a>
+        <a href="https://wa.me/2348157505037?text=Hello%20Admin,%20I%20have%20made%20a%20payment.%20Here%20is%20my%20proof%20of%20payment%20(screenshot)%20for%20verification." target="_blank" class="btn-verify">📄 VERIFY</a>
     </div>
 
     <div class="readiness-card">
@@ -138,7 +138,7 @@
         <div class="balance-header">
             <div>
                 <small style="opacity:0.9">Practice PIN left:</small>
-                <h2 id="wallet-display" style="margin-top:5px;">₦2,000.00</h2>
+                <h2 id="wallet-display" style="margin-top:5px;">₦1,000.00</h2>
             </div>
             <button class="btn-topup-action" onclick="openModal('topup-modal')">➕ TOPUP PIN</button>
         </div>
@@ -221,12 +221,16 @@
         </div>
     </div>
 
-    <nav><a href="#">🏠</a><a href="#" class="active" style="color:var(--opay-purple)">📚</a><a href="#" onclick="resetAll()">🔄</a></nav>
+    <nav>
+        <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp">🏠</a>
+        <a href="#" class="active" style="color:var(--opay-purple)">📚</a>
+        <a href="#" onclick="resetAll()">🔄</a>
+    </nav>
 </div>
 
 <script>
     const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScdS2JUmJlU9Vrbi7R4rSeVq1PHw0m4xCukRoFzPejzChxo4g/viewform?embedded=true";
-    let wallet = parseInt(localStorage.getItem('wallet_bal') || '2000');
+    let wallet = parseInt(localStorage.getItem('wallet_bal') || '1000');
     let subjectsUnlocked = parseInt(localStorage.getItem('unlocked_count') || '0');
     let activeId = null;
 
