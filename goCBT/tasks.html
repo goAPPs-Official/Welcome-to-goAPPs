@@ -45,12 +45,18 @@
 
         .main-scroll { flex: 1; overflow-y: auto; padding: 0 15px 80px; background: var(--bg-gray); position: relative; }
 
-        /* Admin Add Button */
+        /* Admin Add Button with Hover State */
         .admin-add-btn {
-            position: absolute; bottom: 90px; right: 20px; width: 50px; height: 50px;
+            position: absolute; bottom: 90px; right: 20px; width: 55px; height: 55px;
             background: var(--opay-gradient); color: white; border-radius: 50%;
-            display: flex; justify-content: center; align-items: center; font-size: 1.5rem;
-            box-shadow: 0 4px 15px rgba(0, 210, 141, 0.4); border: none; cursor: pointer; z-index: 10;
+            display: flex; justify-content: center; align-items: center; font-size: 1.8rem;
+            box-shadow: 0 4px 15px rgba(0, 210, 141, 0.4); border: 2px solid white; 
+            cursor: pointer; z-index: 10; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .admin-add-btn:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 8px 20px rgba(75, 68, 224, 0.5);
         }
 
         /* Task Cards */
@@ -60,24 +66,37 @@
         .task-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid #fafafa; }
         .btn-go { background: var(--opay-green); color: white; border: none; padding: 8px 16px; border-radius: 8px; font-weight: 700; font-size: 0.75rem; cursor: pointer; }
 
-        /* Modal View */
+        /* Shared Modal Logic */
         .modal-overlay {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); display: none; z-index: 100;
+            background: rgba(0,0,0,0.7); display: none; z-index: 100; backdrop-filter: blur(2px);
         }
+        
+        /* Iframe Modal for Admin */
+        .admin-modal {
+            position: absolute; top: 100%; left: 0; width: 100%; height: 90%;
+            background: white; border-top-left-radius: 30px; border-top-right-radius: 30px;
+            z-index: 102; overflow: hidden; transition: top 0.4s ease;
+        }
+        .admin-modal.active { top: 10%; }
+
+        /* Task Details Modal */
         .details-modal {
             position: absolute; bottom: -100%; left: 0; width: 100%; height: 75%;
             background: white; border-top-left-radius: 30px; border-top-right-radius: 30px;
-            z-index: 101; padding: 30px 20px; transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 101; padding: 30px 20px; transition: bottom 0.4s ease;
         }
         .details-modal.active { bottom: 0; }
-        .modal-close { position: absolute; right: 20px; top: 20px; font-size: 1.2rem; cursor: pointer; color: #ccc; }
+        
+        .modal-close { position: absolute; right: 20px; top: 20px; font-size: 1.2rem; cursor: pointer; color: #333; z-index: 105; background: #eee; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
 
         .submit-btn {
             display: block; width: 100%; padding: 15px; border-radius: 12px;
             background: var(--opay-gradient); color: white; text-align: center;
             text-decoration: none; font-weight: 800; margin-top: 20px; font-size: 0.9rem;
         }
+
+        iframe { width: 100%; height: 100%; border: none; }
 
         nav { display: flex; justify-content: space-around; padding: 12px 0; background: white; border-top: 1px solid #eee; position: absolute; bottom: 0; width: 100%; }
         nav a { text-decoration: none; color: var(--text-light); display: flex; flex-direction: column; align-items: center; flex: 1; font-size: 0.6rem; }
@@ -105,7 +124,7 @@
     </div>
 
     <div class="main-scroll" id="taskContainer">
-        <button class="admin-add-btn" title="Admin: Add Task" onclick="alert('Admin Panel Opening...')">+</button>
+        <button class="admin-add-btn" title="Add New Task" onclick="openAdminPortal()">+</button>
 
         <div class="task-card" data-status="pending">
             <span class="subject-tag">MATHEMATICS</span>
@@ -113,35 +132,25 @@
             <p style="font-size: 0.7rem; color: var(--text-light);">👨‍🏫 Mr. Adeyemi • SS3 Gold</p>
             <div class="task-footer">
                 <span style="font-size: 0.7rem; color: var(--danger); font-weight: 600;">⏰ Due 4:00 PM</span>
-                <button class="btn-go" onclick="showDetails('Math Assignment', 'Solve the 10 questions provided in the PDF regarding root finding.')">Begin</button>
-            </div>
-        </div>
-
-        <div class="task-card" data-status="completed" style="opacity: 0.6;">
-            <span class="subject-tag" style="background:#eee; color:#777;">ENGLISH</span>
-            <div class="task-title">Oral English Mock Quiz</div>
-            <p style="font-size: 0.7rem; color: var(--text-light);">👩‍🏫 Mrs. Chima • SS3 Gold</p>
-            <div class="task-footer">
-                <span style="font-size: 0.7rem; color: var(--opay-green); font-weight: 600;">✅ Completed</span>
-                <button class="btn-go" style="background: #eee; color: #333;">Review</button>
+                <button class="btn-go" onclick="showDetails('Math Assignment', 'Solve the questions in the linked form. Show your work clearly for maximum tokens.')">Begin</button>
             </div>
         </div>
     </div>
 
-    <div class="modal-overlay" id="modalOverlay" onclick="hideDetails()"></div>
+    <div class="modal-overlay" id="modalOverlay" onclick="closeAllModals()"></div>
+
+    <div class="admin-modal" id="adminPortal">
+        <div class="modal-close" onclick="closeAllModals()">✕</div>
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfD7uS-fG7k1Y_T-R9uY-L4oA9mS0_0Xw/viewform?embedded=true">Loading…</iframe>
+    </div>
+
     <div class="details-modal" id="taskDetails">
-        <span class="modal-close" onclick="hideDetails()">✕</span>
-        <div style="width: 40px; height: 4px; background: #eee; border-radius: 10px; margin: -10px auto 20px;"></div>
-        <span class="subject-tag" id="detailSubject">ASSIGNMENT</span>
+        <div class="modal-close" onclick="closeAllModals()">✕</div>
+        <span class="subject-tag">ASSIGNMENT DETAILS</span>
         <h2 id="detailTitle" style="margin: 15px 0 10px; font-size: 1.2rem; color: var(--text-dark);"></h2>
         <p id="detailText" style="font-size: 0.85rem; color: var(--text-light); line-height: 1.6; min-height: 100px;"></p>
         
-        <div style="background: #f9f9f9; padding: 15px; border-radius: 12px; margin-top: 20px;">
-            <p style="font-size: 0.75rem; color: var(--text-dark); margin-bottom: 5px;"><strong>Submission Instructions:</strong></p>
-            <p style="font-size: 0.7rem; color: var(--text-light);">Upload your workspace clear images or PDF via the portal below.</p>
-        </div>
-
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLScXXXXXXXXXXXX/viewform" class="submit-btn" onclick="playSuccessSound()">Submit Assignment</a>
+        <a href="https://docs.google.com/forms/d/e/YOUR_GOOGLE_FORM_ID/viewform" target="_blank" class="submit-btn" onclick="playSuccessSound()">Submit Assignment</a>
     </div>
 
     <nav>
@@ -156,17 +165,24 @@
 
 <script>
     const overlay = document.getElementById('modalOverlay');
-    const modal = document.getElementById('taskDetails');
+    const adminModal = document.getElementById('adminPortal');
+    const detailsModal = document.getElementById('taskDetails');
+
+    function openAdminPortal() {
+        overlay.style.display = 'block';
+        setTimeout(() => adminModal.classList.add('active'), 10);
+    }
 
     function showDetails(title, text) {
         document.getElementById('detailTitle').innerText = title;
         document.getElementById('detailText').innerText = text;
         overlay.style.display = 'block';
-        setTimeout(() => modal.classList.add('active'), 10);
+        setTimeout(() => detailsModal.classList.add('active'), 10);
     }
 
-    function hideDetails() {
-        modal.classList.remove('active');
+    function closeAllModals() {
+        adminModal.classList.remove('active');
+        detailsModal.classList.remove('active');
         setTimeout(() => overlay.style.display = 'none', 300);
     }
 
@@ -175,21 +191,13 @@
     }
 
     function filterTasks(status) {
-        // Update tabs
         document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
         event.target.classList.add('active');
-
-        // Filter cards
         document.querySelectorAll('.task-card').forEach(card => {
-            if (status === 'all' || card.getAttribute('data-status') === status) {
-                card.style.display = 'block';
-            } else {
-                card.style.display = 'none';
-            }
+            card.style.display = (status === 'all' || card.dataset.status === status) ? 'block' : 'none';
         });
     }
 
-    // Search Logic
     document.querySelector('.search-input').addEventListener('input', (e) => {
         const term = e.target.value.toLowerCase();
         document.querySelectorAll('.task-card').forEach(card => {
