@@ -57,10 +57,18 @@
         }
 
         /* Wallet Card with Topup */
-        .balance-card { margin: 10px 15px; padding: 20px; background: var(--opay-gradient); border-radius: 20px; color: white; }
+        .balance-card { margin: 10px 15px; padding: 20px; background: var(--opay-gradient); border-radius: 20px; color: white; transition: 0.3s; position: relative; }
         .balance-header { display: flex; justify-content: space-between; align-items: flex-start; }
         .btn-topup-action { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 6px 12px; border-radius: 8px; font-size: 0.65rem; font-weight: 800; cursor: pointer; }
         .btn-topup-action:hover { background: white; color: var(--opay-purple); }
+
+        /* Error Shake Animation */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+        .shake-error { animation: shake 0.2s ease-in-out 0s 2; border: 2px solid var(--danger); }
 
         /* Readiness Tracker */
         .readiness-card { margin: 15px 15px 5px 15px; padding: 15px; background: var(--bg-card); border-radius: 20px; border: 1px solid var(--border-color); box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
@@ -126,7 +134,7 @@
         <div style="margin-top:8px; font-size:0.65rem; color:var(--text-sub); text-align:right;" id="readiness-text">0/8 Topics Done</div>
     </div>
 
-    <div class="balance-card">
+    <div class="balance-card" id="wallet-card">
         <div class="balance-header">
             <div>
                 <small style="opacity:0.9">Practice PIN left:</small>
@@ -166,6 +174,26 @@
         </div>
     </div>
 
+    <div id="keychain-modal" class="modal-overlay">
+        <div class="modal-content" style="text-align:center;">
+            <h3 style="color:var(--opay-purple)">Redeem License Key</h3>
+            <p style="font-size:0.75rem; color:var(--text-sub); margin:10px 0;">Enter your 6-digit prepaid PIN.</p>
+            <input type="text" id="key-input" placeholder="GOCBT-XXXX" style="text-align:center; font-weight:800; width:100%; padding:15px; border-radius:12px; border:2px solid var(--border-color); background:rgba(128,128,128,0.05); color:var(--text-main); margin:15px 0; outline:none;">
+            <button class="btn-main" onclick="verifyKeychain()">🔓 Activate Key</button>
+            <center><p onclick="closeModals()" style="margin-top:15px; font-size:0.75rem; cursor:pointer; color:var(--text-sub);">Cancel</p></center>
+        </div>
+    </div>
+
+    <div id="error-modal" class="modal-overlay">
+        <div class="modal-content" style="text-align:center;">
+            <div style="font-size:3rem; margin-bottom:15px;">⚠️</div>
+            <h3 style="color:var(--danger)">Insufficient Balance</h3>
+            <p style="font-size:0.85rem; color:var(--text-sub); margin:15px 0;">You need ₦200 to unlock this lesson. Your current balance is too low.</p>
+            <button class="btn-main" onclick="closeModals(); openModal('topup-modal')">Top-up Now</button>
+            <p onclick="closeModals()" style="margin-top:15px; font-size:0.75rem; cursor:pointer; color:var(--text-sub);">Maybe Later</p>
+        </div>
+    </div>
+
     <div id="exam-modal" class="modal-overlay">
         <div class="modal-content">
             <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
@@ -202,6 +230,9 @@
     let subjectsUnlocked = parseInt(localStorage.getItem('unlocked_count') || '0');
     let activeId = null;
 
+    // Keychain Database
+    const VALID_KEYS = { "GOCBT-500": 500, "GOCBT-1000": 1000, "GOCBT-2000": 2000, "FREE-LUNCH": 200 };
+
     if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
 
     function toggleDarkMode() {
@@ -227,8 +258,26 @@
     ];
 
     function handleTopup(method) {
-        alert("Redirecting to " + method + " gateway...");
-        // You can link these to WhatsApp or specific URLs later
+        if (method === 'Keychain') {
+            closeModals();
+            openModal('keychain-modal');
+        } else {
+            alert("Redirecting to " + method + " gateway...");
+        }
+    }
+
+    function verifyKeychain() {
+        const input = document.getElementById('key-input').value.toUpperCase().trim();
+        const amount = VALID_KEYS[input];
+        if (amount) {
+            wallet += amount;
+            updateWalletUI();
+            alert(`🎉 Success! ₦${amount} added to your Practice PIN.`);
+            document.getElementById('key-input').value = "";
+            closeModals();
+        } else {
+            alert("❌ Invalid PIN. Please contact Admin.");
+        }
     }
 
     function updateReadiness() {
@@ -259,7 +308,7 @@
                         <div class="card-header"><div class="subject-title">${s.title}</div><div class="rating">${s.rate}</div></div>
                         <div class="subject-desc">${s.desc}</div>
                         <div class="cta-grid">
-                            <button class="btn-cta" onclick="alert('Loading...')">📅 Date</button>
+                            <button class="btn-cta" onclick="alert('Checking Schedule...')">📅 Date</button>
                             <a href="https://google.com" target="_blank" class="btn-cta">📝 Quiz</a>
                         </div>
                         <button class="btn-main" onclick="handleStart(${s.id}, '${s.title}')" 
@@ -275,7 +324,16 @@
 
     function handleStart(id, title) {
         if (localStorage.getItem(`topic_${id}_done`)) return;
-        if (wallet < 200) return alert("Insufficient Balance! Please top up.");
+        
+        // Visual Error Feedback
+        if (wallet < 200) {
+            const card = document.getElementById('wallet-card');
+            card.classList.add('shake-error');
+            setTimeout(() => card.classList.remove('shake-error'), 400);
+            openModal('error-modal');
+            return;
+        }
+
         activeId = id; wallet -= 200; subjectsUnlocked += 1; updateWalletUI();
         document.getElementById('task-name').innerText = title;
         openModal('task-modal');
@@ -291,7 +349,7 @@
 
     function updateWalletUI() { 
         document.getElementById('wallet-display').innerText = `₦${wallet.toLocaleString()}.00`; 
-        document.getElementById('usage-bar').style.width = (wallet/2000*100)+'%'; 
+        document.getElementById('usage-bar').style.width = (Math.min(wallet/2000*100, 100))+'%'; 
         localStorage.setItem('wallet_bal', wallet);
         localStorage.setItem('unlocked_count', subjectsUnlocked);
     }
