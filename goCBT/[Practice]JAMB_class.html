@@ -11,9 +11,9 @@
             --opay-purple: #4b44e0;
             --opay-gradient: linear-gradient(135deg, #00d28d 0%, #4b44e0 100%);
             --text-dark: #333;
-            --text-light: #888;
             --bg-dark: #121212;
             --danger: #ff4d4d;
+            --warning: #ffb800;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
@@ -24,38 +24,38 @@
             overflow: hidden; position: relative; border: 8px solid #333; display: flex; flex-direction: column;
         }
 
-        header { padding: 20px; background: white; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; }
+        header { padding: 15px 20px; background: white; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; }
         
-        .stats-badges { display: flex; gap: 8px; align-items: center; }
-        .badge { font-size: 0.65rem; font-weight: 800; padding: 5px 10px; border-radius: 20px; cursor: pointer; }
-        .rank-badge { background: #e6fcf5; color: var(--opay-green); }
-        .streak-badge { background: #fff5f5; color: var(--danger); border: 1px solid #ffe3e3; }
+        .sticky-action { padding: 10px 15px; background: #fff; z-index: 10; border-bottom: 1px solid #eee; }
+        .btn-purchase { background: var(--text-dark); color: white; width: 100%; padding: 12px; border-radius: 12px; font-weight: 800; border: none; cursor: pointer; font-size: 0.9rem; }
 
-        .search-wrapper { padding: 10px 15px; background: white; border-bottom: 1px solid #eee; }
-        #topicSearch { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #ddd; outline: none; font-size: 0.85rem; }
+        .balance-card { margin: 15px; padding: 20px; background: var(--opay-gradient); border-radius: 20px; color: white; }
+        .main-scroll { flex: 1; overflow-y: auto; padding: 10px 15px; padding-bottom: 100px; }
 
-        .balance-card { margin: 15px; padding: 20px; background: var(--opay-gradient); border-radius: 20px; color: white; box-shadow: 0 10px 20px rgba(0,210,141,0.2); }
-        .main-scroll { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 100px; scroll-behavior: smooth; }
+        /* Categorized Headers */
+        .dept-header { font-size: 0.75rem; font-weight: 800; color: var(--opay-purple); margin: 20px 0 10px 5px; text-transform: uppercase; letter-spacing: 1px; }
 
+        /* Subject Cards */
         .topic-card { background: white; border-radius: 18px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #eee; }
-        .topic-card.locked { opacity: 0.5; filter: grayscale(1); pointer-events: none; }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+        .subject-title { font-size: 0.95rem; font-weight: 800; color: var(--text-dark); }
+        .rating { color: var(--warning); font-size: 0.7rem; margin-top: 2px; }
+        
+        .subject-desc { font-size: 0.7rem; color: #777; line-height: 1.4; margin-bottom: 12px; }
 
-        .btn { padding: 12px; border-radius: 10px; border: none; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: 0.2s; width: 100%; }
-        .btn-video { background: var(--text-dark); color: white; }
-        .btn-task { background: var(--opay-green); color: white; }
+        .cta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+        .btn-cta { padding: 10px; border-radius: 8px; border: 1px solid #eee; font-size: 0.7rem; font-weight: 700; cursor: pointer; background: #f9f9f9; text-decoration: none; color: inherit; text-align: center; }
+
+        .btn-main { background: var(--opay-green); color: white; width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; }
 
         .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.92); display: none; z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
-        .modal-content { background: white; width: 92%; border-radius: 25px; padding: 20px; position: relative; max-height: 90%; overflow-y: auto; }
+        .modal-content { background: white; width: 90%; border-radius: 25px; padding: 25px; }
         
-        #timer-display { font-size: 1.8rem; font-weight: 800; color: var(--danger); background: #fff0f0; padding: 15px; border-radius: 15px; margin: 15px 0; text-align: center; animation: pulse 1s infinite alternate; }
-        @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.05); } }
-
-        .leader-item { display: flex; justify-content: space-between; padding: 12px; border-radius: 12px; margin-bottom: 8px; background: #f8f9fa; font-size: 0.8rem; }
-        .leader-item.me { background: #e6fcf5; border: 1px solid var(--opay-green); }
+        #timer-display { font-size: 1.8rem; font-weight: 800; color: var(--danger); text-align: center; margin: 15px 0; }
+        input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; outline: none; }
+        #pin-input { text-align: center; font-size: 1.5rem; letter-spacing: 10px; margin-top: 10px; }
 
         nav { position: absolute; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid #eee; }
-        .spinner { width: 18px; height: 18px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; margin: 0 auto; }
-        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -63,206 +63,171 @@
 <div class="phone-container">
     <header>
         <div style="font-weight: 800; color: var(--opay-purple); font-size: 1.1rem;">🎓 goCBT CLASS</div>
-        <div class="stats-badges">
-            <div id="streak-badge" class="badge streak-badge">🔥 0 Days</div>
-            <div id="rank-badge" class="badge rank-badge" onclick="openLeaderboard()">Rank #--</div>
-        </div>
+        <div style="font-size: 0.7rem; font-weight: 800; background: #fff5f5; color: var(--danger); padding: 5px 10px; border-radius: 20px;">🔥 1 Day</div>
     </header>
 
-    <div class="search-wrapper">
-        <input type="text" id="topicSearch" placeholder="🔍 Find a Subject..." onkeyup="renderTopics()">
+    <div class="sticky-action">
+        <button class="btn-purchase" onclick="alert('Redirecting...')">💳 PURCHASE LESSON PIN</button>
     </div>
 
     <div class="balance-card">
-        <small style="opacity: 0.9;">JAMB PREPARATORY CLASS</small>
-        <h5 style="margin-top:5px;">⏳ Readiness Tracker</h5>
-        <h3 id="progress-text">🏆 0% Completed</h3>
-        <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 10px; margin-top: 5px;">
-            <div id="global-progress" style="width: 0%; height: 100%; background: white; border-radius: 10px; transition: 1s;"></div>
+        <small>Virtual Wallet Balance</small>
+        <h2 id="wallet-display">₦2,000.00</h2>
+        <div style="width: 100%; height: 4px; background: rgba(255,255,255,0.2); border-radius: 10px; margin-top: 10px;">
+            <div id="usage-bar" style="width: 0%; height: 100%; background: white; border-radius: 10px;"></div>
         </div>
     </div>
 
     <div class="main-scroll" id="topicsContainer"></div>
 
-    <div id="video-modal" class="modal-overlay">
-        <div class="modal-content" style="background:#000; padding:0; overflow:hidden;">
-            <iframe id="video-player" width="100%" height="220" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-            <div style="padding:15px;"><button onclick="triggerTaskFromVideo()" class="btn btn-task">Submit Task</button></div>
-        </div>
-    </div>
-    
     <div id="task-modal" class="modal-overlay">
         <div class="modal-content">
-            <h3 id="task-name">Submit Assignment</h3>
+            <h3 id="task-name">Submission</h3>
             <div id="timer-display">24:00:00</div>
-            <form id="submissionForm" action="https://formspree.io/f/YOUR_ID_HERE" method="POST">
-                <input type="hidden" name="Subject" id="hiddenTopic">
-                <input type="email" name="email" placeholder="Your Student Email" required style="width:100%; padding:12px; margin-bottom:15px; border-radius:10px; border:1px solid #ddd;">
-                <button type="submit" class="btn btn-task" id="submitBtn">
-                    <span class="btn-text">📤 Submit to Teacher's Drive</span>
-                    <div class="spinner"></div>
-                </button>
-            </form>
+            <input type="email" id="student-email" placeholder="Student Email" required>
+            <button class="btn-main" onclick="requestPin()">📤 Finalize Assignment</button>
+            <center><p onclick="closeModals()" style="margin-top:15px; font-size:0.75rem; cursor:pointer;">Cancel</p></center>
         </div>
     </div>
 
-    <div id="leaderboard-modal" class="modal-overlay">
+    <div id="pin-modal" class="modal-overlay">
         <div class="modal-content">
-            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom:15px;">
-                <h3>🏆 Live Rankings</h3>
-                <button onclick="closeModals()" style="background:none; border:none; font-size:1.5rem;">&times;</button>
-            </div>
-            <div id="leaderboard-list"></div>
-        </div>
-    </div>
-
-    <div id="form-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <b>Exam Portal</b>
-                <button onclick="closeModals()" style="background:none; border:none; font-size:1.5rem;">&times;</button>
-            </div>
-            <iframe id="form-iframe" style="width:100%; height:500px; border:none;" src=""></iframe>
+            <h3 style="text-align:center;">Security PIN</h3>
+            <input type="password" id="pin-input" maxlength="4" placeholder="****">
+            <button class="btn-main" onclick="verifyFinalPin()">Confirm & Unlock</button>
         </div>
     </div>
 
     <nav>
-        <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/">🏠</a>
-        <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/" class="active">📚</a>
+        <a href="#">🏠</a>
+        <a href="#" class="active">📚</a>
         <a href="#" onclick="resetAll()">🔄</a>
     </nav>
 </div>
 
 <script>
     const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScdS2JUmJlU9Vrbi7R4rSeVq1PHw0m4xCukRoFzPejzChxo4g/viewform?embedded=true";
-    const COMPLETE_SOUND = "https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3";
+    let wallet = parseInt(localStorage.getItem('wallet_bal') || '2000');
+    let subjectsUnlocked = parseInt(localStorage.getItem('unlocked_count') || '0');
+    let activeId = null;
 
-    const competitors = [
-        { name: "Adebayo R.", status: 15 },
-        { name: "Chidi O.", status: 12 },
-        { name: "Blessing W.", status: 9 },
-        { name: "Musa A.", status: 4 }
+    const subjects = [
+        { dept: "Core Subjects", list: [
+            { id: 1, title: "Mathematics", desc: "Algebra, Calculus, and Trigonometry fundamentals.", rate: "⭐⭐⭐⭐⭐" },
+            { id: 2, title: "English Language", desc: "Grammar, Oral English, and Creative Writing.", rate: "⭐⭐⭐⭐⭐" },
+            { id: 3, title: "Civic Education", desc: "Rights, duties, and social responsibilities.", rate: "⭐⭐⭐" }
+        ]},
+        { dept: "Science Department", list: [
+            { id: 4, title: "Physics", desc: "Mechanics, Optics, and Nuclear Physics.", rate: "⭐⭐⭐⭐" },
+            { id: 5, title: "Chemistry", desc: "Organic chemistry and stoichiometry.", rate: "⭐⭐⭐⭐" },
+            { id: 6, title: "Biology", desc: "Genetics, Ecology, and Human Anatomy.", rate: "⭐⭐⭐⭐" },
+            { id: 7, title: "Further Mathematics", desc: "Advanced logic and coordinate geometry.", rate: "⭐⭐⭐⭐⭐" }
+        ]},
+        { dept: "Commercial Department", list: [
+            { id: 8, title: "Financial Accounting", desc: "Ledgers, balance sheets, and audit basics.", rate: "⭐⭐⭐⭐" },
+            { id: 9, title: "Economics", desc: "Demand, supply, and macro-economics.", rate: "⭐⭐⭐⭐" },
+            { id: 10, title: "Commerce", desc: "Trade, banking, and insurance systems.", rate: "⭐⭐⭐" }
+        ]},
+        { dept: "Arts Department", list: [
+            { id: 11, title: "Literature-in-English", desc: "Drama, prose, and poetry analysis.", rate: "⭐⭐⭐⭐" },
+            { id: 12, title: "Government", desc: "Political systems and constitutions.", rate: "⭐⭐⭐⭐" },
+            { id: 13, title: "Christian Rel. Studies", desc: "Biblical history and ethical teachings.", rate: "⭐⭐⭐" }
+        ]}
     ];
-
-    const topics = [
-        { id: 1, title: "Mathematics Core", db: "Mathematics_Core_Final_DB_Archive_Feb26", vid: "Cu3R5it4cQs" },
-        { id: 2, title: "English Language", db: "English_Language_Final_DB_Archive_QB_Feb26", vid: "HB4I2CgkcCo" },
-        { id: 3, title: "Physics Mastery", db: "Physics_Final_db_qb_Feb26", vid: "mLgTnkw558w" },
-        { id: 4, title: "Chemistry Hub", db: "Chemistry_Final_DB_Archive_QBank_Feb26", vid: "4y2v7Y7T9oY" },
-        { id: 5, title: "Biology Archive", db: "Biology_Final_DB_Archive_QBank_Feb26", vid: "HB4I2CgkcCo" },
-        { id: 6, title: "Memory & Storage", vid: "6YV_vKnd9q0" },
-        { id: 7, title: "Operating Systems", vid: "pT7V_D_0Usc" },
-        { id: 8, title: "Web Navigation", vid: "hXU02R7m9_k" },
-        { id: 9, title: "Cyber Security", vid: "yvH_k-D_S_k" },
-        { id: 10, title: "Cloud Computing", vid: "uH-SscXp_P8" },
-        { id: 11, title: "Data Privacy", vid: "6O8X_9vS_q8" },
-        { id: 12, title: "Social Media Safety", vid: "mYm-S_K0-X4" },
-        { id: 13, title: "Digital Footprint", vid: "ottnH427as8" },
-        { id: 14, title: "Binary Basics", vid: "CxGSnA-RTsA" },
-        { id: 15, title: "AI Introduction", vid: "5p248yoa3oE" },
-        { id: 16, title: "Final Tech Review", vid: "8fCQ_ZuL2TY" }
-    ];
-
-    let activeTopicId = null;
-    let countdownInterval = null;
-
-    function checkStreak() {
-        const last = localStorage.getItem('last_study');
-        const today = new Date().toDateString();
-        let streak = parseInt(localStorage.getItem('user_streak') || '0');
-        if (last && last !== today) {
-            const diff = (new Date(today) - new Date(last)) / 86400000;
-            streak = diff === 1 ? streak + 1 : 1;
-        } else if (!last) streak = 1;
-        localStorage.setItem('last_study', today);
-        localStorage.setItem('user_streak', streak);
-        document.getElementById('streak-badge').innerText = `🔥 ${streak} Days`;
-    }
 
     function renderTopics() {
-        const query = document.getElementById('topicSearch').value.toLowerCase();
         const container = document.getElementById('topicsContainer');
         container.innerHTML = '';
-        topics.forEach((t, index) => {
-            if (!t.title.toLowerCase().includes(query)) return;
-            const isDone = localStorage.getItem(`topic_${t.id}_done`);
-            const isLocked = index !== 0 && !localStorage.getItem(`topic_${topics[index-1].id}_done`);
-            container.innerHTML += `
-                <div class="topic-card ${isLocked ? 'locked' : ''}">
-                    <b style="font-size:0.9rem;">${index+1}. ${t.title}</b>
-                    <div style="margin-top:10px;">
-                        <button class="btn btn-video" onclick="openVideo('${t.vid}', ${t.id}, '${t.title}')">
-                            ${isDone ? 'Review Lesson' : 'Start Lesson'}
+        subjects.forEach(cat => {
+            container.innerHTML += `<div class="dept-header">${cat.dept}</div>`;
+            cat.list.forEach(s => {
+                const isDone = localStorage.getItem(`topic_${s.id}_done`);
+                container.innerHTML += `
+                    <div class="topic-card">
+                        <div class="card-header">
+                            <div class="subject-title">${s.title}</div>
+                            <div class="rating">${s.rate}</div>
+                        </div>
+                        <div class="subject-desc">${s.desc}</div>
+                        <div class="cta-grid">
+                            <button class="btn-cta" onclick="alert('Loading Timetable...')">📅 Timetable</button>
+                            <a href="https://google.com" target="_blank" class="btn-cta">📝 Practice</a>
+                        </div>
+                        <button class="btn-main" onclick="handleStart(${s.id}, '${s.title}')" 
+                                style="background:${isDone ? '#eee' : '#00d28d'}; color:${isDone ? '#888' : '#fff'}">
+                            ${isDone ? '✓ Completed' : 'Start Lesson (-₦200)'}
                         </button>
                     </div>
-                    ${isDone ? `<div class="assessment-section"><button class="btn btn-task" style="margin-top:10px" onclick="openForm()">Take this Exam</button></div>` : ''}
-                </div>
-            `;
+                `;
+            });
         });
-        updateUI();
+        updateWalletUI();
     }
 
-    function openVideo(vid, id, title) {
-        activeTopicId = id; document.getElementById('hiddenTopic').value = title;
-        document.getElementById('video-player').src = `https://www.youtube.com/embed/${vid}?autoplay=1`;
-        document.getElementById('video-modal').style.display = 'flex';
-    }
-
-    function triggerTaskFromVideo() {
-        document.getElementById('video-modal').style.display = 'none';
+    function handleStart(id, title) {
+        if (localStorage.getItem(`topic_${id}_done`)) return alert("Already completed!");
+        if (wallet < 200) return alert("Insufficient Balance!");
+        activeId = id;
+        wallet -= 200;
+        subjectsUnlocked += 1;
+        updateWalletUI();
+        document.getElementById('task-name').innerText = title;
         document.getElementById('task-modal').style.display = 'flex';
-        let time = 86400;
-        clearInterval(countdownInterval);
-        countdownInterval = setInterval(() => {
-            time--;
-            const h = Math.floor(time/3600).toString().padStart(2,'0');
-            const m = Math.floor((time%3600)/60).toString().padStart(2,'0');
-            const s = (time%60).toString().padStart(2,'0');
-            document.getElementById('timer-display').innerText = `${h}:${m}:${s}`;
+        startTimer();
+    }
+
+    function requestPin() {
+        const email = document.getElementById('student-email').value;
+        if (!email.includes('@')) return alert("Enter valid email");
+        if (subjectsUnlocked > 3) {
+            document.getElementById('pin-modal').style.display = 'flex';
+        } else {
+            finalizeSubject();
+        }
+    }
+
+    function verifyFinalPin() {
+        if (document.getElementById('pin-input').value === "1234") {
+            finalizeSubject();
+        } else {
+            alert("Incorrect PIN!");
+        }
+    }
+
+    function finalizeSubject() {
+        localStorage.setItem(`topic_${activeId}_done`, 'true');
+        closeModals();
+        renderTopics();
+        window.open(GOOGLE_FORM_URL, '_blank');
+    }
+
+    function startTimer() {
+        let t = 86400;
+        const display = document.getElementById('timer-display');
+        const itv = setInterval(() => {
+            t--;
+            const h = Math.floor(t/3600).toString().padStart(2,'0');
+            const m = Math.floor((t%3600)/60).toString().padStart(2,'0');
+            const s = (t%60).toString().padStart(2,'0');
+            display.innerText = `${h}:${m}:${s}`;
+            if (document.getElementById('task-modal').style.display === 'none') clearInterval(itv);
         }, 1000);
     }
 
-    document.getElementById('submissionForm').onsubmit = function(e) {
-        e.preventDefault();
-        const btn = document.getElementById('submitBtn');
-        btn.querySelector('.btn-text').style.display = 'none';
-        btn.querySelector('.spinner').style.display = 'block';
-
-        fetch(e.target.action, { method: 'POST', body: new FormData(e.target), headers: {'Accept': 'application/json'} })
-        .then(() => {
-            localStorage.setItem(`topic_${activeTopicId}_done`, 'true');
-            new Audio(COMPLETE_SOUND).play();
-            closeModals(); renderTopics(); openForm();
-        }).finally(() => {
-            btn.querySelector('.btn-text').style.display = 'block';
-            btn.querySelector('.spinner').style.display = 'none';
-        });
-    };
-
-    function openLeaderboard() {
-        const list = document.getElementById('leaderboard-list');
-        const done = topics.filter(t => localStorage.getItem(`topic_${t.id}_done`)).length;
-        list.innerHTML = '';
-        const all = [...competitors, { name: "You (Student)", status: done, isMe: true }].sort((a,b) => b.status - a.status);
-        all.forEach((p, i) => {
-            list.innerHTML += `<div class="leader-item ${p.isMe?'me':''}"><span>#${i+1} ${p.name}</span><span>${p.status}/16</span></div>`;
-        });
-        document.getElementById('leaderboard-modal').style.display = 'flex';
+    function updateWalletUI() {
+        document.getElementById('wallet-display').innerText = `₦${wallet.toLocaleString()}.00`;
+        localStorage.setItem('wallet_bal', wallet);
+        localStorage.setItem('unlocked_count', subjectsUnlocked);
+        document.getElementById('usage-bar').style.width = (wallet / 2000 * 100) + '%';
     }
 
-    function openForm() { document.getElementById('form-iframe').src = GOOGLE_FORM_URL; document.getElementById('form-modal').style.display = 'flex'; }
-    function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); document.getElementById('video-player').src = ""; }
-    function updateUI() {
-        const done = topics.filter(t => localStorage.getItem(`topic_${t.id}_done`)).length;
-        const pct = Math.round((done / 16) * 100);
-        document.getElementById('global-progress').style.width = pct + '%';
-        document.getElementById('progress-text').innerText = `🏆 ${pct}% Completed`;
-        let rank = done >= 16 ? 1 : done >= 12 ? 2 : done >= 8 ? 3 : 4;
-        document.getElementById('rank-badge').innerText = `Rank #${rank}`;
+    function closeModals() {
+        document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none');
+        document.getElementById('pin-input').value = "";
     }
 
-    function resetAll() { if(confirm("Reset progress?")) { localStorage.clear(); location.reload(); } }
-    window.onload = () => { checkStreak(); renderTopics(); };
+    function resetAll() { if(confirm("Reset all?")) { localStorage.clear(); location.reload(); } }
+    window.onload = renderTopics;
 </script>
 </body>
 </html>
