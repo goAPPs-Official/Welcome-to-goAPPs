@@ -12,6 +12,8 @@
             --opay-gradient: linear-gradient(135deg, #00d28d 0%, #4b44e0 100%);
             --danger: #ff4d4d;
             --warning: #ffb800;
+            
+            /* Light Theme Variables */
             --bg-body: #f8f9fa;
             --bg-app: #f8f9fa;
             --bg-card: #ffffff;
@@ -20,6 +22,7 @@
             --border-color: #eeeeee;
         }
 
+        /* Dark Mode Class */
         body.dark-mode {
             --bg-body: #121212;
             --bg-app: #1a1a1a;
@@ -31,8 +34,7 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; transition: background 0.3s, color 0.3s; -webkit-tap-highlight-color: transparent; }
         
-        body { background-color: var(--bg-body); min-height: 100vh; overflow-x: hidden; user-select: none; }
-
+        /* --- SPLASH SCREEN --- */
         #splash-screen {
             position: fixed; inset: 0; background: var(--opay-gradient);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -42,9 +44,18 @@
         .splash-text { color: white; font-weight: 800; font-size: 1.5rem; letter-spacing: 2px; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
+        /* Fullscreen Layout Updates */
+        body { background-color: var(--bg-body); min-height: 100vh; display: block; }
+
         .app-wrapper {
-            width: 100%; max-width: 600px; margin: 0 auto; min-height: 100vh;
-            background: var(--bg-app); display: flex; flex-direction: column; position: relative;
+            width: 100%;
+            max-width: 600px; 
+            margin: 0 auto;
+            min-height: 100vh;
+            background: var(--bg-app);
+            display: flex;
+            flex-direction: column;
+            position: relative;
         }
 
         header { 
@@ -57,48 +68,85 @@
         .back-btn { 
             background: rgba(128,128,128,0.1); border: none; border-radius: 10px; 
             width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; color: var(--text-main); font-size: 1.2rem;
+            cursor: pointer; color: var(--text-main); font-size: 1.2rem; font-weight: bold;
         }
         
-        /* Responsive Grid for Buttons */
         .sticky-action { padding: 12px 15px; background: var(--bg-card); z-index: 10; border-bottom: 1px solid var(--border-color); display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         
-        .btn-purchase { background: var(--text-main); color: var(--bg-card); padding: 12px; border-radius: 12px; font-weight: 800; border: none; cursor: pointer; font-size: 0.75rem; text-align: center; }
-        .btn-verify { background: transparent; color: var(--opay-purple); padding: 10px; border-radius: 12px; font-weight: 800; border: 2px solid var(--opay-purple); cursor: pointer; font-size: 0.75rem; text-align: center; }
+        .btn-purchase { 
+            background: var(--text-main); color: var(--bg-card); padding: 12px; 
+            border-radius: 12px; font-weight: 800; border: none; cursor: pointer; 
+            font-size: 0.75rem; text-decoration: none; display: block; text-align: center;
+        }
 
-        .search-area { padding: 10px 15px; background: var(--bg-card); }
-        .search-input { width: 100%; padding: 12px 15px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-body); color: var(--text-main); font-size: 0.9rem; outline: none; }
+        .btn-verify {
+            background: transparent; color: var(--opay-purple); padding: 10px;
+            border-radius: 12px; font-weight: 800; border: 2px solid var(--opay-purple);
+            cursor: pointer; font-size: 0.75rem; text-align: center; text-decoration: none;
+            display: flex; align-items: center; justify-content: center;
+        }
 
-        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 15px; }
+        /* Search Bar Style */
+        .search-area { padding: 10px 15px; background: var(--bg-card); border-bottom: 1px solid var(--border-color); }
+        .search-input { width: 100%; padding: 10px 15px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-body); color: var(--text-main); outline: none; font-size: 0.85rem; }
+
+        /* Stats Row */
+        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 15px 0 15px; }
         .stat-card { background: var(--bg-card); padding: 12px; border-radius: 15px; border: 1px solid var(--border-color); text-align: center; }
-        .stat-card small { font-size: 0.65rem; color: var(--text-sub); display: block; }
+        .stat-card small { font-size: 0.65rem; color: var(--text-sub); display: block; margin-bottom: 4px; }
         .stat-card span { font-size: 0.9rem; font-weight: 800; color: var(--opay-purple); }
 
-        .balance-card { margin: 10px 15px; padding: 20px; background: var(--opay-gradient); border-radius: 20px; color: white; position: relative; }
-        .btn-topup-action { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 8px 12px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; cursor: pointer; }
+        .balance-card { margin: 10px 15px; padding: 20px; background: var(--opay-gradient); border-radius: 20px; color: white; transition: 0.3s; position: relative; }
+        .balance-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .btn-topup-action { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 6px 12px; border-radius: 8px; font-size: 0.65rem; font-weight: 800; cursor: pointer; }
 
-        .readiness-card { margin: 15px; padding: 15px; background: var(--bg-card); border-radius: 20px; border: 1px solid var(--border-color); }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+        .shake-error { animation: shake 0.2s ease-in-out 0s 2; border: 2px solid var(--danger); }
+
+        .readiness-card { margin: 15px 15px 5px 15px; padding: 15px; background: var(--bg-card); border-radius: 20px; border: 1px solid var(--border-color); box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        .readiness-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; color: var(--text-main); }
+        #readiness-status { font-size: 0.7rem; font-weight: 800; padding: 4px 10px; border-radius: 12px; text-transform: uppercase; }
         .progress-container { width: 100%; height: 8px; background: rgba(128,128,128,0.1); border-radius: 10px; overflow: hidden; }
         #readiness-bar { height: 100%; width: 0%; transition: 0.8s; }
 
-        .main-scroll { flex: 1; overflow-y: auto; padding: 10px 15px 120px 15px; }
-        .dept-header { font-size: 0.75rem; font-weight: 800; color: var(--opay-purple); margin: 20px 0 10px 5px; text-transform: uppercase; }
+        .main-scroll { flex: 1; overflow-y: auto; padding: 10px 15px; padding-bottom: 120px; }
+        .dept-header { font-size: 0.75rem; font-weight: 800; color: var(--opay-purple); margin: 20px 0 10px 5px; text-transform: uppercase; letter-spacing: 1px; }
 
-        .topic-card { background: var(--bg-card); border-radius: 18px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border-color); }
-        .btn-main { background: var(--opay-green); color: white; width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; }
+        .topic-card { background: var(--bg-card); border-radius: 18px; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid var(--border-color); }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+        .subject-title { font-size: 0.95rem; font-weight: 800; color: var(--text-main); }
+        .timer-badge { font-size: 0.7rem; font-weight: 800; color: var(--opay-purple); background: rgba(75, 68, 224, 0.1); padding: 2px 8px; border-radius: 5px; }
 
-        /* Modal Responsiveness */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(5px); padding: 20px; }
-        .modal-content { background: var(--bg-card); width: 100%; max-width: 400px; border-radius: 25px; padding: 25px; color: var(--text-main); max-height: 90vh; overflow-y: auto; }
+        .cta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
+        .btn-cta { padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 0.7rem; font-weight: 700; cursor: pointer; background: rgba(128,128,128,0.05); text-decoration: none; color: var(--text-main); text-align: center; }
+
+        .btn-main { background: var(--opay-green); color: white; width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; }
+        .btn-stop { background: var(--danger) !important; }
+
+        .fab-pill {
+            position: fixed; bottom: 85px; right: 20px; 
+            padding: 12px 24px; background: var(--opay-purple); 
+            color: white; border-radius: 30px; border: none;
+            cursor: pointer; z-index: 50; font-size: 0.85rem; font-weight: 800;
+            box-shadow: 0 5px 15px rgba(75, 68, 224, 0.4);
+        }
+
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.92); display: none; z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+        .modal-content { background: var(--bg-card); width: 92%; max-width: 400px; border-radius: 25px; padding: 25px; color: var(--text-main); }
         
         .method-item { display: flex; align-items: center; padding: 15px; background: rgba(128,128,128,0.05); border-radius: 15px; margin-bottom: 10px; cursor: pointer; border: 1px solid var(--border-color); }
-        .method-icon { font-size: 1.5rem; margin-right: 15px; }
-        .method-info b { font-size: 0.9rem; display: block; }
-        .method-info span { font-size: 0.7rem; color: var(--text-sub); }
+        .method-icon { font-size: 1.2rem; margin-right: 15px; }
+        .method-info b { font-size: 0.85rem; display: block; }
+        .method-info span { font-size: 0.65rem; color: var(--text-sub); }
+
+        .leaderboard-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; }
 
         nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-card); display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid var(--border-color); z-index: 100; }
-        
-        .fab-pill { position: fixed; bottom: 85px; right: 20px; padding: 12px 20px; background: var(--opay-purple); color: white; border-radius: 30px; border: none; font-weight: 800; box-shadow: 0 5px 15px rgba(75,68,224,0.4); z-index: 90; }
+        .theme-toggle { cursor: pointer; font-size: 1.2rem; }
     </style>
 </head>
 <body class="light-mode">
@@ -106,6 +154,7 @@
 <div id="splash-screen">
     <div class="splash-logo">🎓</div>
     <div class="splash-text">goCBT ACADEMY</div>
+    <div style="color:rgba(255,255,255,0.7); margin-top:10px; font-size:0.8rem;">Preparing your classroom...</div>
 </div>
 
 <div class="app-wrapper">
@@ -116,7 +165,7 @@
         </div>
         <div style="display:flex; gap:15px; align-items:center;">
             <span onclick="openModal('leaderboard-modal')" style="cursor:pointer; font-size:1.2rem;">🏆</span>
-            <div class="theme-toggle" onclick="toggleDarkMode()" style="cursor:pointer; font-size:1.2rem;">🌓</div>
+            <div class="theme-toggle" onclick="toggleDarkMode()">🌓</div>
         </div>
     </header>
 
@@ -125,8 +174,8 @@
     </div>
 
     <div class="sticky-action">
-        <div class="btn-purchase" onclick="redirectToWhatsApp('Payment')">💳 BUY PIN</div>
-        <div class="btn-verify" onclick="redirectToWhatsApp('Verify')">📄 VERIFY</div>
+        <a href="https://wa.me/2348157505037?text=Hello%20Admin,%20I%20want%20to%20purchase%20a%20goCBT%20Lesson%20PIN." target="_blank" class="btn-purchase">💳 BUY PIN</a>
+        <a href="https://wa.me/2348157505037?text=Hello%20Admin,%20I%20have%20made%20a%20payment.%20Here%20is%20my%20proof%20of%20payment%20(screenshot)%20for%20verification." target="_blank" class="btn-verify">📄 VERIFY</a>
     </div>
 
     <div class="stats-row">
@@ -135,21 +184,24 @@
     </div>
 
     <div class="readiness-card">
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+        <div class="readiness-header">
             <span style="font-weight:800; font-size:0.8rem;">Exam Readiness</span>
-            <span id="readiness-status" style="font-size:0.7rem; padding:2px 8px; border-radius:10px;">Critical</span>
+            <span id="readiness-status">Critical</span>
         </div>
         <div class="progress-container"><div id="readiness-bar"></div></div>
-        <div id="readiness-text" style="margin-top:8px; font-size:0.65rem; color:var(--text-sub); text-align:right;">0/12 Done</div>
+        <div style="margin-top:8px; font-size:0.65rem; color:var(--text-sub); text-align:right;" id="readiness-text">0/12 Topics Done</div>
     </div>
 
     <div class="balance-card" id="wallet-card">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="balance-header">
             <div>
-                <small style="opacity:0.9">Practice PIN balance:</small>
-                <h2 id="wallet-display">₦1,000.00</h2>
+                <small style="opacity:0.9">Practice PIN left:</small>
+                <h2 id="wallet-display" style="margin-top:5px;">₦1,000.00</h2>
             </div>
-            <button class="btn-topup-action" onclick="openModal('topup-modal')">➕ TOPUP</button>
+            <button class="btn-topup-action" onclick="openModal('topup-modal')">➕ TOPUP PIN</button>
+        </div>
+        <div class="progress-container" style="background: rgba(255,255,255,0.2); margin-top: 15px; height: 4px;">
+            <div id="usage-bar" style="width: 100%; height: 100%; background: white;"></div>
         </div>
     </div>
 
@@ -157,36 +209,50 @@
 
     <button class="fab-pill" onclick="openModal('exam-modal')">+ ADD EXAM</button>
 
+    <div id="leaderboard-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 style="color:var(--opay-purple); margin-bottom:15px;">Global Ranking 🏆</h3>
+            <div id="leaderboard-list">
+                <div class="leaderboard-row"><span>1. Adebayo Kunle</span><b>42h 10m</b></div>
+                <div class="leaderboard-row"><span>2. Chima Precious</span><b>38h 25m</b></div>
+                <div class="leaderboard-row" style="color:var(--opay-green); border:none;"><span>YOU (Student)</span><b id="modal-user-time">0h 0m</b></div>
+            </div>
+            <button class="btn-main" style="margin-top:20px;" onclick="closeModals()">Back to Studies</button>
+        </div>
+    </div>
+
     <div id="topup-modal" class="modal-overlay">
         <div class="modal-content">
-            <h3 style="margin-bottom:20px;">Get Study PIN 💳</h3>
-            <div class="method-item" onclick="redirectToWhatsApp('Payment')">
+            <h3 style="margin-bottom:20px;">Choose Top-up Method</h3>
+            <div class="method-item" onclick="handleTopup('Card')">
                 <span class="method-icon">💳</span>
-                <div class="method-info"><b>Pay via Transfer/Card</b><span>Get an instant PIN via WhatsApp</span></div>
+                <div class="method-info"><b>Via Card</b><span>Instant topup via secure gateway</span></div>
             </div>
             <div class="method-item" onclick="handleTopup('Keychain')">
                 <span class="method-icon">🔑</span>
-                <div class="method-info"><b>I have a PIN</b><span>Redeem your 6-digit license key</span></div>
+                <div class="method-info"><b>Via Keychain</b><span>Redeem pre-paid license key</span></div>
             </div>
-            <center><p onclick="closeModals()" style="margin-top:20px; font-size:0.8rem; cursor:pointer; color:var(--text-sub);">Cancel</p></center>
+            <center><p onclick="closeModals()" style="margin-top:15px; font-size:0.75rem; cursor:pointer; color:var(--text-sub);">Cancel</p></center>
         </div>
     </div>
 
     <div id="keychain-modal" class="modal-overlay">
         <div class="modal-content" style="text-align:center;">
-            <h3>Redeem License Key</h3>
-            <input type="text" id="key-input" placeholder="GOCBT-XXXX" style="width:100%; padding:15px; border-radius:12px; border:2px solid var(--border-color); margin:20px 0; text-align:center; font-weight:800; font-size:1.1rem; background:var(--bg-body); color:var(--text-main);">
+            <h3 style="color:var(--opay-purple)">Redeem License Key</h3>
+            <p style="font-size:0.75rem; color:var(--text-sub); margin:10px 0;">Enter your 6-digit prepaid PIN.</p>
+            <input type="text" id="key-input" placeholder="GOCBT-XXXX" style="text-align:center; font-weight:800; width:100%; padding:15px; border-radius:12px; border:2px solid var(--border-color); background:rgba(128,128,128,0.05); color:var(--text-main); margin:15px 0; outline:none;">
             <button class="btn-main" onclick="verifyKeychain()">🔓 Activate Key</button>
-            <p onclick="closeModals()" style="margin-top:15px; cursor:pointer; color:var(--text-sub);">Back</p>
+            <center><p onclick="closeModals()" style="margin-top:15px; font-size:0.75rem; cursor:pointer; color:var(--text-sub);">Cancel</p></center>
         </div>
     </div>
 
     <div id="error-modal" class="modal-overlay">
         <div class="modal-content" style="text-align:center;">
-            <div style="font-size:3rem;">⚠️</div>
-            <h3 style="color:var(--danger)">Insufficient PIN</h3>
-            <p style="margin:15px 0; font-size:0.9rem; color:var(--text-sub);">You need ₦200 to unlock this lesson. Please top up your balance.</p>
-            <button class="btn-main" onclick="closeModals(); openModal('topup-modal')">Top-up Now</button>
+            <div style="font-size:3rem; margin-bottom:15px;">⚠️</div>
+            <h3 style="color:var(--danger)">Insufficient Balance</h3>
+            <p style="font-size:0.85rem; color:var(--text-sub); margin:15px 0;">You need ₦200 to unlock this lesson. Your current balance is too low.</p>
+            <button class="btn-main" onclick="closeModals(); setTimeout(() => openModal('topup-modal'), 100)">Top-up Now</button>
+            <p onclick="closeModals()" style="margin-top:15px; font-size:0.75rem; cursor:pointer; color:var(--text-sub);">Maybe Later</p>
         </div>
     </div>
 
@@ -196,61 +262,70 @@
                 <h4 style="color:var(--opay-purple)">Add Exam Record</h4>
                 <button onclick="closeModals()" style="background:none; border:none; font-size:1.5rem; color:var(--text-sub);">&times;</button>
             </div>
-            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScdS2JUmJlU9Vrbi7R4rSeVq1PHw0m4xCukRoFzPejzChxo4g/viewform?embedded=true" style="width:100%; height:450px; border-radius:15px; border:none;"></iframe>
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScdS2JUmJlU9Vrbi7R4rSeVq1PHw0m4xCukRoFzPejzChxo4g/viewform?embedded=true" style="width:100%; height:450px; border-radius:15px; border:1px solid var(--border-color);"></iframe>
+        </div>
+    </div>
+
+    <div id="task-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="task-name">Submission</h3>
+            <input type="email" id="student-email" placeholder="Enter Registered Email" style="width:100%; padding:12px; border-radius:10px; border:1px solid var(--border-color); margin:15px 0; background:rgba(128,128,128,0.05); color:var(--text-main);">
+            <button class="btn-main" onclick="requestPin()">📤 Finalize Assignment</button>
+            <center><p onclick="closeModals()" style="margin-top:15px; font-size:0.75rem; cursor:pointer; color:var(--text-sub);">Cancel</p></center>
+        </div>
+    </div>
+
+    <div id="pin-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 style="text-align:center;">Security PIN</h3>
+            <input type="password" id="pin-input" maxlength="4" placeholder="****" style="width:100%; text-align:center; font-size:1.5rem; letter-spacing:10px; margin:15px 0; border:1px solid var(--border-color); border-radius:10px; padding:12px; background:rgba(128,128,128,0.05); color:var(--text-main);">
+            <button class="btn-main" onclick="verifyFinalPin()">Confirm & Unlock</button>
         </div>
     </div>
 
     <nav>
-        <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp" style="text-decoration:none; font-size:1.2rem;">🏠</a>
-        <a href="#" style="color:var(--opay-purple); text-decoration:none; font-size:1.2rem;">📚</a>
-        <a href="#" onclick="resetAll()" style="text-decoration:none; font-size:1.2rem;">🔄</a>
+        <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp" style="text-decoration:none;">🏠</a>
+        <a href="#" class="active" style="color:var(--opay-purple); text-decoration:none;">📚</a>
+        <a href="#" onclick="resetAll()" style="text-decoration:none;">🔄</a>
     </nav>
 </div>
 
 <script>
-    const ADMIN_PHONE = "2348157505037";
+    // --- LOCAL CMS & PERSISTENCE LAYER ---
     const CMS = {
         save: (key, val) => localStorage.setItem(key, JSON.stringify(val)),
         get: (key, fallback) => {
             const data = localStorage.getItem(key);
-            try { return data ? JSON.parse(data) : fallback; } catch (e) { return fallback; }
+            try {
+                return data ? JSON.parse(data) : fallback;
+            } catch (e) { return fallback; }
         }
     };
 
+    // Splash Screen Timer
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const splash = document.getElementById('splash-screen');
+            splash.style.opacity = '0';
+            setTimeout(() => splash.style.display = 'none', 600);
+        }, 1500);
+    });
+
+    const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScdS2JUmJlU9Vrbi7R4rSeVq1PHw0m4xCukRoFzPejzChxo4g/viewform?embedded=true";
+    
+    // Load persisted state or defaults
     let wallet = CMS.get('wallet_bal', 1000);
     let subjectsUnlocked = CMS.get('unlocked_count', 0);
-    const VALID_KEYS = { "GOCBT-500": 500, "GOCBT-1000": 1000, "GOCBT-2000": 2000, "FREE-200": 200 };
+    let activeId = null;
+    let timerInterval = null;
 
-    // WHATSAPP FLOW
-    function redirectToWhatsApp(type) {
-        let message = "";
-        if (type === 'Payment') {
-            message = encodeURIComponent("Hello Admin, I want to purchase a goCBT Lesson PIN. Please send payment details.");
-        } else if (type === 'Verify') {
-            message = encodeURIComponent("Hello Admin, I have made a payment. Here is my proof of payment for verification.");
-        }
-        window.open(`https://wa.me/${ADMIN_PHONE}?text=${message}`, '_blank');
-    }
+    const VALID_KEYS = { "GOCBT-500": 500, "GOCBT-1000": 1000, "GOCBT-2000": 2000, "FREE-LUNCH": 200 };
 
-    function handleTopup(method) {
-        if (method === 'Keychain') {
-            closeModals();
-            openModal('keychain-modal');
-        }
-    }
+    if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
 
-    function verifyKeychain() {
-        const input = document.getElementById('key-input').value.toUpperCase().trim();
-        const amount = VALID_KEYS[input];
-        if (amount) {
-            wallet += amount;
-            updateWalletUI();
-            alert(`🎉 Success! ₦${amount} added.`);
-            document.getElementById('key-input').value = "";
-            closeModals();
-        } else {
-            alert("❌ Invalid PIN. Please contact Admin via WhatsApp.");
-        }
+    function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
     }
 
     const subjects = [
@@ -262,14 +337,56 @@
         { dept: "Science", list: [
             { id: 4, title: "Physics", desc: "Mechanics, Heat & Waves." },
             { id: 5, title: "Chemistry", desc: "Organic & Inorganic." },
-            { id: 6, title: "Biology", desc: "Genetics & Ecology." }
+            { id: 6, title: "Biology", desc: "Genetics & Ecology." },
+            { id: 10, title: "Further Maths", desc: "Advanced Trigonometry." }
         ]},
         { dept: "Art / Commercial", list: [
             { id: 7, title: "Economics", desc: "Markets & Elasticity." },
             { id: 8, title: "Government", desc: "Nationalism & Power." },
-            { id: 9, title: "Literature", desc: "African Prose & Drama." }
+            { id: 9, title: "Literature", desc: "African Prose & Drama." },
+            { id: 11, title: "Commerce", desc: "Trade & Warehousing." },
+            { id: 12, title: "Accounting", desc: "Balance Sheets & Ledgers." }
         ]}
     ];
+
+    function handleTopup(method) {
+        if (method === 'Keychain') {
+            closeModals();
+            openModal('keychain-modal');
+        } else {
+            alert("Redirecting to " + method + " gateway...");
+        }
+    }
+
+    function verifyKeychain() {
+        const input = document.getElementById('key-input').value.toUpperCase().trim();
+        const amount = VALID_KEYS[input];
+        if (amount) {
+            wallet += amount;
+            updateWalletUI();
+            alert(`🎉 Success! ₦${amount} added to your Practice PIN.`);
+            document.getElementById('key-input').value = "";
+            closeModals();
+        } else {
+            alert("❌ Invalid PIN. Please contact Admin.");
+        }
+    }
+
+    function updateReadiness() {
+        let total = 0, completed = 0;
+        subjects.forEach(cat => cat.list.forEach(s => {
+            total++;
+            if(localStorage.getItem(`topic_${s.id}_done`)) completed++;
+        }));
+        const percent = Math.round((completed / total) * 100);
+        const bar = document.getElementById('readiness-bar');
+        const status = document.getElementById('readiness-status');
+        bar.style.width = percent + '%';
+        document.getElementById('readiness-text').innerText = `${completed} / ${total} Topics Completed`;
+        if (percent <= 25) { status.innerText = 'Critical'; status.style.background = '#ffebeb'; status.style.color = '#ff4d4d'; bar.style.background = '#ff4d4d'; }
+        else if (percent <= 75) { status.innerText = 'Improving'; status.style.background = '#fff9eb'; status.style.color = '#ffb800'; bar.style.background = '#ffb800'; }
+        else { status.innerText = 'Exam Ready'; status.style.background = '#ebfffa'; status.style.color = '#00d28d'; bar.style.background = '#00d28d'; }
+    }
 
     function renderTopics() {
         const query = document.getElementById('subject-search').value.toLowerCase();
@@ -282,69 +399,94 @@
                 container.innerHTML += `<div class="dept-header">${cat.dept}</div>`;
                 filtered.forEach(s => {
                     const isDone = localStorage.getItem(`topic_${s.id}_done`);
+                    const savedTime = localStorage.getItem(`time_${s.id}`) || "00:00:00";
+                    
                     container.innerHTML += `
                         <div class="topic-card">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                                <b style="color:var(--text-main); font-size:1rem;">${s.title}</b>
-                                <span style="font-size:0.7rem; color:var(--opay-purple); font-weight:800;">⏳ 00:00</span>
+                            <div class="card-header">
+                                <div class="subject-title">${s.title}</div>
+                                <div class="timer-badge">⏳ <span id="time-display-${s.id}">${savedTime}</span></div>
                             </div>
-                            <p style="font-size:0.75rem; color:var(--text-sub); margin-bottom:15px;">${s.desc}</p>
-                            <button class="btn-main" onclick="${isDone ? '' : `handleStart(${s.id})`}" 
-                                style="background:${isDone ? 'var(--border-color)' : ''}; color:${isDone ? 'var(--text-sub)' : ''}">
-                                ${isDone ? '✓ Completed' : 'Unlock Lesson (-₦200)'}
+                            <div class="subject-desc" style="font-size:0.7rem; color:var(--text-sub); margin-bottom:12px;">${s.desc}</div>
+                            <div class="cta-grid">
+                                <button class="btn-cta" onclick="alert('Checking Schedule...')">📅 Date</button>
+                                <a href="https://google.com" target="_blank" class="btn-cta">📝 Quiz</a>
+                            </div>
+                            <button class="btn-main" onclick="${isDone ? '' : `handleStart(${s.id}, '${s.title}')`}" 
+                                    style="background:${isDone ? '#eee' : ''}; color:${isDone ? '#888' : ''}">
+                                ${isDone ? '✓ Completed' : 'Mark as Complete (-₦200)'}
                             </button>
                         </div>`;
                 });
             }
         });
-        updateReadiness();
-    }
-
-    function handleStart(id) {
-        if (wallet < 200) {
-            openModal('error-modal');
-            return;
-        }
-        wallet -= 200;
-        localStorage.setItem(`topic_${id}_done`, 'true');
         updateWalletUI();
-        renderTopics();
-        window.open("https://docs.google.com/forms/d/e/1FAIpQLScdS2JUmJlU9Vrbi7R4rSeVq1PHw0m4xCukRoFzPejzChxo4g/viewform", "_blank");
+        updateReadiness();
+        updateStats();
     }
 
-    function updateWalletUI() {
-        document.getElementById('wallet-display').innerText = `₦${wallet.toLocaleString()}.00`;
+    function handleStart(id, title) {
+        // Deduction logic
+        if (!localStorage.getItem(`topic_${id}_done`)) {
+            if (wallet < 200) {
+                const card = document.getElementById('wallet-card');
+                card.classList.add('shake-error');
+                setTimeout(() => card.classList.remove('shake-error'), 400);
+                openModal('error-modal');
+                return;
+            }
+            wallet -= 200;
+            subjectsUnlocked += 1;
+            
+            // Persist completion and wallet
+            localStorage.setItem(`topic_${id}_done`, 'true');
+            CMS.save('wallet_bal', wallet);
+            CMS.save('unlocked_count', subjectsUnlocked);
+
+            // Open Task Modal & Redirect
+            document.getElementById('task-name').innerText = title;
+            openModal('task-modal');
+            renderTopics();
+        }
+    }
+
+    function requestPin() { if (subjectsUnlocked > 3) openModal('pin-modal'); else finalizeSubject(); }
+    function verifyFinalPin() { if (document.getElementById('pin-input').value === "1234") finalizeSubject(); else alert("Wrong PIN (1234)"); }
+    
+    function finalizeSubject() { 
+        closeModals(); 
+        window.open(GOOGLE_FORM_URL, '_blank'); 
+    }
+
+    function updateWalletUI() { 
+        document.getElementById('wallet-display').innerText = `₦${wallet.toLocaleString()}.00`; 
+        document.getElementById('usage-bar').style.width = (Math.min(wallet/2000*100, 100))+'%'; 
         CMS.save('wallet_bal', wallet);
+        CMS.save('unlocked_count', subjectsUnlocked);
     }
 
-    function updateReadiness() {
-        let total = 9, completed = 0;
-        for(let i=1; i<=12; i++) if(localStorage.getItem(`topic_${i}_done`)) completed++;
-        const percent = (completed / total) * 100;
-        document.getElementById('readiness-bar').style.width = percent + '%';
-        document.getElementById('readiness-text').innerText = `${completed}/${total} Topics Done`;
-        const status = document.getElementById('readiness-status');
-        if(percent > 70) { status.innerText = "Ready"; status.style.background = "#ebfffa"; status.style.color = "var(--opay-green)"; }
-        else { status.innerText = "Critical"; status.style.background = "#ffebeb"; status.style.color = "var(--danger)"; }
+    function updateStats() {
+        let totalSecs = 0;
+        subjects.forEach(c => c.list.forEach(s => {
+            const timeVal = localStorage.getItem(`time_${s.id}`);
+            if(timeVal) {
+                const [h, m, sec] = timeVal.split(':').map(Number);
+                totalSecs += (h * 3600) + (m * 60) + sec;
+            }
+        }));
+        const hrs = Math.floor(totalSecs / 3600);
+        const mins = Math.floor((totalSecs % 3600) / 60);
+        const display = `${hrs}h ${mins}m`;
+        document.getElementById('total-study-time').innerText = display;
+        document.getElementById('modal-user-time').innerText = display;
+        document.getElementById('user-rank').innerText = hrs > 10 ? "#1" : "#3";
     }
 
     function openModal(id) { document.getElementById(id).style.display = 'flex'; }
     function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); }
-    function toggleDarkMode() {
-        document.body.classList.toggle('dark-mode');
-        localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
-    }
-    function resetAll() { if(confirm("Reset all progress?")) { localStorage.clear(); location.reload(); } }
-
-    window.onload = () => {
-        if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
-        updateWalletUI();
-        renderTopics();
-        setTimeout(() => {
-            document.getElementById('splash-screen').style.opacity = '0';
-            setTimeout(() => document.getElementById('splash-screen').style.display = 'none', 600);
-        }, 1500);
-    };
+    function resetAll() { if(confirm("Clear Progress?")) { localStorage.clear(); location.reload(); } }
+    
+    window.onload = renderTopics;
 </script>
 </body>
 </html>
