@@ -291,6 +291,17 @@
 </div>
 
 <script>
+    // --- LOCAL CMS & PERSISTENCE LAYER ---
+    const CMS = {
+        save: (key, val) => localStorage.setItem(key, JSON.stringify(val)),
+        get: (key, fallback) => {
+            const data = localStorage.getItem(key);
+            try {
+                return data ? JSON.parse(data) : fallback;
+            } catch (e) { return fallback; }
+        }
+    };
+
     // Splash Screen Timer
     window.addEventListener('load', () => {
         setTimeout(() => {
@@ -301,8 +312,10 @@
     });
 
     const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScdS2JUmJlU9Vrbi7R4rSeVq1PHw0m4xCukRoFzPejzChxo4g/viewform?embedded=true";
-    let wallet = parseInt(localStorage.getItem('wallet_bal') || '1000');
-    let subjectsUnlocked = parseInt(localStorage.getItem('unlocked_count') || '0');
+    
+    // Load persisted state or defaults
+    let wallet = CMS.get('wallet_bal', 1000);
+    let subjectsUnlocked = CMS.get('unlocked_count', 0);
     let activeId = null;
     let timerInterval = null;
 
@@ -386,7 +399,6 @@
                 container.innerHTML += `<div class="dept-header">${cat.dept}</div>`;
                 filtered.forEach(s => {
                     const isDone = localStorage.getItem(`topic_${s.id}_done`);
-                    const isRunning = activeId === s.id;
                     const savedTime = localStorage.getItem(`time_${s.id}`) || "00:00:00";
                     
                     container.innerHTML += `
@@ -400,9 +412,9 @@
                                 <button class="btn-cta" onclick="alert('Checking Schedule...')">📅 Date</button>
                                 <a href="https://google.com" target="_blank" class="btn-cta">📝 Quiz</a>
                             </div>
-                            <button class="btn-main ${isRunning ? 'btn-stop' : ''}" onclick="handleStart(${s.id}, '${s.title}')" 
-                                    style="background:${isDone && !isRunning ? '#eee' : ''}; color:${isDone && !isRunning ? '#888' : ''}">
-                                ${isRunning ? 'Stop Session' : (isDone ? '✓ Resume Lesson' : 'Start Lesson (-₦200)')}
+                            <button class="btn-main" onclick="${isDone ? '' : `handleStart(${s.id}, '${s.title}')`}" 
+                                    style="background:${isDone ? '#eee' : ''}; color:${isDone ? '#888' : ''}">
+                                ${isDone ? '✓ Completed' : 'Mark as Complete (-₦200)'}
                             </button>
                         </div>`;
                 });
@@ -414,13 +426,7 @@
     }
 
     function handleStart(id, title) {
-        if (activeId === id) {
-            clearInterval(timerInterval);
-            activeId = null;
-            renderTopics();
-            return;
-        }
-
+        // Deduction logic
         if (!localStorage.getItem(`topic_${id}_done`)) {
             if (wallet < 200) {
                 const card = document.getElementById('wallet-card');
@@ -431,50 +437,42 @@
             }
             wallet -= 200;
             subjectsUnlocked += 1;
+            
+            // Persist completion and wallet
+            localStorage.setItem(`topic_${id}_done`, 'true');
+            CMS.save('wallet_bal', wallet);
+            CMS.save('unlocked_count', subjectsUnlocked);
+
+            // Open Task Modal & Redirect
+            document.getElementById('task-name').innerText = title;
+            openModal('task-modal');
+            renderTopics();
         }
-
-        if (activeId) clearInterval(timerInterval);
-        activeId = id;
-        
-        let [h, m, s] = (localStorage.getItem(`time_${id}`) || "00:00:00").split(':').map(Number);
-        
-        timerInterval = setInterval(() => {
-            s++; if(s===60){s=0; m++;} if(m===60){m=0; h++;}
-            const timeStr = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-            const el = document.getElementById(`time-display-${id}`);
-            if(el) el.innerText = timeStr;
-            localStorage.setItem(`time_${id}`, timeStr);
-            updateStats();
-        }, 1000);
-
-        document.getElementById('task-name').innerText = title;
-        openModal('task-modal');
-        updateWalletUI();
-        renderTopics();
     }
 
     function requestPin() { if (subjectsUnlocked > 3) openModal('pin-modal'); else finalizeSubject(); }
     function verifyFinalPin() { if (document.getElementById('pin-input').value === "1234") finalizeSubject(); else alert("Wrong PIN (1234)"); }
     
     function finalizeSubject() { 
-        localStorage.setItem(`topic_${activeId}_done`, 'true'); 
         closeModals(); 
-        renderTopics(); 
         window.open(GOOGLE_FORM_URL, '_blank'); 
     }
 
     function updateWalletUI() { 
         document.getElementById('wallet-display').innerText = `₦${wallet.toLocaleString()}.00`; 
         document.getElementById('usage-bar').style.width = (Math.min(wallet/2000*100, 100))+'%'; 
-        localStorage.setItem('wallet_bal', wallet);
-        localStorage.setItem('unlocked_count', subjectsUnlocked);
+        CMS.save('wallet_bal', wallet);
+        CMS.save('unlocked_count', subjectsUnlocked);
     }
 
     function updateStats() {
         let totalSecs = 0;
         subjects.forEach(c => c.list.forEach(s => {
-            const [h, m, sec] = (localStorage.getItem(`time_${s.id}`) || "00:00:00").split(':').map(Number);
-            totalSecs += (h * 3600) + (m * 60) + sec;
+            const timeVal = localStorage.getItem(`time_${s.id}`);
+            if(timeVal) {
+                const [h, m, sec] = timeVal.split(':').map(Number);
+                totalSecs += (h * 3600) + (m * 60) + sec;
+            }
         }));
         const hrs = Math.floor(totalSecs / 3600);
         const mins = Math.floor((totalSecs % 3600) / 60);
