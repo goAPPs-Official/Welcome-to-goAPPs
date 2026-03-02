@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🎓 goCBT Academy Pro</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -14,7 +14,7 @@
             --warning: #ffb800;
             
             /* Light Theme Variables */
-            --bg-body: #121212;
+            --bg-body: #f8f9fa;
             --bg-app: #f8f9fa;
             --bg-card: #ffffff;
             --text-main: #333333;
@@ -24,6 +24,7 @@
 
         /* Dark Mode Class */
         body.dark-mode {
+            --bg-body: #121212;
             --bg-app: #1a1a1a;
             --bg-card: #252525;
             --text-main: #ffffff;
@@ -31,15 +32,44 @@
             --border-color: #333333;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; transition: background 0.3s, color 0.3s; }
-        body { background-color: var(--bg-body); display: flex; justify-content: center; min-height: 100vh; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; transition: background 0.3s, color 0.3s; -webkit-tap-highlight-color: transparent; }
+        
+        /* --- SPLASH SCREEN --- */
+        #splash-screen {
+            position: fixed; inset: 0; background: var(--opay-gradient);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 9999; transition: opacity 0.6s ease, visibility 0.6s;
+        }
+        .splash-logo { font-size: 3.5rem; margin-bottom: 20px; animation: pulse 1.5s infinite; }
+        .splash-text { color: white; font-weight: 800; font-size: 1.5rem; letter-spacing: 2px; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
-        .phone-container {
-            width: 375px; height: 812px; background: var(--bg-app); border-radius: 40px;
-            overflow: hidden; position: relative; border: 8px solid #333; display: flex; flex-direction: column;
+        /* Fullscreen Layout Updates */
+        body { background-color: var(--bg-body); min-height: 100vh; display: block; }
+
+        .app-wrapper {
+            width: 100%;
+            max-width: 600px; /* Centered readable width for desktop */
+            margin: 0 auto;
+            min-height: 100vh;
+            background: var(--bg-app);
+            display: flex;
+            flex-direction: column;
+            position: relative;
         }
 
-        header { padding: 15px 20px; background: var(--bg-card); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+        header { 
+            padding: 15px 20px; background: var(--bg-card); display: flex; 
+            justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; 
+        }
+
+        .header-left { display: flex; align-items: center; gap: 15px; }
+        .back-btn { 
+            background: rgba(128,128,128,0.1); border: none; border-radius: 10px; 
+            width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; 
+            cursor: pointer; color: var(--text-main); font-size: 1.2rem; font-weight: bold;
+        }
         
         .sticky-action { padding: 12px 15px; background: var(--bg-card); z-index: 10; border-bottom: 1px solid var(--border-color); display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         
@@ -56,13 +86,10 @@
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* Wallet Card with Topup */
         .balance-card { margin: 10px 15px; padding: 20px; background: var(--opay-gradient); border-radius: 20px; color: white; transition: 0.3s; position: relative; }
         .balance-header { display: flex; justify-content: space-between; align-items: flex-start; }
         .btn-topup-action { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 6px 12px; border-radius: 8px; font-size: 0.65rem; font-weight: 800; cursor: pointer; }
-        .btn-topup-action:hover { background: white; color: var(--opay-purple); }
 
-        /* Error Shake Animation */
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-6px); }
@@ -70,7 +97,6 @@
         }
         .shake-error { animation: shake 0.2s ease-in-out 0s 2; border: 2px solid var(--danger); }
 
-        /* Readiness Tracker */
         .readiness-card { margin: 15px 15px 5px 15px; padding: 15px; background: var(--bg-card); border-radius: 20px; border: 1px solid var(--border-color); box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
         .readiness-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; color: var(--text-main); }
         #readiness-status { font-size: 0.7rem; font-weight: 800; padding: 4px 10px; border-radius: 12px; text-transform: uppercase; }
@@ -92,31 +118,39 @@
         .btn-main { background: var(--opay-green); color: white; width: 100%; padding: 12px; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; }
 
         .fab-pill {
-            position: absolute; bottom: 85px; right: 20px; 
+            position: fixed; bottom: 85px; right: 20px; 
             padding: 12px 24px; background: var(--opay-purple); 
             color: white; border-radius: 30px; border: none;
             cursor: pointer; z-index: 50; font-size: 0.85rem; font-weight: 800;
+            box-shadow: 0 5px 15px rgba(75, 68, 224, 0.4);
         }
 
-        .modal-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.92); display: none; z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
-        .modal-content { background: var(--bg-card); width: 92%; border-radius: 25px; padding: 25px; color: var(--text-main); }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.92); display: none; z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+        .modal-content { background: var(--bg-card); width: 92%; max-width: 400px; border-radius: 25px; padding: 25px; color: var(--text-main); }
         
-        /* Topup Method Styles */
         .method-item { display: flex; align-items: center; padding: 15px; background: rgba(128,128,128,0.05); border-radius: 15px; margin-bottom: 10px; cursor: pointer; border: 1px solid var(--border-color); }
-        .method-item:hover { border-color: var(--opay-purple); background: rgba(75, 68, 224, 0.05); }
         .method-icon { font-size: 1.2rem; margin-right: 15px; }
         .method-info b { font-size: 0.85rem; display: block; }
         .method-info span { font-size: 0.65rem; color: var(--text-sub); }
 
-        nav { position: absolute; bottom: 0; width: 100%; background: var(--bg-card); display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid var(--border-color); }
+        nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-card); display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid var(--border-color); z-index: 100; }
         .theme-toggle { cursor: pointer; font-size: 1.2rem; }
     </style>
 </head>
 <body class="light-mode">
 
-<div class="phone-container">
+<div id="splash-screen">
+    <div class="splash-logo">🎓</div>
+    <div class="splash-text">goCBT ACADEMY</div>
+    <div style="color:rgba(255,255,255,0.7); margin-top:10px; font-size:0.8rem;">Preparing your classroom...</div>
+</div>
+
+<div class="app-wrapper">
     <header>
-        <div style="font-weight: 800; color: var(--opay-purple); font-size: 1.1rem;">🎓 goCBT CLASS</div>
+        <div class="header-left">
+            <button class="back-btn" onclick="window.history.back()">‹</button>
+            <div style="font-weight: 800; color: var(--opay-purple); font-size: 1.1rem;">🎓 goCBT CLASS</div>
+        </div>
         <div class="theme-toggle" onclick="toggleDarkMode()">🌓</div>
     </header>
 
@@ -222,19 +256,27 @@
     </div>
 
     <nav>
-        <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp">🏠</a>
-        <a href="#" class="active" style="color:var(--opay-purple)">📚</a>
-        <a href="#" onclick="resetAll()">🔄</a>
+        <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp" style="text-decoration:none;">🏠</a>
+        <a href="#" class="active" style="color:var(--opay-purple); text-decoration:none;">📚</a>
+        <a href="#" onclick="resetAll()" style="text-decoration:none;">🔄</a>
     </nav>
 </div>
 
 <script>
+    // Splash Screen Timer
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            const splash = document.getElementById('splash-screen');
+            splash.style.opacity = '0';
+            setTimeout(() => splash.style.display = 'none', 600);
+        }, 1500);
+    });
+
     const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScdS2JUmJlU9Vrbi7R4rSeVq1PHw0m4xCukRoFzPejzChxo4g/viewform?embedded=true";
     let wallet = parseInt(localStorage.getItem('wallet_bal') || '1000');
     let subjectsUnlocked = parseInt(localStorage.getItem('unlocked_count') || '0');
     let activeId = null;
 
-    // Keychain Database
     const VALID_KEYS = { "GOCBT-500": 500, "GOCBT-1000": 1000, "GOCBT-2000": 2000, "FREE-LUNCH": 200 };
 
     if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
@@ -328,8 +370,6 @@
 
     function handleStart(id, title) {
         if (localStorage.getItem(`topic_${id}_done`)) return;
-        
-        // Visual Error Feedback
         if (wallet < 200) {
             const card = document.getElementById('wallet-card');
             card.classList.add('shake-error');
@@ -337,7 +377,6 @@
             openModal('error-modal');
             return;
         }
-
         activeId = id; wallet -= 200; subjectsUnlocked += 1; updateWalletUI();
         document.getElementById('task-name').innerText = title;
         openModal('task-modal');
