@@ -31,77 +31,89 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; transition: background 0.3s, color 0.3s; -webkit-tap-highlight-color: transparent; }
         
-        body { background-color: var(--bg-body); min-height: 100vh; overflow-x: hidden; user-select: none; }
+        body { background-color: var(--bg-body); min-height: 100vh; overflow-x: hidden; }
 
+        /* --- NEW: NOTIFICATION TOAST --- */
+        #notification-toast {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 350px;
+            background: var(--opay-green);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 10px 25px rgba(0, 210, 141, 0.3);
+            z-index: 10001;
+            transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #notification-toast.show { top: 20px; }
+        .toast-icon { background: rgba(255,255,255,0.2); width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+
+        /* Splash Screen */
         #splash-screen {
             position: fixed; inset: 0; background: var(--opay-gradient);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             z-index: 9999; transition: opacity 0.6s ease, visibility 0.6s;
         }
         .splash-logo { font-size: 3.5rem; margin-bottom: 20px; animation: pulse 1.5s infinite; }
-        .splash-text { color: white; font-weight: 800; font-size: 1.5rem; letter-spacing: 2px; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
-        .app-wrapper {
-            width: 100%; max-width: 600px; margin: 0 auto; min-height: 100vh;
-            background: var(--bg-app); display: flex; flex-direction: column; position: relative;
-        }
-
+        /* Layout & Mobile Adjustments */
+        .app-wrapper { width: 100%; max-width: 600px; margin: 0 auto; min-height: 100vh; background: var(--bg-app); position: relative; }
+        
         header { 
-            padding: 15px 20px; background: var(--bg-card); display: flex; 
+            padding: 12px 15px; background: var(--bg-card); display: flex; 
             justify-content: space-between; align-items: center; 
             border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 100; 
         }
 
-        .header-left { display: flex; align-items: center; gap: 15px; }
-        .back-btn { 
-            background: rgba(128,128,128,0.1); border: none; border-radius: 10px; 
-            width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; 
-            cursor: pointer; color: var(--text-main); font-size: 1.2rem;
-        }
+        .sticky-action { padding: 10px 15px; background: var(--bg-card); display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         
-        /* Responsive Grid for Buttons */
-        .sticky-action { padding: 12px 15px; background: var(--bg-card); z-index: 10; border-bottom: 1px solid var(--border-color); display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        
-        .btn-purchase { background: var(--text-main); color: var(--bg-card); padding: 12px; border-radius: 12px; font-weight: 800; border: none; cursor: pointer; font-size: 0.75rem; text-align: center; }
-        .btn-verify { background: transparent; color: var(--opay-purple); padding: 10px; border-radius: 12px; font-weight: 800; border: 2px solid var(--opay-purple); cursor: pointer; font-size: 0.75rem; text-align: center; }
+        .btn-purchase { background: var(--text-main); color: var(--bg-card); padding: 12px; border-radius: 12px; font-weight: 800; border: none; font-size: 0.75rem; text-decoration: none; text-align: center; }
+        .btn-verify { border: 2px solid var(--opay-purple); color: var(--opay-purple); padding: 10px; border-radius: 12px; font-weight: 800; font-size: 0.75rem; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; }
 
-        .search-area { padding: 10px 15px; background: var(--bg-card); }
-        .search-input { width: 100%; padding: 12px 15px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-body); color: var(--text-main); font-size: 0.9rem; outline: none; }
+        .search-area { padding: 10px 15px; }
+        .search-input { width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--bg-card); color: var(--text-main); font-size: 0.9rem; }
 
-        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 15px; }
+        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 15px; }
         .stat-card { background: var(--bg-card); padding: 12px; border-radius: 15px; border: 1px solid var(--border-color); text-align: center; }
-        .stat-card small { font-size: 0.65rem; color: var(--text-sub); display: block; }
-        .stat-card span { font-size: 0.9rem; font-weight: 800; color: var(--opay-purple); }
 
-        .balance-card { margin: 10px 15px; padding: 20px; background: var(--opay-gradient); border-radius: 20px; color: white; position: relative; }
-        .btn-topup-action { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 8px 12px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; cursor: pointer; }
+        .balance-card { margin: 15px; padding: 20px; background: var(--opay-gradient); border-radius: 20px; color: white; box-shadow: 0 8px 20px rgba(0,210,141,0.2); }
+        .btn-topup-action { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); color: white; padding: 8px 12px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; }
 
-        .readiness-card { margin: 15px; padding: 15px; background: var(--bg-card); border-radius: 20px; border: 1px solid var(--border-color); }
-        .progress-container { width: 100%; height: 8px; background: rgba(128,128,128,0.1); border-radius: 10px; overflow: hidden; }
-        #readiness-bar { height: 100%; width: 0%; transition: 0.8s; }
-
-        .main-scroll { flex: 1; overflow-y: auto; padding: 10px 15px 120px 15px; }
-        .dept-header { font-size: 0.75rem; font-weight: 800; color: var(--opay-purple); margin: 20px 0 10px 5px; text-transform: uppercase; }
-
-        .topic-card { background: var(--bg-card); border-radius: 18px; padding: 15px; margin-bottom: 15px; border: 1px solid var(--border-color); }
-        .btn-main { background: var(--opay-green); color: white; width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 700; cursor: pointer; }
-
-        /* Modal Responsiveness */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(5px); padding: 20px; }
-        .modal-content { background: var(--bg-card); width: 100%; max-width: 400px; border-radius: 25px; padding: 25px; color: var(--text-main); max-height: 90vh; overflow-y: auto; }
+        .main-scroll { padding: 10px 15px 120px 15px; }
+        .topic-card { background: var(--bg-card); border-radius: 20px; padding: 18px; margin-bottom: 15px; border: 1px solid var(--border-color); }
         
-        .method-item { display: flex; align-items: center; padding: 15px; background: rgba(128,128,128,0.05); border-radius: 15px; margin-bottom: 10px; cursor: pointer; border: 1px solid var(--border-color); }
-        .method-icon { font-size: 1.5rem; margin-right: 15px; }
-        .method-info b { font-size: 0.9rem; display: block; }
-        .method-info span { font-size: 0.7rem; color: var(--text-sub); }
+        .btn-main { background: var(--opay-green); color: white; width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 700; font-size: 0.9rem; cursor: pointer; }
+
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: none; z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+        .modal-content { background: var(--bg-card); width: 100%; max-width: 400px; border-radius: 25px; padding: 25px; position: relative; }
 
         nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--bg-card); display: flex; justify-content: space-around; padding: 15px; border-top: 1px solid var(--border-color); z-index: 100; }
         
-        .fab-pill { position: fixed; bottom: 85px; right: 20px; padding: 12px 20px; background: var(--opay-purple); color: white; border-radius: 30px; border: none; font-weight: 800; box-shadow: 0 5px 15px rgba(75,68,224,0.4); z-index: 90; }
+        .fab-pill { position: fixed; bottom: 85px; right: 20px; padding: 12px 20px; background: var(--opay-purple); color: white; border-radius: 30px; border: none; font-weight: 800; box-shadow: 0 5px 15px rgba(75, 68, 224, 0.4); }
+
+        @media (max-width: 360px) {
+            .subject-title { font-size: 0.85rem; }
+            .btn-cta { font-size: 0.65rem; }
+        }
     </style>
 </head>
 <body class="light-mode">
+
+<div id="notification-toast">
+    <div class="toast-icon">✓</div>
+    <div>
+        <b style="display:block; font-size:0.85rem;">Success!</b>
+        <span id="toast-message" style="font-size:0.75rem; opacity:0.9;">Wallet updated successfully.</span>
+    </div>
+</div>
 
 <div id="splash-screen">
     <div class="splash-logo">🎓</div>
@@ -111,104 +123,71 @@
 <div class="app-wrapper">
     <header>
         <div class="header-left">
-            <button class="back-btn" onclick="window.history.back()">‹</button>
-            <div style="font-weight: 800; color: var(--opay-purple); font-size: 1.1rem;">🎓 goCBT CLASS</div>
+            <button class="back-btn" style="background:none; border:none; font-size:1.5rem; color:var(--text-main); margin-right:10px;">‹</button>
+            <div style="font-weight: 800; color: var(--opay-purple); font-size: 1.1rem;">goCBT CLASS</div>
         </div>
         <div style="display:flex; gap:15px; align-items:center;">
             <span onclick="openModal('leaderboard-modal')" style="cursor:pointer; font-size:1.2rem;">🏆</span>
-            <div class="theme-toggle" onclick="toggleDarkMode()" style="cursor:pointer; font-size:1.2rem;">🌓</div>
+            <div class="theme-toggle" onclick="toggleDarkMode()" style="font-size:1.2rem; cursor:pointer;">🌓</div>
         </div>
     </header>
 
     <div class="search-area">
-        <input type="text" id="subject-search" class="search-input" placeholder="Search syllabus topics..." oninput="renderTopics()">
+        <input type="text" id="subject-search" class="search-input" placeholder="🔍 Search topics..." oninput="renderTopics()">
     </div>
 
     <div class="sticky-action">
-        <div class="btn-purchase" onclick="redirectToWhatsApp('Payment')">💳 BUY PIN</div>
-        <div class="btn-verify" onclick="redirectToWhatsApp('Verify')">📄 VERIFY</div>
-    </div>
-
-    <div class="stats-row">
-        <div class="stat-card"><small>Global Rank</small><span id="user-rank">#--</span></div>
-        <div class="stat-card"><small>Study Time</small><span id="total-study-time">0h 0m</span></div>
-    </div>
-
-    <div class="readiness-card">
-        <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-            <span style="font-weight:800; font-size:0.8rem;">Exam Readiness</span>
-            <span id="readiness-status" style="font-size:0.7rem; padding:2px 8px; border-radius:10px;">Critical</span>
-        </div>
-        <div class="progress-container"><div id="readiness-bar"></div></div>
-        <div id="readiness-text" style="margin-top:8px; font-size:0.65rem; color:var(--text-sub); text-align:right;">0/12 Done</div>
+        <a href="https://wa.me/2348157505037?text=Hello%20Admin,%20I%20want%20to%20purchase%20a%20goCBT%20Lesson%20PIN." target="_blank" class="btn-purchase">💳 BUY PIN</a>
+        <a href="https://wa.me/2348157505037?text=Hello%20Admin,%20I%20have%20made%20a%20payment..." target="_blank" class="btn-verify">📄 VERIFY</a>
     </div>
 
     <div class="balance-card" id="wallet-card">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="balance-header" style="display:flex; justify-content:space-between;">
             <div>
-                <small style="opacity:0.9">Practice PIN balance:</small>
-                <h2 id="wallet-display">₦1,000.00</h2>
+                <small style="opacity:0.9; font-size:0.7rem;">Available Balance</small>
+                <h2 id="wallet-display" style="margin-top:5px; font-size:1.8rem;">₦0.00</h2>
             </div>
             <button class="btn-topup-action" onclick="openModal('topup-modal')">➕ TOPUP</button>
         </div>
     </div>
 
+    <div class="stats-row">
+        <div class="stat-card"><small style="font-size:0.6rem; color:var(--text-sub);">RANK</small><br><span id="user-rank" style="font-weight:800; color:var(--opay-purple);">#--</span></div>
+        <div class="stat-card"><small style="font-size:0.6rem; color:var(--text-sub);">TIME</small><br><span id="total-study-time" style="font-weight:800; color:var(--opay-purple);">0h 0m</span></div>
+    </div>
+
     <div class="main-scroll" id="topicsContainer"></div>
 
-    <button class="fab-pill" onclick="openModal('exam-modal')">+ ADD EXAM</button>
+    <button class="fab-pill" onclick="openModal('exam-modal')">+ EXAM</button>
 
     <div id="topup-modal" class="modal-overlay">
         <div class="modal-content">
-            <h3 style="margin-bottom:20px;">Get Study PIN 💳</h3>
-            <div class="method-item" onclick="redirectToWhatsApp('Payment')">
-                <span class="method-icon">💳</span>
-                <div class="method-info"><b>Pay via Transfer/Card</b><span>Get an instant PIN via WhatsApp</span></div>
+            <h3 style="margin-bottom:20px; text-align:center;">Top-up PIN</h3>
+            <div class="method-item" onclick="handleTopup('Keychain')" style="padding:15px; border:1px solid var(--border-color); border-radius:15px; display:flex; gap:15px; align-items:center; cursor:pointer;">
+                <span style="font-size:1.5rem;">🔑</span>
+                <div><b style="font-size:0.9rem;">Redeem Keychain</b><br><small style="color:var(--text-sub);">Use a 6-digit prepaid PIN</small></div>
             </div>
-            <div class="method-item" onclick="handleTopup('Keychain')">
-                <span class="method-icon">🔑</span>
-                <div class="method-info"><b>I have a PIN</b><span>Redeem your 6-digit license key</span></div>
-            </div>
-            <center><p onclick="closeModals()" style="margin-top:20px; font-size:0.8rem; cursor:pointer; color:var(--text-sub);">Cancel</p></center>
+            <p onclick="closeModals()" style="text-align:center; margin-top:20px; color:var(--text-sub); font-size:0.8rem;">Close</p>
         </div>
     </div>
 
     <div id="keychain-modal" class="modal-overlay">
         <div class="modal-content" style="text-align:center;">
-            <h3>Redeem License Key</h3>
-            <input type="text" id="key-input" placeholder="GOCBT-XXXX" style="width:100%; padding:15px; border-radius:12px; border:2px solid var(--border-color); margin:20px 0; text-align:center; font-weight:800; font-size:1.1rem; background:var(--bg-body); color:var(--text-main);">
-            <button class="btn-main" onclick="verifyKeychain()">🔓 Activate Key</button>
-            <p onclick="closeModals()" style="margin-top:15px; cursor:pointer; color:var(--text-sub);">Back</p>
-        </div>
-    </div>
-
-    <div id="error-modal" class="modal-overlay">
-        <div class="modal-content" style="text-align:center;">
-            <div style="font-size:3rem;">⚠️</div>
-            <h3 style="color:var(--danger)">Insufficient PIN</h3>
-            <p style="margin:15px 0; font-size:0.9rem; color:var(--text-sub);">You need ₦200 to unlock this lesson. Please top up your balance.</p>
-            <button class="btn-main" onclick="closeModals(); openModal('topup-modal')">Top-up Now</button>
-        </div>
-    </div>
-
-    <div id="exam-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                <h4 style="color:var(--opay-purple)">Add Exam Record</h4>
-                <button onclick="closeModals()" style="background:none; border:none; font-size:1.5rem; color:var(--text-sub);">&times;</button>
-            </div>
-            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScdS2JUmJlU9Vrbi7R4rSeVq1PHw0m4xCukRoFzPejzChxo4g/viewform?embedded=true" style="width:100%; height:450px; border-radius:15px; border:none;"></iframe>
+            <h3 style="color:var(--opay-purple)">Enter License Key</h3>
+            <input type="text" id="key-input" placeholder="GOCBT-XXXX" style="width:100%; padding:15px; border-radius:12px; border:2px solid var(--opay-purple); margin:20px 0; text-align:center; font-weight:800; outline:none;">
+            <button class="btn-main" onclick="verifyKeychain()">Unlock Balance</button>
+            <p onclick="closeModals()" style="margin-top:15px; font-size:0.8rem; color:var(--text-sub);">Cancel</p>
         </div>
     </div>
 
     <nav>
-        <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp" style="text-decoration:none; font-size:1.2rem;">🏠</a>
-        <a href="#" style="color:var(--opay-purple); text-decoration:none; font-size:1.2rem;">📚</a>
-        <a href="#" onclick="resetAll()" style="text-decoration:none; font-size:1.2rem;">🔄</a>
+        <a href="#" style="font-size:1.4rem;">🏠</a>
+        <a href="#" style="font-size:1.4rem; color:var(--opay-purple);">📚</a>
+        <a href="#" onclick="resetAll()" style="font-size:1.4rem;">🔄</a>
     </nav>
 </div>
 
 <script>
-    const ADMIN_PHONE = "2348157505037";
     const CMS = {
         save: (key, val) => localStorage.setItem(key, JSON.stringify(val)),
         get: (key, fallback) => {
@@ -219,132 +198,73 @@
 
     let wallet = CMS.get('wallet_bal', 1000);
     let subjectsUnlocked = CMS.get('unlocked_count', 0);
-    const VALID_KEYS = { "GOCBT-500": 500, "GOCBT-1000": 1000, "GOCBT-2000": 2000, "FREE-200": 200 };
+    const VALID_KEYS = { "GOCBT-500": 500, "GOCBT-1000": 1000, "GOCBT-2000": 2000, "FREE-LUNCH": 200 };
 
-    // WHATSAPP FLOW
-    function redirectToWhatsApp(type) {
-        let message = "";
-        if (type === 'Payment') {
-            message = encodeURIComponent("Hello Admin, I want to purchase a goCBT Lesson PIN. Please send payment details.");
-        } else if (type === 'Verify') {
-            message = encodeURIComponent("Hello Admin, I have made a payment. Here is my proof of payment for verification.");
-        }
-        window.open(`https://wa.me/${ADMIN_PHONE}?text=${message}`, '_blank');
-    }
-
-    function handleTopup(method) {
-        if (method === 'Keychain') {
-            closeModals();
-            openModal('keychain-modal');
-        }
+    // --- NEW: TOAST NOTIFICATION LOGIC ---
+    function showNotification(message) {
+        const toast = document.getElementById('notification-toast');
+        document.getElementById('toast-message').innerText = message;
+        toast.classList.add('show');
+        if (navigator.vibrate) navigator.vibrate(50); // Haptic feedback
+        setTimeout(() => toast.classList.remove('show'), 3500);
     }
 
     function verifyKeychain() {
         const input = document.getElementById('key-input').value.toUpperCase().trim();
         const amount = VALID_KEYS[input];
+        
         if (amount) {
             wallet += amount;
             updateWalletUI();
-            alert(`🎉 Success! ₦${amount} added.`);
-            document.getElementById('key-input').value = "";
             closeModals();
+            document.getElementById('key-input').value = "";
+            setTimeout(() => {
+                showNotification(`₦${amount.toLocaleString()} added to your account!`);
+            }, 300);
         } else {
-            alert("❌ Invalid PIN. Please contact Admin via WhatsApp.");
+            alert("❌ Invalid PIN. Please try again.");
         }
     }
 
-    const subjects = [
-        { dept: "Core Subjects", list: [
-            { id: 1, title: "Mathematics", desc: "Algebra, Calculus & Geometry." },
-            { id: 2, title: "English Language", desc: "Grammar, Lexis & Oral." },
-            { id: 3, title: "Civic Education", desc: "Laws and Citizenship." }
-        ]},
-        { dept: "Science", list: [
-            { id: 4, title: "Physics", desc: "Mechanics, Heat & Waves." },
-            { id: 5, title: "Chemistry", desc: "Organic & Inorganic." },
-            { id: 6, title: "Biology", desc: "Genetics & Ecology." }
-        ]},
-        { dept: "Art / Commercial", list: [
-            { id: 7, title: "Economics", desc: "Markets & Elasticity." },
-            { id: 8, title: "Government", desc: "Nationalism & Power." },
-            { id: 9, title: "Literature", desc: "African Prose & Drama." }
-        ]}
-    ];
-
-    function renderTopics() {
-        const query = document.getElementById('subject-search').value.toLowerCase();
-        const container = document.getElementById('topicsContainer');
-        container.innerHTML = '';
-        
-        subjects.forEach(cat => {
-            const filtered = cat.list.filter(s => s.title.toLowerCase().includes(query));
-            if (filtered.length > 0) {
-                container.innerHTML += `<div class="dept-header">${cat.dept}</div>`;
-                filtered.forEach(s => {
-                    const isDone = localStorage.getItem(`topic_${s.id}_done`);
-                    container.innerHTML += `
-                        <div class="topic-card">
-                            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                                <b style="color:var(--text-main); font-size:1rem;">${s.title}</b>
-                                <span style="font-size:0.7rem; color:var(--opay-purple); font-weight:800;">⏳ 00:00</span>
-                            </div>
-                            <p style="font-size:0.75rem; color:var(--text-sub); margin-bottom:15px;">${s.desc}</p>
-                            <button class="btn-main" onclick="${isDone ? '' : `handleStart(${s.id})`}" 
-                                style="background:${isDone ? 'var(--border-color)' : ''}; color:${isDone ? 'var(--text-sub)' : ''}">
-                                ${isDone ? '✓ Completed' : 'Unlock Lesson (-₦200)'}
-                            </button>
-                        </div>`;
-                });
-            }
-        });
-        updateReadiness();
-    }
-
-    function handleStart(id) {
-        if (wallet < 200) {
-            openModal('error-modal');
-            return;
-        }
-        wallet -= 200;
-        localStorage.setItem(`topic_${id}_done`, 'true');
-        updateWalletUI();
-        renderTopics();
-        window.open("https://docs.google.com/forms/d/e/1FAIpQLScdS2JUmJlU9Vrbi7R4rSeVq1PHw0m4xCukRoFzPejzChxo4g/viewform", "_blank");
-    }
-
-    function updateWalletUI() {
-        document.getElementById('wallet-display').innerText = `₦${wallet.toLocaleString()}.00`;
+    function updateWalletUI() { 
+        document.getElementById('wallet-display').innerText = `₦${wallet.toLocaleString()}.00`; 
         CMS.save('wallet_bal', wallet);
     }
 
-    function updateReadiness() {
-        let total = 9, completed = 0;
-        for(let i=1; i<=12; i++) if(localStorage.getItem(`topic_${i}_done`)) completed++;
-        const percent = (completed / total) * 100;
-        document.getElementById('readiness-bar').style.width = percent + '%';
-        document.getElementById('readiness-text').innerText = `${completed}/${total} Topics Done`;
-        const status = document.getElementById('readiness-status');
-        if(percent > 70) { status.innerText = "Ready"; status.style.background = "#ebfffa"; status.style.color = "var(--opay-green)"; }
-        else { status.innerText = "Critical"; status.style.background = "#ffebeb"; status.style.color = "var(--danger)"; }
-    }
-
-    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-    function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); }
     function toggleDarkMode() {
         document.body.classList.toggle('dark-mode');
         localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
     }
-    function resetAll() { if(confirm("Reset all progress?")) { localStorage.clear(); location.reload(); } }
 
-    window.onload = () => {
-        if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display = 'none'); }
+    function handleTopup(m) { closeModals(); if(m==='Keychain') openModal('keychain-modal'); }
+
+    // Initializations
+    window.addEventListener('load', () => {
+        if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark-mode');
         updateWalletUI();
-        renderTopics();
         setTimeout(() => {
             document.getElementById('splash-screen').style.opacity = '0';
             setTimeout(() => document.getElementById('splash-screen').style.display = 'none', 600);
         }, 1500);
-    };
+    });
+
+    // Dummy data for render
+    const subjects = [{ dept: "Syllabus", list: [{ id: 1, title: "English Language", desc: "Core Course" }] }];
+    function renderTopics() {
+        const container = document.getElementById('topicsContainer');
+        container.innerHTML = subjects[0].list.map(s => `
+            <div class="topic-card">
+                <div style="font-weight:800; margin-bottom:5px;">${s.title}</div>
+                <div style="font-size:0.75rem; color:var(--text-sub); margin-bottom:15px;">${s.desc}</div>
+                <button class="btn-main" onclick="showNotification('Opening lesson...')">Study Now</button>
+            </div>
+        `).join('');
+    }
+    renderTopics();
+    
+    function resetAll() { if(confirm("Reset all data?")) { localStorage.clear(); location.reload(); } }
 </script>
 </body>
 </html>
