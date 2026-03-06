@@ -193,16 +193,19 @@
     </div>
 
     <script>
-        let userData = {
-            balance: 5600.00,
-            isPro: false,
-            apps: [{n:'goPROTECT', i:'👨‍✈️'}, {n:'goMETRO', i:'🚌'}, {n:'goNEWs', i:'🗞'}],
-            history: []
-        };
+        userData.apps = [
+            {n:'goPROTECT', i:'👨‍✈️', url: 'https://goapps-official.github.io/Welcome-to-goAPPs/goPROTECT/index.html'}, 
+            {n:'goMETRO', i:'🚌', url: 'https://goapps-official.github.io/Welcome-to-goAPPs/goMETRO/index.html'}, 
+            {n:'goNEWs', i:'🗞', url: 'https://goapps-official.github.io/Welcome-to-goAPPs/goNEWs/index.html'}
+        ];
 
         const marketItems = [
-            {n:'goCBT', i:'🎓'}, {n:'goRIDEs', i:'🚗'}, {n:'goMEDIC', i:'🚑'}, 
-            {n:'goSHOP', i:'🛒'}, {n:'goTRIPs', i:'✈'}, {n:'SwapR', i:'💱'}
+            {n:'goCBT', i:'🎓', url: 'https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/index.html'}, 
+            {n:'goRIDEs', i:'🚗', url: 'https://goapps-official.github.io/Welcome-to-goAPPs/goRIDEs/index.html'}, 
+            {n:'goMEDIC', i:'🚑', url: 'https://goapps-official.github.io/Welcome-to-goAPPs/goMEDIC/index.html'}, 
+            {n:'goSHOP', i:'🛒', url: 'https://goapps-official.github.io/Welcome-to-goAPPs/goSHOP/index.html'}, 
+            {n:'goTRIPs', i:'✈', url: 'https://goapps-official.github.io/Welcome-to-goAPPs/goTRIPs/index.html'}, 
+            {n:'SwapR', i:'💱', url: 'https://goapps-official.github.io/Welcome-to-goAPPs/SwapR/index.html'}
         ];
 
         // --- Initialization ---
@@ -217,28 +220,44 @@
             renderDashboard();
         };
 
-        function renderDashboard() {
-            // Render Connected Apps
-            const grid = document.getElementById('connected-apps-grid');
-            grid.innerHTML = userData.apps.map(app => `
-                <div class="service-item"><span>${app.i}</span><b>${app.n}</b></div>
-            `).join('');
+            function renderDashboard() {
+    // Render Connected Apps (Added <a> tag wrap)
+    const grid = document.getElementById('connected-apps-grid');
+    grid.innerHTML = userData.apps.map(app => `
+        <a href="${app.url}" target="_blank" style="text-decoration:none; color:inherit;">
+            <div class="service-item"><span>${app.i}</span><b>${app.n}</b></div>
+        </a>
+    `).join('');
 
             // Render Market
             const mList = document.getElementById('market-list');
-            mList.innerHTML = marketItems.map(item => `
-                <div class="service-item" onclick="connectApp('${item.n}', '${item.i}')">
-                    <span>${item.i}</span><small>${item.n}</small>
-                </div>
-            `).join('');
+    mList.innerHTML = marketItems.map(item => `
+        <div class="service-item" onclick="connectApp('${item.n}', '${item.i}', '${item.url}')">
+            <span>${item.i}</span><small>${item.n}</small>
+        </div>
+    `).join('');
 
-            // Update Tier Text
-            document.getElementById('tier-text').innerText = userData.isPro ? "Pro Edition (Unlimited)" : `Free Tier (${userData.apps.length}/3)`;
-            if(userData.isPro) {
-                document.getElementById('premium-indicator').classList.remove('hidden');
-                document.getElementById('upgrade-section').classList.add('hidden');
-            }
-        }
+    // Update Tier Text
+    document.getElementById('tier-text').innerText = userData.isPro ? "Pro Edition (Unlimited)" : `Free Tier (${userData.apps.length}/3)`;
+    if(userData.isPro) {
+        document.getElementById('premium-indicator').classList.remove('hidden');
+        document.getElementById('upgrade-section').classList.add('hidden');
+    }
+}
+
+// 3. Updated connectApp to handle the URL parameter
+function connectApp(n, i, url) {
+    if(!userData.isPro && userData.apps.length >= 3) {
+        alert("App limit reached! Upgrade to Pro for unlimited connections.");
+        return;
+    }
+    if(userData.apps.find(a => a.n === n)) return alert("App already connected.");
+    
+    userData.apps.push({n, i, url}); // Store the URL in the connected apps list
+    addHistory(n + " Linked", 0, 'pos');
+    renderDashboard();
+    closeModals();
+}
 
         // --- Core Functions ---
         function animateBalance(start, end) {
@@ -385,4 +404,5 @@ function upgradePro() {
     </script>
 </body>
 </html>
+
 
