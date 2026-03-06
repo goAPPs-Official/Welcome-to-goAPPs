@@ -7,27 +7,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #062c1e;
-            --card: #0a3d2a;
-            --text: #ffffff;
-            --primary: #00d28d;
-            --primary-glow: rgba(0, 210, 141, 0.3);
-            --input-bg: #0d4d36;
-            --success: #10b981;
-            --danger: #ff4d4d;
-            --premium: #f5c330;
-            --white: #ffffff;
-            --gray: #a0aec0;
+            --bg: #062c1e; --card: #0a3d2a; --text: #ffffff;
+            --primary: #00d28d; --primary-glow: rgba(0, 210, 141, 0.3);
+            --input-bg: #0d4d36; --success: #10b981; --danger: #ff4d4d;
+            --premium: #f5c330; --white: #ffffff; --gray: #a0aec0;
             --overlay: rgba(0,0,0,0.85);
         }
 
         .light-mode {
-            --bg: #f3f4f6;
-            --card: #ffffff;
-            --text: #1a1a1a;
-            --primary: #059669;
-            --input-bg: #e5e7eb;
-            --gray: #4b5563;
+            --bg: #f3f4f6; --card: #ffffff; --text: #1a1a1a;
+            --primary: #059669; --input-bg: #e5e7eb; --gray: #4b5563;
         }
 
         body { margin: 0; font-family: 'Inter', sans-serif; background-color: #111; color: var(--text); overflow-x: hidden; transition: 0.3s; }
@@ -39,12 +28,10 @@
         .spinner { width: 40px; height: 40px; border: 3px solid rgba(255,255,255,0.2); border-top-color: #fff; border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Header & Cards */
         header { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
         .main-scroll { flex: 1; overflow-y: auto; padding: 15px; padding-bottom: 100px; scrollbar-width: none; }
         .balance-card { padding: 25px; background: linear-gradient(135deg, #00d28d 0%, #059669 100%); border-radius: 24px; position: relative; box-shadow: 0 10px 20px var(--primary-glow); color: white; margin-bottom: 30px; }
 
-        /* 3D Card */
         .card-container { perspective: 1000px; width: 100%; height: 180px; margin-bottom: 25px; cursor: pointer; }
         .card-inner { position: relative; width: 100%; height: 100%; transition: 0.6s; transform-style: preserve-3d; }
         .is-flipped .card-inner { transform: rotateY(180deg); }
@@ -52,28 +39,22 @@
         .card-front { background: linear-gradient(135deg, #1a1a1a 0%, #0d4d36 100%); border: 1px solid rgba(255,255,255,0.1); }
         .card-back { background: #1a1a1a; transform: rotateY(180deg); display: flex; flex-direction: column; justify-content: center; }
 
-        /* Marketplace & Grid */
         .section-title { font-weight: 800; margin: 20px 0 10px; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .service-item { background: var(--card); padding: 12px; border-radius: 16px; display: flex; align-items: center; gap: 10px; border: 1px solid rgba(255,255,255,0.05); font-size: 0.8rem; cursor: pointer; transition: 0.2s; }
         .service-item:hover { transform: scale(1.02); background: var(--input-bg); }
-        .service-item.highlight { background: var(--primary); color: #062c1e; border: none; font-weight: 800; }
 
-        /* Transaction History */
         .tx-list { background: var(--card); border-radius: 20px; padding: 15px; margin-top: 10px; }
         .tx-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.75rem; }
-        .tx-item:last-child { border-bottom: none; }
         .tx-amt-pos { color: var(--primary); font-weight: 800; }
         .tx-amt-neg { color: var(--danger); font-weight: 800; }
 
-        /* Modals */
         .modal { position: absolute; inset: 0; background: var(--bg); z-index: 3000; display: none; flex-direction: column; padding: 30px; overflow-y: auto; }
         .btn-action { width: 100%; padding: 14px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; margin-top: 10px; transition: 0.2s; background: var(--primary); color: #062c1e; }
         .btn-cancel { background: transparent; color: var(--gray); margin-top: 10px; border: none; width: 100%; cursor: pointer; }
         .input-group { background: var(--input-bg); padding: 12px; border-radius: 12px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.1); }
         .input-group input { background: transparent; border: none; color: white; width: 100%; outline: none; font-size: 1rem; }
 
-        /* Navigation */
         nav { display: flex; justify-content: space-around; padding: 15px 0 25px; background: var(--card); position: absolute; bottom: 0; width: 100%; border-top: 1px solid rgba(255,255,255,0.05); }
         nav a { text-decoration: none; color: var(--text); opacity: 0.5; font-size: 0.65rem; text-align: center; }
         nav a.active { opacity: 1; color: var(--primary); }
@@ -82,7 +63,7 @@
         .badge-pro { background: var(--premium); color: #000; padding: 2px 8px; border-radius: 4px; font-size: 0.6rem; font-weight: 800; }
     </style>
 </head>
-<body id="app-body">
+<body>
 
     <div id="splash-screen">
         <h1 style="font-size: 2.2rem; font-weight: 800; color: white;">goAPPs<span style="background:rgba(255,255,255,0.2); padding:2px 8px; border-radius:6px; margin-left:5px;">NG</span></h1>
@@ -98,7 +79,7 @@
         </header>
 
         <div class="main-scroll">
-            <div class="card-container" id="myCard" onclick="this.classList.toggle('is-flipped')">
+            <div class="card-container" onclick="this.classList.toggle('is-flipped')">
                 <div class="card-inner">
                     <div class="card-front">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -126,7 +107,7 @@
                 </div>
                 <div style="display: flex; justify-content: space-between; font-size: 0.75rem; opacity: 0.9;">
                     <span>Bonus: 🏆 2.00 gc</span>
-                    <span id="tier-text">Free Tier (3/3)</span>
+                    <span id="tier-text">Free Tier</span>
                 </div>
                 <button class="btn-action" style="background: rgba(255,255,255,0.2); color: white; margin-top: 15px;" onclick="openModal('topup-modal')">Deposit Funds</button>
             </div>
@@ -135,8 +116,7 @@
                 <span>Connect goAPPs</span>
                 <small style="color: var(--primary); cursor: pointer;" onclick="openModal('market-modal')">Open Market 🏪</small>
             </div>
-            <div class="grid" id="connected-apps-grid">
-                </div>
+            <div class="grid" id="connected-apps-grid"></div>
 
             <h3 class="section-title">Recent Activity 📜</h3>
             <div class="tx-list" id="transaction-feed">
@@ -159,24 +139,17 @@
             <b>Account: DigitalSolution360</b><br>
             <b>Number: 0265544737</b>
         </div>
-        <div class="input-group">
-            <input type="number" id="topup-amount" placeholder="Amount (₦)">
-        </div>
-        <div class="input-group">
-            <input type="text" id="topup-code" placeholder="Top-up/Transfer Code">
-        </div>
+        <div class="input-group"><input type="number" id="topup-amount" placeholder="Amount (₦)"></div>
+        <div class="input-group"><input type="text" id="topup-code" placeholder="Top-up/Transfer Code"></div>
         <button class="btn-action" onclick="executeTopup()">Confirm Deposit</button>
         <button class="btn-cancel" onclick="closeModals()">Cancel</button>
     </div>
 
     <div id="market-modal" class="modal">
         <h3 style="text-align: center;">App Marketplace</h3>
-        <p style="font-size: 0.75rem; text-align: center; opacity: 0.7; margin-bottom: 20px;">Select an app to connect to your dashboard.</p>
-        <div class="grid" id="market-list">
-            </div>
-        <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;">
-        <div id="upgrade-section">
-            <p style="font-size: 0.7rem; text-align: center;">Running out of slots? Unlock Unlimited.</p>
+        <div class="grid" id="market-list"></div>
+        <div id="upgrade-section" style="margin-top:20px;">
+            <p style="font-size: 0.7rem; text-align: center;">Upgrade for unlimited slots.</p>
             <button class="btn-action" style="background: var(--premium);" onclick="upgradePro()">Upgrade to Pro (₦5,000)</button>
         </div>
         <button class="btn-cancel" onclick="closeModals()">Close</button>
@@ -185,19 +158,23 @@
     <div id="reveal-modal" class="modal" style="justify-content: center;">
         <div style="background: var(--card); padding: 25px; border-radius: 20px; text-align: center;">
             <h3>Verify Identity</h3>
-            <p style="font-size: 0.8rem; opacity: 0.8;">Enter your WhatsApp number to receive an OTP.</p>
             <input type="number" id="wa-num" placeholder="080XXXXXXXX" style="width: 100%; padding: 12px; border-radius: 8px; background: #0d4d36; color: white; border: none; margin: 10px 0;">
-            <button class="btn-action" onclick="alert('OTP Sent to WhatsApp!')">Request Code</button>
+            <button class="btn-action" onclick="alert('OTP Sent!')">Request Code</button>
             <button class="btn-cancel" onclick="closeModals()">Cancel</button>
         </div>
     </div>
 
     <script>
-        userData.apps = [
-            {n:'goPROTECT', i:'👨‍✈️', url: 'https://goapps-official.github.io/Welcome-to-goAPPs/goPROTECT/index.html'}, 
-            {n:'goMETRO', i:'🚌', url: 'https://goapps-official.github.io/Welcome-to-goAPPs/goMETRO/index.html'}, 
-            {n:'goNEWs', i:'🗞', url: 'https://goapps-official.github.io/Welcome-to-goAPPs/goNEWs/index.html'}
-        ];
+        let userData = {
+            balance: 5600.00,
+            isPro: false,
+            apps: [
+                {n:'goPROTECT', i:'👨‍✈️', url: 'https://goapps-official.github.io/Welcome-to-goAPPs/goPROTECT/index.html'}, 
+                {n:'goMETRO', i:'🚌', url: 'https://goapps-official.github.io/Welcome-to-goAPPs/goMETRO/index.html'}, 
+                {n:'goNEWs', i:'🗞', url: 'https://goapps-official.github.io/Welcome-to-goAPPs/goNEWs/index.html'}
+            ],
+            history: []
+        };
 
         const marketItems = [
             {n:'goCBT', i:'🎓', url: 'https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/index.html'}, 
@@ -208,201 +185,93 @@
             {n:'SwapR', i:'💱', url: 'https://goapps-official.github.io/Welcome-to-goAPPs/SwapR/index.html'}
         ];
 
-        // --- Initialization ---
         window.onload = () => {
             setTimeout(() => {
                 document.getElementById('splash-screen').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('splash-screen').style.display = 'none';
-                    animateBalance(0, userData.balance);
-                }, 600);
+                setTimeout(() => { document.getElementById('splash-screen').style.display = 'none'; animateBalance(0, userData.balance); }, 600);
             }, 1500);
             renderDashboard();
         };
 
-            function renderDashboard() {
-    // Render Connected Apps (Added <a> tag wrap)
-    const grid = document.getElementById('connected-apps-grid');
-    grid.innerHTML = userData.apps.map(app => `
-        <a href="${app.url}" target="_blank" style="text-decoration:none; color:inherit;">
-            <div class="service-item"><span>${app.i}</span><b>${app.n}</b></div>
-        </a>
-    `).join('');
+        function renderDashboard() {
+            const grid = document.getElementById('connected-apps-grid');
+            grid.innerHTML = userData.apps.map(app => `
+                <a href="${app.url}" target="_blank" style="text-decoration:none; color:inherit;">
+                    <div class="service-item"><span>${app.i}</span><b>${app.n}</b></div>
+                </a>`).join('');
 
-            // Render Market
             const mList = document.getElementById('market-list');
-    mList.innerHTML = marketItems.map(item => `
-        <div class="service-item" onclick="connectApp('${item.n}', '${item.i}', '${item.url}')">
-            <span>${item.i}</span><small>${item.n}</small>
-        </div>
-    `).join('');
+            mList.innerHTML = marketItems.map(item => `
+                <div class="service-item" onclick="connectApp('${item.n}', '${item.i}', '${item.url}')">
+                    <span>${item.i}</span><small>${item.n}</small>
+                </div>`).join('');
 
-    // Update Tier Text
-    document.getElementById('tier-text').innerText = userData.isPro ? "Pro Edition (Unlimited)" : `Free Tier (${userData.apps.length}/3)`;
-    if(userData.isPro) {
-        document.getElementById('premium-indicator').classList.remove('hidden');
-        document.getElementById('upgrade-section').classList.add('hidden');
-    }
-}
+            document.getElementById('tier-text').innerText = userData.isPro ? "Pro Edition (Unlimited)" : `Free Tier (${userData.apps.length}/3)`;
+            if(userData.isPro) {
+                document.getElementById('premium-indicator').classList.remove('hidden');
+                document.getElementById('upgrade-section').classList.add('hidden');
+            }
+        }
 
-// 3. Updated connectApp to handle the URL parameter
-function connectApp(n, i, url) {
-    if(!userData.isPro && userData.apps.length >= 3) {
-        alert("App limit reached! Upgrade to Pro for unlimited connections.");
-        return;
-    }
-    if(userData.apps.find(a => a.n === n)) return alert("App already connected.");
-    
-    userData.apps.push({n, i, url}); // Store the URL in the connected apps list
-    addHistory(n + " Linked", 0, 'pos');
-    renderDashboard();
-    closeModals();
-}
+        function connectApp(n, i, url) {
+            if(!userData.isPro && userData.apps.length >= 3) return alert("Upgrade to Pro for more slots!");
+            if(userData.apps.find(a => a.n === n)) return alert("Already connected.");
+            userData.apps.push({n, i, url});
+            renderDashboard();
+            closeModals();
+        }
 
-        // --- Core Functions ---
         function animateBalance(start, end) {
             const el = document.getElementById('balance-display');
-            let curr = start;
-            const step = (end - start) / 40;
+            let curr = start; const step = (end - start) / 40;
             const timer = setInterval(() => {
                 curr += step;
                 if((step > 0 && curr >= end) || (step < 0 && curr <= end)) {
                     el.innerText = `₦${end.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
                     clearInterval(timer);
-                } else {
-                    el.innerText = `₦${curr.toLocaleString(undefined, {minimumFractionDigits: 2})}`;
-                }
+                } else { el.innerText = `₦${curr.toLocaleString(undefined, {minimumFractionDigits: 2})}`; }
             }, 30);
         }
 
         function executeTopup() {
             const amt = parseFloat(document.getElementById('topup-amount').value);
             const code = document.getElementById('topup-code').value;
-            if(!amt || code.length < 3) return alert("Enter valid deposit details.");
-
-            const old = userData.balance;
-            userData.balance += amt;
+            if(!amt || code.length < 3) return alert("Invalid details.");
+            sendEmailAlert("DEPOSIT REQUEST", {amount: amt, code: code});
+            const old = userData.balance; userData.balance += amt;
             addHistory("Deposit Verified", amt, 'pos');
-            closeModals();
-            animateBalance(old, userData.balance);
-            alert(`₦${amt.toLocaleString()} successfully added!`);
+            closeModals(); animateBalance(old, userData.balance);
+        }
+
+        async function sendEmailAlert(type, details) {
+            try {
+                await fetch('https://formspree.io/f/mwvredjp', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ subject: type, message: JSON.stringify(details) })
+                });
+            } catch (e) { console.error(e); }
         }
 
         function upgradePro() {
-            const cost = 5000;
-            if(userData.balance < cost) return alert("Insufficient balance to upgrade.");
-            
-            const old = userData.balance;
-            userData.balance -= cost;
-            userData.isPro = true;
-            addHistory("Pro Upgrade", cost, 'neg');
-            closeModals();
-            animateBalance(old, userData.balance);
-            renderDashboard();
-            alert("Welcome to goAPPs Pro!");
-        }
-
-        function connectApp(n, i) {
-            if(!userData.isPro && userData.apps.length >= 3) {
-                alert("App limit reached! Upgrade to Pro for unlimited connections.");
-                return;
-            }
-            if(userData.apps.find(a => a.n === n)) return alert("App already connected.");
-            
-            userData.apps.push({n, i});
-            addHistory(n + " Linked", 0, 'pos');
-            renderDashboard();
-            closeModals();
+            if(userData.balance < 5000) return alert("Insufficient balance.");
+            userData.balance -= 5000; userData.isPro = true;
+            renderDashboard(); closeModals();
         }
 
         function addHistory(title, amt, type) {
             const date = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
             userData.history.unshift({title, amt, type, date});
-            const feed = document.getElementById('transaction-feed');
-            feed.innerHTML = userData.history.map(item => `
+            document.getElementById('transaction-feed').innerHTML = userData.history.map(item => `
                 <div class="tx-item">
                     <div><b>${item.title}</b><br><small style="opacity:0.6">${item.date}</small></div>
-                    <div class="${item.type === 'pos' ? 'tx-amt-pos' : 'tx-amt-neg'}">${item.type === 'pos' ? '+' : '-'} ₦${item.amt.toLocaleString()}</div>
-                </div>
-            `).join('');
+                    <div class="${item.type === 'pos' ? 'tx-amt-pos' : 'tx-amt-neg'}">₦${item.amt.toLocaleString()}</div>
+                </div>`).join('');
         }
 
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
         function toggleTheme() { document.body.classList.toggle('light-mode'); }
-        // --- Email Alert Configuration ---
-const ADMIN_EMAIL = "ict4global@gmail.com"; // Replace with your actual email
-
-async function sendEmailAlert(actionType, details) {
-    console.log(`Sending Alert to Admin: ${actionType}`);
-
-    const payload = {
-        to_email: ADMIN_EMAIL,
-        subject: `🚨 goAPPs Alert: ${actionType}`,
-        message: `
-            Action: ${actionType}
-            Amount: ₦${details.amount || 0}
-            User: ${details.user || 'Anonymous'}
-            Ref Code: ${details.code || 'N/A'}
-            Timestamp: ${new Date().toLocaleString()}
-        `
-    };
-
-    // Example using a generic Webhook (Replace URL with your Formspree/Zapier link)
-    try {
-        await fetch('https://formspree.io/f/mwvredjp', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-        console.log("Admin Notification Sent.");
-    } catch (error) {
-        console.error("Alert failed to send:", error);
-    }
-}
-
-// --- Updated executeTopup to trigger the alert ---
-function executeTopup() {
-    const amt = parseFloat(document.getElementById('topup-amount').value);
-    const code = document.getElementById('topup-code').value;
-    
-    if(!amt || code.length < 3) return alert("Enter valid deposit details.");
-
-    // Trigger Email Alert before updating UI
-    sendEmailAlert("NEW DEPOSIT REQUEST", {
-        amount: amt,
-        code: code,
-        user: document.getElementById('user-display-name').innerText
-    });
-
-    const old = userData.balance;
-    userData.balance += amt;
-    addHistory("Deposit Verified", amt, 'pos');
-    closeModals();
-    animateBalance(old, userData.balance);
-    alert(`Transfer of ₦${amt.toLocaleString()} is being processed!`);
-}
-
-// --- Updated upgradePro to trigger the alert ---
-function upgradePro() {
-    const cost = 5000;
-    if(userData.balance < cost) return alert("Insufficient balance.");
-    
-    sendEmailAlert("PREMIUM UPGRADE", {
-        amount: cost,
-        user: document.getElementById('user-display-name').innerText
-    });
-
-    const old = userData.balance;
-    userData.balance -= cost;
-    userData.isPro = true;
-    addHistory("Pro Upgrade", cost, 'neg');
-    closeModals();
-    animateBalance(old, userData.balance);
-    renderDashboard();
-}
     </script>
 </body>
 </html>
-
-
