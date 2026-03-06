@@ -148,6 +148,7 @@
             <a href="#" class="active">🏠<br>Home</a>
             <a href="#" onclick="openModal('topup-modal')">💳<br>Top-up</a>
             <a href="#" onclick="openModal('market-modal')">🏪<br>Market</a>
+            <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/profile_page.html">⚙️<br>Settings</a>
         </nav>
     </div>
 
@@ -311,7 +312,7 @@
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
         function toggleTheme() { document.body.classList.toggle('light-mode'); }
         // --- Email Alert Configuration ---
-const ADMIN_EMAIL = "your-email@example.com"; // Replace with your actual email
+const ADMIN_EMAIL = "ict4global@gmail.com"; // Replace with your actual email
 
 async function sendEmailAlert(actionType, details) {
     console.log(`Sending Alert to Admin: ${actionType}`);
@@ -330,7 +331,7 @@ async function sendEmailAlert(actionType, details) {
 
     // Example using a generic Webhook (Replace URL with your Formspree/Zapier link)
     try {
-        await fetch('https://formspree.io/f/your-id', {
+        await fetch('https://formspree.io/f/mwvredjp', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
@@ -384,3 +385,4 @@ function upgradePro() {
     </script>
 </body>
 </html>
+
