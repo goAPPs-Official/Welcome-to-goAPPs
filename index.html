@@ -4,13 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DSA | Interactive Portal</title>
-    
-    <meta name="theme-color" content="#05080a">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon-192.png">
-
     <style>
         :root {
             --bg-dark: #05080a;
@@ -39,8 +32,10 @@
             text-transform: uppercase; letter-spacing: 2px; transition: 0.3s;
         }
 
+        /* Container */
         .container { display: none; flex-direction: column; align-items: center; width: 350px; }
 
+        /* Logo & Flicker */
         .logo-box { position: relative; margin-bottom: 50px; }
         .logo-img { width: 200px; filter: drop-shadow(0 0 10px var(--accent-cyan)); animation: flicker 3s linear forwards; }
         
@@ -50,6 +45,7 @@
             border-radius: 50%; animation: spin 2s linear infinite; opacity: 0; transition: opacity 1s;
         }
 
+        /* Progress & CTA Area */
         .ui-wrapper { width: 100%; position: relative; height: 60px; display: flex; flex-direction: column; align-items: center; }
         
         .progress-bar { width: 100%; height: 2px; background: rgba(255,255,255,0.05); position: absolute; top: 25px; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
@@ -57,19 +53,30 @@
 
         .status-text { width: 100%; display: flex; justify-content: space-between; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #556677; font-family: monospace; margin-bottom: 5px; }
 
+        /* The CTA Button (Hidden initially) */
         #cta-button {
-            opacity: 0; visibility: hidden;
-            padding: 12px 40px; background: transparent;
-            border: 1px solid var(--accent-green); color: var(--accent-green);
-            text-transform: uppercase; letter-spacing: 3px;
-            font-weight: bold; cursor: pointer; transition: all 0.3s;
-            transform: translateY(10px); z-index: 10;
+            opacity: 0;
+            visibility: hidden;
+            padding: 12px 40px;
+            background: transparent;
+            border: 1px solid var(--accent-green);
+            color: var(--accent-green);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 0px var(--accent-green);
+            transform: translateY(10px);
+            z-index: 10;
         }
         #cta-button:hover {
-            background: var(--accent-green); color: var(--bg-dark);
+            background: var(--accent-green);
+            color: var(--bg-dark);
             box-shadow: 0 0 20px var(--accent-green);
         }
 
+        /* Animations */
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes flicker {
             0% { opacity: 0; filter: blur(4px) brightness(0.2); }
@@ -79,6 +86,7 @@
             100% { opacity: 1; filter: drop-shadow(0 0 20px rgba(0, 242, 255, 0.3)); }
         }
 
+        /* Class to trigger when loaded */
         .is-loaded .progress-bar { opacity: 0; transform: scaleX(0); }
         .is-loaded .status-text { opacity: 0; }
         .is-loaded #cta-button { opacity: 1; visibility: visible; transform: translateY(-15px); }
@@ -111,19 +119,11 @@
     </div>
 
     <script>
-        // PWA Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js')
-                .then(reg => console.log('SW Registered'))
-                .catch(err => console.log('SW Failed', err));
-            });
-        }
-
         function startSystem() {
             document.getElementById('interaction-overlay').style.display = 'none';
             document.getElementById('main-ui').style.display = 'flex';
 
+            // Synthetic Chime
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
@@ -134,10 +134,12 @@
             osc.connect(gain); gain.connect(audioCtx.destination);
             osc.start(); osc.stop(audioCtx.currentTime + 1.2);
 
+            // 3-Second Loading
             const duration = 3000;
             const start = performance.now();
             const fill = document.getElementById('fill');
             const perc = document.getElementById('perc');
+            const msg = document.getElementById('msg');
 
             function animate(time) {
                 let runtime = time - start;
@@ -150,6 +152,7 @@
                 if (runtime < duration) {
                     requestAnimationFrame(animate);
                 } else {
+                    // Transition to CTA state
                     document.getElementById('ui-container').classList.add('is-loaded');
                     document.getElementById('stabilizer-ring').style.opacity = "1";
                 }
@@ -158,6 +161,7 @@
         }
 
         function launchApp() {
+            // Final click sound
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
@@ -168,10 +172,11 @@
             osc.connect(gain); gain.connect(audioCtx.destination);
             osc.start();
             
+            // Redirect
             setTimeout(() => {
                 window.location.href = "index.html";
             }, 200);
         }
     </script>
 </body>
-                    </html>
+                </html>
