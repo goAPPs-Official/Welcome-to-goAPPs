@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DigitalSolution® | Interactive Portal</title>
+    <title>DSA | Interactive Portal</title>
+    
+    <meta name="theme-color" content="#05080a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192.png">
+
     <style>
         :root {
             --bg-dark: #05080a;
@@ -32,9 +39,142 @@
             text-transform: uppercase; letter-spacing: 2px; transition: 0.3s;
         }
 
-        /* Container */
         .container { display: none; flex-direction: column; align-items: center; width: 350px; }
 
+        .logo-box { position: relative; margin-bottom: 50px; }
+        .logo-img { width: 200px; filter: drop-shadow(0 0 10px var(--accent-cyan)); animation: flicker 3s linear forwards; }
+        
+        .ring {
+            position: absolute; top: -25px; left: -25px; right: -25px; bottom: -25px;
+            border: 1px solid rgba(0, 242, 255, 0.05); border-top: 2px solid var(--accent-cyan);
+            border-radius: 50%; animation: spin 2s linear infinite; opacity: 0; transition: opacity 1s;
+        }
+
+        .ui-wrapper { width: 100%; position: relative; height: 60px; display: flex; flex-direction: column; align-items: center; }
+        
+        .progress-bar { width: 100%; height: 2px; background: rgba(255,255,255,0.05); position: absolute; top: 25px; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .progress-fill { height: 100%; width: 0%; background: var(--accent-cyan); box-shadow: 0 0 10px var(--accent-cyan); }
+
+        .status-text { width: 100%; display: flex; justify-content: space-between; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #556677; font-family: monospace; margin-bottom: 5px; }
+
+        #cta-button {
+            opacity: 0; visibility: hidden;
+            padding: 12px 40px; background: transparent;
+            border: 1px solid var(--accent-green); color: var(--accent-green);
+            text-transform: uppercase; letter-spacing: 3px;
+            font-weight: bold; cursor: pointer; transition: all 0.3s;
+            transform: translateY(10px); z-index: 10;
+        }
+        #cta-button:hover {
+            background: var(--accent-green); color: var(--bg-dark);
+            box-shadow: 0 0 20px var(--accent-green);
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes flicker {
+            0% { opacity: 0; filter: blur(4px) brightness(0.2); }
+            10% { opacity: 0.8; filter: blur(0px) brightness(1.5); }
+            30% { opacity: 1; filter: brightness(1); }
+            60% { opacity: 0.4; }
+            100% { opacity: 1; filter: drop-shadow(0 0 20px rgba(0, 242, 255, 0.3)); }
+        }
+
+        .is-loaded .progress-bar { opacity: 0; transform: scaleX(0); }
+        .is-loaded .status-text { opacity: 0; }
+        .is-loaded #cta-button { opacity: 1; visibility: visible; transform: translateY(-15px); }
+        .is-loaded .ring { opacity: 1; }
+    </style>
+</head>
+<body>
+
+    <div id="interaction-overlay" onclick="startSystem()">
+        <button class="init-btn">Activate Terminal</button>
+    </div>
+
+    <div class="container" id="main-ui">
+        <div class="logo-box">
+            <div class="ring" id="stabilizer-ring"></div>
+            <img src="DSA Logo White.png" alt="DSA Logo" class="logo-img">
+        </div>
+
+        <div class="ui-wrapper" id="ui-container">
+            <div class="status-text" id="status-labels">
+                <span id="msg">Booting...</span>
+                <span id="perc">0%</span>
+            </div>
+            <div class="progress-bar" id="p-bar">
+                <div id="fill" class="progress-fill"></div>
+            </div>
+            
+            <button id="cta-button" onclick="launchApp()">Enter System</button>
+        </div>
+    </div>
+
+    <script>
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('SW Registered'))
+                .catch(err => console.log('SW Failed', err));
+            });
+        }
+
+        function startSystem() {
+            document.getElementById('interaction-overlay').style.display = 'none';
+            document.getElementById('main-ui').style.display = 'flex';
+
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.5);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.2);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start(); osc.stop(audioCtx.currentTime + 1.2);
+
+            const duration = 3000;
+            const start = performance.now();
+            const fill = document.getElementById('fill');
+            const perc = document.getElementById('perc');
+
+            function animate(time) {
+                let runtime = time - start;
+                let progress = Math.min(runtime / duration, 1);
+                let percentage = Math.floor(progress * 100);
+
+                fill.style.width = percentage + "%";
+                perc.innerText = percentage + "%";
+
+                if (runtime < duration) {
+                    requestAnimationFrame(animate);
+                } else {
+                    document.getElementById('ui-container').classList.add('is-loaded');
+                    document.getElementById('stabilizer-ring').style.opacity = "1";
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        function launchApp() {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.start();
+            
+            setTimeout(() => {
+                window.location.href = "index.html";
+            }, 200);
+        }
+    </script>
+</body>
+</html>
         /* Logo & Flicker */
         .logo-box { position: relative; margin-bottom: 50px; }
         .logo-img { width: 200px; filter: drop-shadow(0 0 10px var(--accent-cyan)); animation: flicker 3s linear forwards; }
