@@ -3,222 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>goAPPs | Secure Workspace</title>
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
+    <title>DSA | System Energized</title>
     <style>
-        /* --- VARIABLE DEFINITIONS --- */
         :root {
-            --bg-color: #f0f2f5;
-            --card-bg: #ffffff;
-            --text-main: #1c1e21;
-            --text-sub: #333333;
-            --input-border: #dddfe2;
-            --brand-primary: #e65100;
-            --wa-green: #25D366;
-            --shadow: rgba(0,0,0,0.1);
+            --bg-dark: #05080a;
+            --accent-cyan: #00f2ff;
+            --accent-green: #00ff88;
         }
 
-        [data-theme="dark"] {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --text-main: #ffffff;
-            --text-sub: #b0b3b8;
-            --input-border: #3a3b3c;
-            --brand-primary: #ff9800;
-            --shadow: rgba(0,0,0,0.5);
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-dark);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', sans-serif;
+            color: white;
+            overflow: hidden;
         }
 
-        /* --- CORE STYLES --- */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: background 0.3s ease, color 0.3s ease; }
-        body { background-color: var(--bg-color); overflow: hidden; height: 100vh; color: var(--text-main); }
-        .hidden { display: none !important; }
-
-        .theme-switch {
-            position: fixed; top: 20px; right: 20px; z-index: 10001;
-            background: var(--card-bg); border: 1px solid var(--input-border);
-            padding: 10px; border-radius: 50%; cursor: pointer;
-            box-shadow: 0 4px 10px var(--shadow); color: var(--brand-primary);
-        }
-
-        /* --- SPLASH SCREEN --- */
-        #splash-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        /* Overlay */
+        #interaction-overlay {
+            position: fixed; inset: 0;
+            background: var(--bg-dark);
+            z-index: 100;
             display: flex; justify-content: center; align-items: center;
-            z-index: 9999; color: white; text-align: center;
+            cursor: pointer;
         }
-        .slideshow { position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: -2; }
-        .slide {
-            position: absolute; width: 100%; height: 100%;
-            background-size: cover; background-position: center;
-            animation: fadeSlider 12s infinite; opacity: 0;
+        .init-btn {
+            padding: 15px 30px;
+            border: 1px solid var(--accent-cyan);
+            background: transparent;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: 0.3s;
         }
-        .slide:nth-child(1) { background-image: url('https://images.unsplash.com/photo-1518655061766-48c34baaff57?auto=format&fit=crop&w=1350&q=80'); }
-        .slide:nth-child(2) { background-image: url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&w=1350&q=80'); animation-delay: 4s; }
-        .slide:nth-child(3) { background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1350&q=80'); animation-delay: 8s; }
+        .init-btn:hover { background: rgba(0, 242, 255, 0.1); }
 
-        @keyframes fadeSlider { 0%, 45% { opacity: 0; } 15%, 33% { opacity: 1; } }
-        .overlay { position: absolute; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(255, 111, 0, 0.7), rgba(103, 58, 183, 0.7)); z-index: -1; }
-        
-        #timer-display { font-size: 1.2rem; font-weight: bold; margin-bottom: 10px; opacity: 0.9; }
-        .progress-container { width: 250px; height: 6px; background: rgba(255,255,255,0.2); border-radius: 10px; margin: 10px auto; overflow: hidden; }
-        .progress-bar { height: 100%; width: 0%; background: #fff; transition: width 0.1s linear; }
+        .container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 350px;
+        }
 
-        /* --- LOGIN PAGE --- */
-        #login-page { display: flex; justify-content: center; align-items: center; height: 100vh; width: 100%; }
-        .login-wrapper { display: flex; max-width: 1000px; width: 100%; padding: 20px; align-items: center; }
-        .brand-text { flex: 1; padding-right: 50px; }
-        .brand-text h1 { color: var(--brand-primary); font-size: 3.5rem; font-weight: 800; }
-        
-        .login-card { width: 400px; background: var(--card-bg); padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px var(--shadow); text-align: center; }
-        .login-card input { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid var(--input-border); border-radius: 8px; font-size: 1rem; background: var(--card-bg); color: var(--text-main); }
-        
-        .btn-login { width: 100%; padding: 14px; background: var(--brand-primary); color: white; border: none; border-radius: 8px; font-size: 1.2rem; font-weight: bold; cursor: pointer; }
-        .forgot-link { color: var(--brand-primary); text-decoration: none; font-size: 0.9rem; display: block; margin: 15px 0; cursor: pointer; }
+        .logo-box {
+            position: relative;
+            margin-bottom: 50px;
+            /* Subtle entry */
+            animation: fadeIn 0.5s ease-out;
+        }
 
-        .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-        .social-btn { padding: 12px; border-radius: 8px; border: 1px solid var(--input-border); cursor: pointer; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--card-bg); color: var(--text-main); text-decoration: none; }
-        
-        .btn-wa-cta { background: var(--wa-green) !important; color: white !important; border: none; grid-column: span 2; font-size: 1.1rem; }
-        .btn-new { background: #42b72a; color: white; width: 100%; padding: 14px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .logo-img {
+            width: 200px;
+            filter: drop-shadow(0 0 10px var(--accent-cyan));
+            
+            /* The electrical flicker is applied here */
+            animation: flicker 3s linear forwards; 
+            animation-delay: 0s;
+        }
 
-        /* --- MODALS --- */
-        .modal { display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); }
-        .modal-content { background: var(--card-bg); margin: 5% auto; width: 90%; max-width: 500px; border-radius: 12px; position: relative; padding: 25px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-        .modal-content.large { max-width: 600px; height: 85vh; padding: 10px; }
-        .close-btn { position: absolute; right: 15px; top: 10px; font-size: 1.5rem; cursor: pointer; color: var(--text-main); }
-        
-        iframe { width: 100%; height: calc(100% - 40px); border: none; }
+        /* The stabilizing halo applied after flicker */
+        .ring {
+            position: absolute;
+            top: -25px; left: -25px; right: -25px; bottom: -25px;
+            border: 1px solid rgba(0, 242, 255, 0.05);
+            border-top: 2px solid var(--accent-cyan);
+            border-radius: 50%;
+            animation: spin 2s linear infinite, ringBloom 1s ease-out 2.8s forwards;
+            opacity: 0;
+        }
 
-        @media (max-width: 850px) { .login-wrapper { flex-direction: column; text-align: center; } .brand-text { padding-right: 0; margin-bottom: 25px; } }
+        /* Progress Elements */
+        .progress-bar { width: 100%; height: 2px; background: rgba(255,255,255,0.05); position: relative; }
+        .progress-fill { height: 100%; width: 0%; background: var(--accent-cyan); box-shadow: 0 0 10px var(--accent-cyan); transition: width 0.1s linear; }
+        .status-text { width: 100%; display: flex; justify-content: space-between; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #556677; font-family: monospace; }
+
+        /* KEYFRAMES */
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Electrical Flicker Logic (Brightness and Blur) */
+        @keyframes flicker {
+            0% { opacity: 0; filter: blur(4px) brightness(0.2); }
+            5% { opacity: 0.8; filter: blur(0px) brightness(1.5); } /* Flash 1 */
+            7% { opacity: 0.2; }
+            12% { opacity: 0.9; filter: brightness(2); } /* Flash 2 */
+            14% { opacity: 0.1; filter: blur(2px); }
+            30% { opacity: 1; filter: blur(0px) brightness(1); } /* Stabilize briefly */
+            33% { opacity: 0.5; filter: brightness(1.2); }
+            35% { opacity: 1; }
+            60% { opacity: 0.3; filter: brightness(0.5); } /* Dip */
+            62% { opacity: 1; filter: brightness(1.5); } /* Final Pulse */
+            100% { opacity: 1; filter: blur(0px) brightness(1) drop-shadow(0 0 20px rgba(0, 242, 255, 0.2)); } /* Solid state */
+        }
+
+        /* Ring activates as the flicker finishes */
+        @keyframes ringBloom {
+            to { opacity: 1; filter: drop-shadow(0 0 10px var(--accent-cyan)); }
+        }
+
     </style>
 </head>
-<body data-theme="dark">
+<body>
 
-    <button class="theme-switch" onclick="toggleTheme()"><i id="theme-icon" class="fas fa-sun"></i></button>
-
-    <div id="splash-screen">
-        <div class="slideshow">
-            <div class="slide"></div><div class="slide"></div><div class="slide"></div>
-        </div>
-        <div class="overlay"></div>
-        <div class="splash-content">
-            <h1>goAPPs</h1>
-            <div id="timer-display">Initializing in 5s...</div>
-            <div class="progress-container"><div class="progress-bar" id="bar"></div></div>
-            <p id="status-text">Synchronizing Dark Preferences...</p>
-        </div>
+    <div id="interaction-overlay" onclick="startSystem()">
+        <button class="init-btn">Initialize DSA System</button>
     </div>
 
-    <div id="login-page" class="hidden">
-        <div class="login-wrapper">
-            <div class="brand-text">
-                <h1>goAPPs</h1>
-                <p>Welcome to the future of connectivity.</p>
-            </div>
-            
-            <div class="login-card">
-                <input type="text" id="login-user" placeholder="Email or phone number">
-                <input type="password" placeholder="Password">
-                <button class="btn-login">Log In</button>
-                <span class="forgot-link" onclick="toggleForgotModal(true)">Forgotten password?</span>
-                <hr>
-                <div class="social-grid">
-                    <a href="#" id="wa-auth-link" class="social-btn btn-wa-cta">
-                        <i class="fab fa-whatsapp"></i> WhatsApp Login
-                    </a>
-                    <button class="social-btn"><i class="fab fa-google" style="color: #EA4335;"></i> Google</button>
-                    <button class="social-btn" style="color: #007AFF;" onclick="alert('FaceID initialized...')"><i class="fas fa-face-id"></i> FaceID</button>
-                </div>
-                <hr>
-                <button class="btn-new" onclick="toggleRegModal(true)">Create New Account</button>
-            </div>
+    <div class="container" id="main-ui">
+        <div class="logo-box">
+            <div class="ring"></div>
+            <img src="DSA Logo White.png" alt="DSA Logo" class="logo-img">
         </div>
-    </div>
 
-    <div id="regModal" class="modal">
-        <div class="modal-content large">
-            <span class="close-btn" onclick="toggleRegModal(false)">&times;</span>
-            <iframe id="google-form-iframe" src="about:blank"></iframe>
+        <div class="status-text">
+            <span id="msg">System Booting</span>
+            <span id="perc">0%</span>
         </div>
-    </div>
-
-    <div id="forgotModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="toggleForgotModal(false)">&times;</span>
-            <h2 style="margin-bottom: 10px; color: var(--brand-primary);">Account Recovery</h2>
-            <p style="color: var(--text-sub); margin-bottom: 20px;">Enter your email to receive a recovery code.</p>
-            <input type="text" id="forgot-input" placeholder="Email address" style="width: 100%; padding: 14px; border: 1px solid var(--input-border); border-radius: 8px; background: var(--card-bg); color: var(--text-main);">
-            <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-                <button onclick="toggleForgotModal(false)" style="padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer;">Cancel</button>
-                <button onclick="alert('Recovery email sent!')" style="padding: 10px 20px; border: none; border-radius: 6px; background: var(--brand-primary); color: white; cursor: pointer; font-weight: bold;">Submit</button>
-            </div>
+        <div class="progress-bar">
+            <div id="fill" class="progress-fill"></div>
         </div>
     </div>
 
     <script>
-        // --- SETTINGS ---
-        const WA_PHONE = "1234567890"; 
-        const WA_MSG = "I am ready to authenticate with goAPPs.";
-        const FORM_URL = "https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform";
-        const EMAIL_FIELD = "entry.123456789";
+        function startSystem() {
+            // UI Setup
+            document.getElementById('interaction-overlay').style.display = 'none';
+            document.getElementById('main-ui').style.display = 'flex';
 
-        // Initialize WA Link
-        document.getElementById('wa-auth-link').href = `https://wa.me/${WA_PHONE}?text=${encodeURIComponent(WA_MSG)}`;
+            // Audio Setup (Synthetic Chime)
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(440, audioCtx.currentTime); // A4
+            oscillator.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.5); // Slide to A5
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.2);
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 1.2);
 
-        // Theme
-        function toggleTheme() {
-            const b = document.body;
-            const icon = document.getElementById('theme-icon');
-            const isDark = b.getAttribute('data-theme') === 'dark';
-            b.setAttribute('data-theme', isDark ? 'light' : 'dark');
-            icon.className = isDark ? "fas fa-moon" : "fas fa-sun";
-        }
+            // 3-Second Loading Logic synchronized with flicker
+            const duration = 3000;
+            const start = performance.now();
+            const fill = document.getElementById('fill');
+            const perc = document.getElementById('perc');
+            const msg = document.getElementById('msg');
+            const messages = ["Ignition Sequence", "Core Stability", "Finalizing"];
 
-        // Countdown & Splash
-        let timeLeft = 5;
-        const bar = document.getElementById('bar');
-        const timerText = document.getElementById('timer-display');
-        
-        const splashTimer = setInterval(() => {
-            timeLeft--;
-            timerText.innerText = `Initializing in ${timeLeft}s...`;
-            
-            // Sync bar progress (20% per second for 5 seconds)
-            bar.style.width = ((5 - timeLeft) * 20) + '%';
+            function animate(time) {
+                let runtime = time - start;
+                let relativeProgress = Math.min(runtime / duration, 1);
+                let percentage = Math.floor(relativeProgress * 100);
 
-            if (timeLeft <= 0) {
-                clearInterval(splashTimer);
-                document.getElementById('splash-screen').style.opacity = "0";
-                setTimeout(() => {
-                    document.getElementById('splash-screen').classList.add('hidden');
-                    document.getElementById('login-page').classList.remove('hidden');
-                }, 500);
+                fill.style.width = percentage + "%";
+                perc.innerText = percentage + "%";
+
+                if (percentage < 35) msg.innerText = messages[0];
+                else if (percentage < 75) msg.innerText = messages[1];
+                else msg.innerText = messages[2];
+
+                if (runtime < duration) {
+                    requestAnimationFrame(animate);
+                } else {
+                    msg.innerText = "System Energized";
+                    msg.style.color = "#00ff88";
+                    fill.style.background = "#00ff88";
+                    fill.style.boxShadow = "0 0 20px #00ff88";
+                    setTimeout(() => {
+                        // REDIRECT!
+                        window.location.href = "index.html";
+                    }, 800);
+                }
             }
-        }, 1000);
-
-        // Modals
-        function toggleRegModal(show) {
-            const m = document.getElementById('regModal');
-            const f = document.getElementById('google-form-iframe');
-            const email = document.getElementById('login-user').value;
-            if (show) {
-                let url = `${FORM_URL}?embedded=true`;
-                if (email) url += `&${EMAIL_FIELD}=${encodeURIComponent(email)}`;
-                f.src = url;
-                m.style.display = 'block';
-            } else {
-                m.style.display = 'none';
-                f.src = "about:blank";
-            }
+            requestAnimationFrame(animate);
         }
-
-        function toggleForgotModal(show) {
-            document.getElementById('forgotModal').style.display = show ? 'block' : 'none';
-        }
-
-        window.onclick = (e) => { if (e.target.className === 'modal') { toggleRegModal(false); toggleForgotModal(false); } }
     </script>
 </body>
 </html>
