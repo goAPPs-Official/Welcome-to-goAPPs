@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DSA | System Energized</title>
+    <title>DSA | System Activation</title>
     <style>
         :root {
             --bg-dark: #05080a;
@@ -25,14 +25,18 @@
             overflow: hidden;
         }
 
-        /* Overlay */
+        /* Overlay to bypass browser audio autoplay restrictions */
         #interaction-overlay {
-            position: fixed; inset: 0;
+            position: fixed;
+            inset: 0;
             background: var(--bg-dark);
             z-index: 100;
-            display: flex; justify-content: center; align-items: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             cursor: pointer;
         }
+
         .init-btn {
             padding: 15px 30px;
             border: 1px solid var(--accent-cyan);
@@ -42,71 +46,67 @@
             letter-spacing: 2px;
             transition: 0.3s;
         }
+
         .init-btn:hover { background: rgba(0, 242, 255, 0.1); }
 
         .container {
-            display: none;
+            display: none; /* Hidden until clicked */
             flex-direction: column;
             align-items: center;
             width: 350px;
+            animation: logoBloom 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         .logo-box {
             position: relative;
             margin-bottom: 50px;
-            /* Subtle entry */
-            animation: fadeIn 0.5s ease-out;
         }
 
         .logo-img {
             width: 200px;
-            filter: drop-shadow(0 0 10px var(--accent-cyan));
-            
-            /* The electrical flicker is applied here */
-            animation: flicker 3s linear forwards; 
-            animation-delay: 0s;
+            filter: drop-shadow(0 0 20px rgba(0, 242, 255, 0.2));
         }
 
-        /* The stabilizing halo applied after flicker */
+        /* Spinning Activation Ring */
         .ring {
             position: absolute;
             top: -25px; left: -25px; right: -25px; bottom: -25px;
-            border: 1px solid rgba(0, 242, 255, 0.05);
+            border: 1px solid rgba(0, 242, 255, 0.1);
             border-top: 2px solid var(--accent-cyan);
             border-radius: 50%;
-            animation: spin 2s linear infinite, ringBloom 1s ease-out 2.8s forwards;
-            opacity: 0;
+            animation: spin 2s linear infinite;
         }
 
         /* Progress Elements */
-        .progress-bar { width: 100%; height: 2px; background: rgba(255,255,255,0.05); position: relative; }
-        .progress-fill { height: 100%; width: 0%; background: var(--accent-cyan); box-shadow: 0 0 10px var(--accent-cyan); transition: width 0.1s linear; }
-        .status-text { width: 100%; display: flex; justify-content: space-between; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #556677; font-family: monospace; }
+        .progress-bar {
+            width: 100%;
+            height: 2px;
+            background: rgba(255,255,255,0.05);
+            margin-top: 15px;
+            position: relative;
+        }
 
-        /* KEYFRAMES */
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent-cyan);
+            box-shadow: 0 0 10px var(--accent-cyan);
+            transition: width 0.1s linear;
+        }
+
+        .status-text {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #556677;
+            font-family: monospace;
+        }
+
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Electrical Flicker Logic (Brightness and Blur) */
-        @keyframes flicker {
-            0% { opacity: 0; filter: blur(4px) brightness(0.2); }
-            5% { opacity: 0.8; filter: blur(0px) brightness(1.5); } /* Flash 1 */
-            7% { opacity: 0.2; }
-            12% { opacity: 0.9; filter: brightness(2); } /* Flash 2 */
-            14% { opacity: 0.1; filter: blur(2px); }
-            30% { opacity: 1; filter: blur(0px) brightness(1); } /* Stabilize briefly */
-            33% { opacity: 0.5; filter: brightness(1.2); }
-            35% { opacity: 1; }
-            60% { opacity: 0.3; filter: brightness(0.5); } /* Dip */
-            62% { opacity: 1; filter: brightness(1.5); } /* Final Pulse */
-            100% { opacity: 1; filter: blur(0px) brightness(1) drop-shadow(0 0 20px rgba(0, 242, 255, 0.2)); } /* Solid state */
-        }
-
-        /* Ring activates as the flicker finishes */
-        @keyframes ringBloom {
-            to { opacity: 1; filter: drop-shadow(0 0 10px var(--accent-cyan)); }
-        }
-
+        @keyframes logoBloom { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 <body>
@@ -122,7 +122,7 @@
         </div>
 
         <div class="status-text">
-            <span id="msg">System Booting</span>
+            <span id="msg">System Offline</span>
             <span id="perc">0%</span>
         </div>
         <div class="progress-bar">
@@ -132,31 +132,36 @@
 
     <script>
         function startSystem() {
-            // UI Setup
+            // Hide overlay and show UI
             document.getElementById('interaction-overlay').style.display = 'none';
             document.getElementById('main-ui').style.display = 'flex';
 
-            // Audio Setup (Synthetic Chime)
+            // Play Activation Sound (Synthetic Sine-wave Chime)
             const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             const oscillator = audioCtx.createOscillator();
             const gainNode = audioCtx.createGain();
+
             oscillator.type = 'sine';
             oscillator.frequency.setValueAtTime(440, audioCtx.currentTime); // A4
             oscillator.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.5); // Slide to A5
+            
             gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.2);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1);
+
             oscillator.connect(gainNode);
             gainNode.connect(audioCtx.destination);
-            oscillator.start();
-            oscillator.stop(audioCtx.currentTime + 1.2);
 
-            // 3-Second Loading Logic synchronized with flicker
-            const duration = 3000;
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 1);
+
+            // 3-Second Loading Logic
+            const duration = 3000; // 3 seconds
             const start = performance.now();
             const fill = document.getElementById('fill');
             const perc = document.getElementById('perc');
             const msg = document.getElementById('msg');
-            const messages = ["Ignition Sequence", "Core Stability", "Finalizing"];
+            
+            const messages = ["Powering Cells", "Syncing Data", "Finalizing"];
 
             function animate(time) {
                 let runtime = time - start;
@@ -166,21 +171,18 @@
                 fill.style.width = percentage + "%";
                 perc.innerText = percentage + "%";
 
-                if (percentage < 35) msg.innerText = messages[0];
-                else if (percentage < 75) msg.innerText = messages[1];
+                if (percentage < 40) msg.innerText = messages[0];
+                else if (percentage < 80) msg.innerText = messages[1];
                 else msg.innerText = messages[2];
 
                 if (runtime < duration) {
                     requestAnimationFrame(animate);
                 } else {
-                    msg.innerText = "System Energized";
+                    msg.innerText = "Active";
                     msg.style.color = "#00ff88";
-                    fill.style.background = "#00ff88";
-                    fill.style.boxShadow = "0 0 20px #00ff88";
                     setTimeout(() => {
-                        // REDIRECT!
                         window.location.href = "index.html";
-                    }, 800);
+                    }, 500);
                 }
             }
             requestAnimationFrame(animate);
