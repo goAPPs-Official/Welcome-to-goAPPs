@@ -8,8 +8,9 @@
         :root {
             --bg-dark: #05080a;
             --accent-cyan: #00f2ff;
-            --accent-green: #00ff88;
+            --accent-green: #25D366; 
             --font-main: 'Segoe UI', Roboto, sans-serif;
+            --modal-bg: rgba(10, 15, 20, 0.98);
         }
 
         body, html {
@@ -32,8 +33,8 @@
             text-transform: uppercase; letter-spacing: 2px; transition: 0.3s;
         }
 
-        /* Container */
-        .container { display: none; flex-direction: column; align-items: center; width: 350px; }
+        /* Main Container */
+        .container { display: none; flex-direction: column; align-items: center; width: 350px; text-align: center; }
 
         /* Logo & Flicker */
         .logo-box { position: relative; margin-bottom: 50px; }
@@ -45,58 +46,70 @@
             border-radius: 50%; animation: spin 2s linear infinite; opacity: 0; transition: opacity 1s;
         }
 
-        /* Progress & CTA Area */
-        .ui-wrapper { width: 100%; position: relative; height: 60px; display: flex; flex-direction: column; align-items: center; }
-        
-        .progress-bar { width: 100%; height: 2px; background: rgba(255,255,255,0.05); position: absolute; top: 25px; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* UI Styling */
+        .ui-wrapper { width: 100%; position: relative; min-height: 100px; display: flex; flex-direction: column; align-items: center; }
+        .progress-bar { width: 100%; height: 2px; background: rgba(255,255,255,0.05); margin: 20px 0; overflow: hidden; }
         .progress-fill { height: 100%; width: 0%; background: var(--accent-cyan); box-shadow: 0 0 10px var(--accent-cyan); }
+        .status-text { width: 100%; display: flex; justify-content: space-between; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #556677; font-family: monospace; }
+        
+        .info-text { font-size: 0.85rem; color: #94a3b8; line-height: 1.4; margin-top: 10px; opacity: 0; transition: 0.5s; }
 
-        .status-text { width: 100%; display: flex; justify-content: space-between; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #556677; font-family: monospace; margin-bottom: 5px; }
-
-        /* The CTA Button (Hidden initially) */
+        /* CTA Button */
         #cta-button {
-            opacity: 0;
-            visibility: hidden;
-            padding: 12px 40px;
-            background: transparent;
-            border: 1px solid var(--accent-green);
-            color: var(--accent-green);
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 0 0px var(--accent-green);
-            transform: translateY(10px);
-            z-index: 10;
+            opacity: 0; visibility: hidden;
+            padding: 12px 30px; background: transparent;
+            border: 1px solid var(--accent-green); color: var(--accent-green);
+            text-transform: uppercase; letter-spacing: 2px; font-weight: bold;
+            cursor: pointer; transition: 0.3s; margin-top: 20px;
         }
-        #cta-button:hover {
-            background: var(--accent-green);
-            color: var(--bg-dark);
-            box-shadow: 0 0 20px var(--accent-green);
-        }
+        #cta-button:hover { background: var(--accent-green); color: var(--bg-dark); box-shadow: 0 0 20px var(--accent-green); }
 
-        /* Animations */
+        /* Modal & Progress Spinner */
+        #modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+            display: none; justify-content: center; align-items: center;
+            z-index: 1000; backdrop-filter: blur(8px);
+        }
+        .modal {
+            background: var(--modal-bg); border: 1px solid rgba(37, 211, 102, 0.3);
+            padding: 40px 30px; width: 320px; border-radius: 12px;
+            text-align: center; box-shadow: 0 0 40px rgba(0,0,0,0.8);
+            transform: translateY(20px); opacity: 0; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal.active { transform: translateY(0); opacity: 1; }
+        
+        .wa-logo { width: 60px; height: 60px; margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(37, 211, 102, 0.4)); }
+        
+        /* Redirect Loader Section */
+        #loader-section { display: none; margin-top: 20px; }
+        .spinner {
+            width: 30px; height: 30px;
+            border: 3px solid rgba(37, 211, 102, 0.1);
+            border-top: 3px solid var(--accent-green);
+            border-radius: 50%; margin: 0 auto 10px;
+            animation: spin 0.8s linear infinite;
+        }
+        .loading-label { font-size: 10px; color: var(--accent-green); text-transform: uppercase; letter-spacing: 2px; font-weight: bold; animation: pulseText 1s ease-in-out infinite; }
+
+        @keyframes pulseText { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
         @keyframes spin { 100% { transform: rotate(360deg); } }
         @keyframes flicker {
             0% { opacity: 0; filter: blur(4px) brightness(0.2); }
             10% { opacity: 0.8; filter: blur(0px) brightness(1.5); }
             30% { opacity: 1; filter: brightness(1); }
-            60% { opacity: 0.4; }
             100% { opacity: 1; filter: drop-shadow(0 0 20px rgba(0, 242, 255, 0.3)); }
         }
 
-        /* Class to trigger when loaded */
-        .is-loaded .progress-bar { opacity: 0; transform: scaleX(0); }
-        .is-loaded .status-text { opacity: 0; }
-        .is-loaded #cta-button { opacity: 1; visibility: visible; transform: translateY(-15px); }
+        .is-loaded .progress-bar, .is-loaded .status-text { display: none; }
+        .is-loaded .info-text { opacity: 1; }
+        .is-loaded #cta-button { opacity: 1; visibility: visible; }
         .is-loaded .ring { opacity: 1; }
     </style>
 </head>
 <body>
 
     <div id="interaction-overlay" onclick="startSystem()">
-        <button class="init-btn">🚀Open goAPPs</button>
+        <button class="init-btn">🚀 Open goAPPs</button>
     </div>
 
     <div class="container" id="main-ui">
@@ -106,79 +119,100 @@
         </div>
 
         <div class="ui-wrapper" id="ui-container">
-            <div class="status-text" id="status-labels">
-                <span id="msg">Booting...</span>
+            <div class="status-text">
+                <span id="msg">Booting System...</span>
                 <span id="perc">0%</span>
             </div>
-            <div class="progress-bar" id="p-bar">
-                <div id="fill" class="progress-fill"></div>
-            </div>
-            <div>
-                <p>goAPPs requires connection to WhatsApp to work preperly.</p>
-            </div>
+            <div class="progress-bar"><div id="fill" class="progress-fill"></div></div>
+            <p class="info-text">goAPPs requires connection to WhatsApp to work properly.</p>
+            <button id="cta-button" onclick="showModal()">🔗 Link WhatsApp</button>
+        </div>
+    </div>
+
+    <div id="modal-overlay">
+        <div class="modal" id="modal-box">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="wa-logo">
+            <h2>WhatsApp Link Required</h2>
+            <p>Ready to synchronize? We will redirect you to WhatsApp to securely link your account.</p>
             
-            <button id="cta-button" onclick="launchApp()">🔗Link WhatsApp</button>
+            <div class="modal-btns" id="modal-actions">
+                <button class="modal-btn btn-confirm" onclick="confirmLink()">Connect Now</button>
+                <button class="modal-btn btn-cancel" onclick="closeModal()">Maybe Later</button>
+            </div>
+
+            <div id="loader-section">
+                <div class="spinner"></div>
+                <div class="loading-label">Linking Device...</div>
+            </div>
         </div>
     </div>
 
     <script>
+        let audioCtx;
+
         function startSystem() {
             document.getElementById('interaction-overlay').style.display = 'none';
             document.getElementById('main-ui').style.display = 'flex';
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            playEffect([440, 880], 0.1); 
 
-            // Synthetic Chime
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.frequency.setValueAtTime(440, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.5);
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.2);
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.start(); osc.stop(audioCtx.currentTime + 1.2);
-
-            // 3-Second Loading
             const duration = 3000;
             const start = performance.now();
             const fill = document.getElementById('fill');
             const perc = document.getElementById('perc');
-            const msg = document.getElementById('msg');
 
             function animate(time) {
                 let runtime = time - start;
                 let progress = Math.min(runtime / duration, 1);
                 let percentage = Math.floor(progress * 100);
-
                 fill.style.width = percentage + "%";
                 perc.innerText = percentage + "%";
 
-                if (runtime < duration) {
-                    requestAnimationFrame(animate);
-                } else {
-                    // Transition to CTA state
-                    document.getElementById('ui-container').classList.add('is-loaded');
-                    document.getElementById('stabilizer-ring').style.opacity = "1";
-                }
+                if (runtime < duration) requestAnimationFrame(animate);
+                else document.getElementById('ui-container').classList.add('is-loaded');
             }
             requestAnimationFrame(animate);
         }
 
-        function launchApp() {
-            // Final click sound
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSuccessSound() {
+            const notes = [523.25, 659.25, 783.99, 987.77]; // C5, E5, G5, B5 (Major 7th Chord)
+            notes.forEach((freq, i) => {
+                setTimeout(() => playEffect([freq, freq * 1.05], 0.3), i * 80);
+            });
+        }
+
+        function playEffect(freqs, vol) {
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
-            osc.frequency.setValueAtTime(880, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freqs[0], audioCtx.currentTime);
+            if (freqs[1]) osc.frequency.exponentialRampToValueAtTime(freqs[1], audioCtx.currentTime + 0.1);
+            gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
             osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.start();
+            osc.start(); osc.stop(audioCtx.currentTime + 0.6);
+        }
+
+        function showModal() {
+            const overlay = document.getElementById('modal-overlay');
+            const box = document.getElementById('modal-box');
+            overlay.style.display = 'flex';
+            setTimeout(() => box.classList.add('active'), 10);
+        }
+
+        function closeModal() {
+            document.getElementById('modal-box').classList.remove('active');
+            setTimeout(() => document.getElementById('modal-overlay').style.display = 'none', 300);
+        }
+
+        function confirmLink() {
+            playSuccessSound();
+            document.getElementById('modal-actions').style.display = 'none';
+            document.getElementById('loader-section').style.display = 'block';
             
-            // Redirect
             setTimeout(() => {
                 window.location.href = "https://wa.me/2348157505037?text=Link%20goAPPs";
-            }, 200);
+            }, 2200); 
         }
     </script>
 </body>
