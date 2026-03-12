@@ -62,7 +62,7 @@ nav{position:fixed;bottom:0;left:0;width:100%;background:var(--card);display:fle
 .pin-key{padding:16px;border-radius:14px;border:1px solid var(--bdr);background:rgba(128,128,128,.05);font-size:1.1rem;font-weight:800;cursor:pointer;color:var(--txt);text-align:center;transition:.15s}
 .pin-key:active{background:rgba(75,68,224,.1);transform:scale(.96)}
 .pin-key.del{font-size:.9rem;color:var(--danger)}
-/* QUIZ */
+/* Drill */
 .q-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
 .q-badge{font-size:.65rem;font-weight:800;background:rgba(75,68,224,.1);color:var(--op);padding:4px 10px;border-radius:20px}
 .q-num{font-size:.7rem;color:var(--sub)}
@@ -148,7 +148,7 @@ nav{position:fixed;bottom:0;left:0;width:100%;background:var(--card);display:fle
   </div>
 
   <div class="scroll" id="topics"></div>
-  <button class="fab-pill" onclick="openM('m-exam')">+ ADD EXAM</button>
+  <button class="fab-pill" onclick="openM('m-exam')">+ ADD Drill</button>
 
   <!-- ── LEADERBOARD ── -->
   <div id="m-lb" class="overlay">
@@ -217,7 +217,7 @@ nav{position:fixed;bottom:0;left:0;width:100%;background:var(--card);display:fle
     </div>
   </div>
 
-  <!-- ── STUDENT PROFILE (collected once before first quiz) ── -->
+  <!-- ── STUDENT PROFILE (collected once before first Drill) ── -->
   <div id="m-profile" class="overlay">
     <div class="modal" style="text-align:center">
       <div style="font-size:2.5rem;margin-bottom:8px">🎓</div>
@@ -226,19 +226,19 @@ nav{position:fixed;bottom:0;left:0;width:100%;background:var(--card);display:fle
       <input type="text" id="inp-name" class="inp" placeholder="Full Name *" style="margin-bottom:10px">
       <input type="email" id="inp-email" class="inp" placeholder="Your Email (optional)" style="margin-bottom:10px">
       <input type="text" id="inp-class" class="inp" placeholder="Class / School (optional)" style="margin-bottom:16px">
-      <button class="btn-main" onclick="saveProfile()">✅ Save & Continue to Quiz</button>
+      <button class="btn-main" onclick="saveProfile()">✅ Save & Continue to Drill</button>
       <p onclick="skipProfile()" style="margin-top:12px;font-size:.72rem;cursor:pointer;color:var(--sub)">Skip for now</p>
     </div>
   </div>
 
-  <!-- ── QUIZ PIN GATE ── -->
-  <div id="m-quiz-pin" class="overlay">
+  <!-- ── Drill PIN GATE ── -->
+  <div id="m-Drill-pin" class="overlay">
     <div class="modal" style="text-align:center">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-        <h3 style="color:var(--op)">🔐 Quiz Access PIN</h3>
+        <h3 style="color:var(--op)">🔐 Drill Access PIN</h3>
         <button class="m-close" onclick="closeM()">&times;</button>
       </div>
-      <p style="font-size:.72rem;color:var(--sub);margin-bottom:4px">Enter your 5-digit PIN to access this quiz</p>
+      <p style="font-size:.72rem;color:var(--sub);margin-bottom:4px">Enter your 5-digit PIN to access this Drill</p>
       <div class="pin-dots" id="qpin-dots">
         <div class="pin-dot" id="qd0"></div><div class="pin-dot" id="qd1"></div>
         <div class="pin-dot" id="qd2"></div><div class="pin-dot" id="qd3"></div>
@@ -246,18 +246,18 @@ nav{position:fixed;bottom:0;left:0;width:100%;background:var(--card);display:fle
       </div>
       <div id="qpin-err" style="font-size:.72rem;color:var(--danger);min-height:16px;margin-bottom:6px"></div>
       <div class="pin-pad">
-        <button class="pin-key" onclick="pinKey('quiz',1)">1</button>
-        <button class="pin-key" onclick="pinKey('quiz',2)">2</button>
-        <button class="pin-key" onclick="pinKey('quiz',3)">3</button>
-        <button class="pin-key" onclick="pinKey('quiz',4)">4</button>
-        <button class="pin-key" onclick="pinKey('quiz',5)">5</button>
-        <button class="pin-key" onclick="pinKey('quiz',6)">6</button>
-        <button class="pin-key" onclick="pinKey('quiz',7)">7</button>
-        <button class="pin-key" onclick="pinKey('quiz',8)">8</button>
-        <button class="pin-key" onclick="pinKey('quiz',9)">9</button>
-        <button class="pin-key" onclick="pinKey('quiz','clr')" style="font-size:.7rem;color:var(--sub)">CLR</button>
-        <button class="pin-key" onclick="pinKey('quiz',0)">0</button>
-        <button class="pin-key del" onclick="pinKey('quiz','del')">⌫</button>
+        <button class="pin-key" onclick="pinKey('Drill',1)">1</button>
+        <button class="pin-key" onclick="pinKey('Drill',2)">2</button>
+        <button class="pin-key" onclick="pinKey('Drill',3)">3</button>
+        <button class="pin-key" onclick="pinKey('Drill',4)">4</button>
+        <button class="pin-key" onclick="pinKey('Drill',5)">5</button>
+        <button class="pin-key" onclick="pinKey('Drill',6)">6</button>
+        <button class="pin-key" onclick="pinKey('Drill',7)">7</button>
+        <button class="pin-key" onclick="pinKey('Drill',8)">8</button>
+        <button class="pin-key" onclick="pinKey('Drill',9)">9</button>
+        <button class="pin-key" onclick="pinKey('Drill','clr')" style="font-size:.7rem;color:var(--sub)">CLR</button>
+        <button class="pin-key" onclick="pinKey('Drill',0)">0</button>
+        <button class="pin-key del" onclick="pinKey('Drill','del')">⌫</button>
       </div>
     </div>
   </div>
@@ -274,8 +274,8 @@ nav{position:fixed;bottom:0;left:0;width:100%;background:var(--card);display:fle
     </div>
   </div>
 
-  <!-- ── QUIZ MODAL ── -->
-  <div id="m-quiz" class="overlay">
+  <!-- ── Drill MODAL ── -->
+  <div id="m-Drill" class="overlay">
     <div class="modal">
       <div class="q-hdr">
         <span class="q-badge" id="q-badge">Subject</span>
@@ -1021,8 +1021,8 @@ const QB={
 // ═══════════════════════════════════════════
 // PIN KEYPAD STATE
 // ═══════════════════════════════════════════
-const pinState={topup:'',quiz:''};
-let pendingQuizId=null;
+const pinState={topup:'',Drill:''};
+let pendingDrillId=null;
 
 function pinKey(ctx,val){
   if(val==='clr'){pinState[ctx]=''}
@@ -1031,7 +1031,7 @@ function pinKey(ctx,val){
   updatePinDots(ctx);
   if(pinState[ctx].length===5){
     if(ctx==='topup')processTopupPin();
-    else processQuizPin();
+    else processDrillPin();
   }
 }
 
@@ -1060,28 +1060,28 @@ function processTopupPin(){
   }
 }
 
-function processQuizPin(){
-  const pin=pinState.quiz;
+function processDrillPin(){
+  const pin=pinState.Drill;
   const errEl=document.getElementById('qpin-err');
-  // Any valid PIN (used or unused) grants quiz access
+  // Any valid PIN (used or unused) grants Drill access
   if(PIN_CMS[pin]){
     closeM();
-    pinState.quiz='';updatePinDots('quiz');
+    pinState.Drill='';updatePinDots('Drill');
     document.getElementById('qpin-err').innerText='';
-    setTimeout(()=>launchQuiz(pendingQuizId),150);
+    setTimeout(()=>launchDrill(pendingDrillId),150);
   }else{
     errEl.innerText='❌ Incorrect PIN. Try again.';
-    pinState.quiz='';updatePinDots('quiz');
+    pinState.Drill='';updatePinDots('Drill');
   }
 }
 
 // ═══════════════════════════════════════════
-// QUIZ ENGINE
+// Drill ENGINE
 // ═══════════════════════════════════════════
 let QS={id:null,idx:0,score:0,answered:false,shuffled:[]};
 
-function openQuizGate(id){
-  pendingQuizId=id;
+function openDrillGate(id){
+  pendingDrillId=id;
   // Check profile first
   if(!S.get('profile_set',false)){
     // Clear any old values
@@ -1091,21 +1091,21 @@ function openQuizGate(id){
     openM('m-profile');
     return;
   }
-  pinState.quiz='';updatePinDots('quiz');
+  pinState.Drill='';updatePinDots('Drill');
   document.getElementById('qpin-err').innerText='';
-  openM('m-quiz-pin');
+  openM('m-Drill-pin');
 }
 
-function launchQuiz(id){
+function launchDrill(id){
   const bank=QB[id];
-  if(!bank){alert('Quiz coming soon!');return;}
+  if(!bank){alert('Drill coming soon!');return;}
   // Shuffle questions
   const shuffled=[...bank].sort(()=>Math.random()-0.5);
   QS={id,idx:0,score:0,answered:false,shuffled};
   const s=subjects.flatMap(c=>c.list).find(x=>x.id===id);
-  document.getElementById('q-badge').innerText='📝 '+(s?s.title:'Subject')+' Quiz';
+  document.getElementById('q-badge').innerText='📝 '+(s?s.title:'Subject')+' Drill';
   renderQ();
-  openM('m-quiz');
+  openM('m-Drill');
 }
 
 function renderQ(){
@@ -1153,7 +1153,7 @@ function showScore(){
   let retries=S.get(retryKey,0)+1;
   S.set(retryKey,retries);
 
-  // ── COMPLETION: mark done + deduct ₦200 on first completion of this quiz ──
+  // ── COMPLETION: mark done + deduct ₦200 on first completion of this Drill ──
   let completedNow=false;
   if(!S.get('done_'+QS.id,false)){
     if(wallet>=200){
@@ -1200,7 +1200,7 @@ function showScore(){
       ${doneMsg}
       <div class="score-msg">${msg}</div>
       <div style="font-size:.7rem;color:var(--sub);margin-bottom:14px">📧 Results sent to gocbtinfo@gmail.com</div>
-      <button class="btn-qnext" onclick="closeM();setTimeout(()=>openQuizGate(${QS.id}),150)">🔄 Retry Quiz</button>
+      <button class="btn-qnext" onclick="closeM();setTimeout(()=>openDrillGate(${QS.id}),150)">🔄 Retry Drill</button>
       <button class="btn-qnext" onclick="closeM()" style="background:rgba(128,128,128,.1);color:var(--txt);margin-top:6px">✔ Done</button>
     </div>`;
   updateWalletUI();
@@ -1226,14 +1226,14 @@ function sendResultEmail(subjName,score,total,pct,attempt){
   });
 
   const rank=S.get('user_rank','--');
-  const body=`goCBT QUIZ RESULT REPORT
+  const body=`goCBT Drill RESULT REPORT
 ========================
 Student  : ${studentName}
 Email    : ${studentEmail||'Not provided'}
 Date     : ${now}
 Global Rank: #${rank}
 
-LATEST QUIZ
+LATEST Drill
 Subject  : ${subjName}
 Score    : ${score}/${total} (${pct}%)
 Attempt  : #${attempt}
@@ -1326,11 +1326,11 @@ function renderTopics(){
           <div style="font-size:.7rem;color:var(--sub);margin-bottom:12px">${s.desc}</div>
           <div class="cta-grid">
             <button class="btn-cta" onclick="alert('Schedule coming soon')">📅 Date</button>
-            <button class="btn-cta" onclick="handleQuizClick(${s.id})">📝 Quiz</button>
+            <button class="btn-cta" onclick="handleDrillClick(${s.id})">📝 Drill</button>
           </div>
-          <button class="btn-main" onclick="handleQuizClick(${s.id})"
+          <button class="btn-main" onclick="handleDrillClick(${s.id})"
             style="${isDone?'background:rgba(0,210,141,.15);color:#007a52;border:1.5px solid rgba(0,210,141,.4)':''}">
-            ${isDone?'🔄 Retake Quiz':'🚀 Start Quiz to Complete (−₦200)'}
+            ${isDone?'🔄 Retake Drill':'🚀 Start Drill to Complete (−₦200)'}
           </button>
         </div>`;
     });
@@ -1339,7 +1339,7 @@ function renderTopics(){
   updateStats();
 }
 
-function handleQuizClick(id){
+function handleDrillClick(id){
   const isDone=S.get('done_'+id,false);
   // If not yet completed and wallet < 200, block
   if(!isDone && wallet<200){
@@ -1347,14 +1347,14 @@ function handleQuizClick(id){
     el.classList.add('shake');setTimeout(()=>el.classList.remove('shake'),400);
     openM('m-insuf');return;
   }
-  openQuizGate(id);
+  openDrillGate(id);
 }
 
 function handleComplete(id,title){
-  // Completion is triggered automatically on quiz finish — this button is now disabled for already-done subjects
+  // Completion is triggered automatically on Drill finish — this button is now disabled for already-done subjects
   if(S.get('done_'+id,false))return;
-  // Guard: must take quiz first
-  alert('📝 Complete the Quiz to mark this subject as done. Tap the Quiz button!');
+  // Guard: must take Drill first
+  alert('📝 Complete the Drill to mark this subject as done. Tap the Drill button!');
 }
 
 function finalizeSubject(){
@@ -1419,12 +1419,12 @@ function saveProfile(){
   S.set('student_class',document.getElementById('inp-class').value.trim());
   S.set('profile_set',true);
   closeM();
-  setTimeout(()=>openQuizGate(pendingQuizId),150);
+  setTimeout(()=>openDrillGate(pendingDrillId),150);
 }
 function skipProfile(){
   S.set('profile_set',true);
   closeM();
-  setTimeout(()=>openQuizGate(pendingQuizId),150);
+  setTimeout(()=>openDrillGate(pendingDrillId),150);
 }
 
 function openLeaderboard(){
@@ -1450,7 +1450,7 @@ function openLeaderboard(){
   });
   const avg=scoredCount>0?Math.round(scoreSum/scoredCount):0;
   document.getElementById('lb-time').innerText=`${doneCount}/${allSubj.length} · avg ${avg}%`;
-  document.getElementById('lb-subject-scores').innerHTML=rows||'<div style="text-align:center;padding:10px">Complete a quiz to see scores here</div>';
+  document.getElementById('lb-subject-scores').innerHTML=rows||'<div style="text-align:center;padding:10px">Complete a Drill to see scores here</div>';
   openM('m-lb');
 }
 function handleTopup(method){
