@@ -3,313 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎓goCLASS</title>
+    <title>🎓 goCLASS | Practice Selector</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --opay-green: #00d28d;
-            --opay-gradient: linear-gradient(135deg, #00d28d 0%, #4b44e0 100%);
-            --text-dark: #333;
-            --text-light: #888;
-            --danger: #ff4d4d;
+            /* ── THEME PALETTE ── */
+            --bg: #081f14;
+            --bg2: #0a2a1a;
+            --card: #0d3d26;
+            --card2: #0f4a2e;
+            --text: #f0faf5;
+            --text2: #a8c5b5;
+            --primary: #00d28d;
+            --primary-glow: rgba(0, 210, 141, 0.25);
+            --border: rgba(255, 255, 255, 0.07);
+            --opay-gradient: linear-gradient(135deg, #00d28d 0%, #064e35 100%);
+            --overlay: rgba(0,0,0,0.85);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
 
         body {
-            background-color: #121212;
+            background-color: #111;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            color: var(--text);
         }
 
         .phone-container {
             width: 375px;
             height: 750px;
-            background: white;
+            background: var(--bg);
             border-radius: 40px;
             overflow: hidden;
             position: relative;
-            border: 8px solid #333;
+            border: 8px solid #1a1a1a;
             display: flex;
             flex-direction: column;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
         }
 
-        header { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-        .menu-icon { width: 22px; height: 16px; border-top: 2px solid var(--opay-green); border-bottom: 2px solid var(--opay-green); position: relative; }
-        .menu-icon::after { content: ''; position: absolute; top: 5px; width: 100%; height: 2px; background: var(--opay-green); }
-        .user-avatar { width: 35px; height: 35px; border-radius: 50%; background: #eee; overflow: hidden; }
-        .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        /* ── HEADER ── */
+        header { 
+            padding: 25px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .menu-icon { width: 22px; height: 16px; border-top: 2px solid var(--primary); border-bottom: 2px solid var(--primary); position: relative; }
+        .menu-icon::after { content: ''; position: absolute; top: 5px; width: 100%; height: 2px; background: var(--primary); }
+
+        /* ── SCROLL CONTENT ── */
+        .main-scroll { flex: 1; overflow-y: auto; padding: 0 15px 100px; scrollbar-width: none; }
+        .main-scroll::-webkit-scrollbar { display: none; }
 
         .balance-card {
-            margin: 0 15px;
+            margin: 15px 0;
             padding: 22px;
             background: var(--opay-gradient);
-            border-radius: 20px;
+            border-radius: 24px;
             color: white;
-            position: relative;
+            box-shadow: 0 10px 20px var(--primary-glow);
         }
 
-        .username { font-size: 1.4rem; font-weight: 800; margin-bottom: 15px; }
-        .total-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 1.6rem; font-weight: 800; }
-        
-        .add-btn {
-            width: 42px; height: 42px; background: var(--opay-green); color: white; border-radius: 50%;
-            display: flex; justify-content: center; align-items: center; font-size: 1.8rem;
-            border: 4px solid white; position: absolute; bottom: -21px; left: 50%; transform: translateX(-50%);
-        }
+        .section-title { font-weight: 800; margin: 25px 0 15px; font-size: 1.1rem; color: var(--primary); }
 
-        .info-banner {
-            margin: 30px 15px 10px; padding: 12px; background: #fff; border-radius: 12px;
-            display: flex; align-items: center; gap: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            font-size: 0.7rem; color: var(--text-light);
-        }
-
-        .main-scroll { flex: 1; overflow-y: auto; padding: 0 15px 80px; }
-        .section-title { font-weight: 800; margin: 20px 0 10px; font-size: 1.1rem; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
         .service-item {
-            background: white; padding: 12px; border-radius: 12px;
-            display: flex; align-items: center; gap: 10px; border: 1px solid #f2f2f2;
-            position: relative;
-        }
-
-        .service-item.highlight { background: var(--opay-green); color: white; border: none; }
-        .service-info b { font-size: 0.8rem; display: block; }
-        .service-info small { font-size: 0.6rem; opacity: 0.7; }
-        
-        /* FOOTER NAVIGATION */
-        nav { 
-            display: flex; 
-            justify-content: space-around; 
-            padding: 12px 0; 
-            background: white; 
-            border-top: 1px solid #eee; 
-            position: absolute; 
-            bottom: 0; 
-            width: 100%; 
-        }
-
-        /* Link specific styling */
-        nav a {
-            text-decoration: none;
-            color: var(--text-light);
+            background: var(--card);
+            padding: 15px;
+            border-radius: 18px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            flex: 1;
-            font-size: 0.6rem;
-            transition: color 0.3s ease;
+            align-items: flex-start;
+            gap: 8px;
+            border: 1px solid var(--border);
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.1s;
         }
 
-        nav a.active {
-            color: var(--opay-green);
+        .service-item:active { transform: scale(0.95); }
+
+        .service-item span { font-size: 1.4rem; }
+        .service-info b { font-size: 0.85rem; display: block; color: var(--text); }
+        .service-info small { font-size: 0.65rem; color: var(--text2); }
+
+        .highlight { background: var(--primary); border: none; }
+        .highlight b, .highlight small { color: #081f14 !important; font-weight: 800; }
+
+        /* ── MODALS ── */
+        .modal-overlay {
+            position: absolute; inset: 0; background: var(--overlay);
+            display: none; flex-direction: column; justify-content: center; align-items: center;
+            padding: 20px; z-index: 1000;
         }
 
-        .nav-icon { display: block; font-size: 1.2rem; margin-bottom: 2px; }
-        .service-item:active {
-    transform: scale(0.95);
-    transition: transform 0.1s;
-}
+        .modal-content {
+            background: var(--bg2);
+            width: 100%;
+            padding: 25px;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .btn-action {
+            width: 100%; padding: 14px; border-radius: 12px; border: none;
+            font-weight: 800; cursor: pointer; margin-top: 10px;
+            background: var(--primary); color: #081f14;
+        }
+
+        /* ── NAVIGATION ── */
+        nav { 
+            display: flex; justify-content: space-around; padding: 15px 0 25px; 
+            background: var(--bg2); border-top: 1px solid var(--border);
+            position: absolute; bottom: 0; width: 100%;
+        }
+
+        nav a { text-decoration: none; color: var(--text2); font-size: 0.65rem; text-align: center; opacity: 0.6; }
+        nav a.active { color: var(--primary); opacity: 1; font-weight: 800; }
     </style>
 </head>
 <body>
-    <div id="offline-screen" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:white; z-index:1000; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:20px;">
-        <div style="font-size: 4rem; margin-bottom: 20px;">📡</div>
-        <h2 style="color: var(--text-dark); margin-bottom: 10px;">Oops! You're Offline</h2>
-        <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 30px;">Please check your internet connection to continue using 🚀goAPPs.</p>
-        <button style="background:var(--opay-green); color:white; border:none; padding:12px; border-radius:10px; width:200px;" onclick="window.location.reload()">Reload Page</button>
-    </div>
 
-<div class="phone-container">
-    <header>
-        <div class="menu-icon"></div>
-        <div style="font-weight: 800; font-size: 1.1rem;">🎓goCLASS</div>
-        <div class="user-avatar"><img src="https://i.pravatar.cc/100" alt="user"></div>
-    </header>
+    <div class="phone-container">
+        <header>
+            <div class="menu-icon"></div>
+            <div style="font-weight: 800; font-size: 1.1rem; color: var(--primary);">🎓 goCLASS</div>
+            <div style="width: 35px; height: 35px; border-radius: 50%; background: var(--card); border: 1px solid var(--primary);"></div>
+        </header>
 
-    <div class="main-scroll">
-        <div class="balance-card">
-            <p style="font-size: 0.7rem; opacity: 0.8;">Welcome to Class,</p>
-            <p class="username">Digital</p>
-            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; opacity: 0.9;">
-                <span>Balance</span><span>₦***.00</span>
+        <div class="main-scroll">
+            <div class="balance-card">
+                <p style="font-size: 0.7rem; opacity: 0.9;">Choose a class to begin practice</p>
+                <h2 style="margin: 5px 0;">Select Level</h2>
+                <button class="btn-action" style="background: white; color: var(--bg); margin-top: 10px;" onclick="openTransferModal()">Unlock Premium PIN</button>
             </div>
-            <div style="display: flex; justify-content: space-between; font-size: 0.8rem; opacity: 0.9;">
-                <span>Bonus</span><span>🏆2.00gc</span>
-            </div>
-            <div class="total-row">
-                <span style="font-size: 0.8rem; font-weight: 400;">💰Total Token</span>
-                <span>₦5,600</span>
-            </div>
-            <div class="add-btn">+</div>
-        </div>
 
-        <div class="info-banner">
-            <span style="font-size: 1.2rem;">ℹ️</span>
-            <p>Enjoy millions of educational materials, contents and resources.</p>
-        </div>
-
-        <h3 class="section-title">Select your Class</h3>
-        <a href="#" style="text-decoration: none; color: inherit;">
-            <div class="service-item highlight">
-                <span>⚠️</span>
-                <div class="service-info">
-                    <b>Update PROFILE</b>
-                    <small>Stay Connected.</small>
+            <h3 class="section-title">Junior Secondary</h3>
+            <div class="grid">
+                <div class="service-item" onclick="alert('JSS1 Selected')">
+                    <span>📖</span>
+                    <div class="service-info"><b>JSS 1</b><small>Practice Now</small></div>
+                </div>
+                <div class="service-item" onclick="alert('JSS2 Selected')">
+                    <span>📚</span>
+                    <div class="service-info"><b>JSS 2</b><small>Practice Now</small></div>
+                </div>
+                <div class="service-item highlight" onclick="alert('JSS3 Selected')">
+                    <span>🎓</span>
+                    <div class="service-info"><b>JSS 3</b><small>Exam Mode</small></div>
                 </div>
             </div>
-        </a>
-        
-        <a href="#" style="text-decoration: none; color: inherit;">
+
+            <h3 class="section-title">Senior Secondary</h3>
             <div class="grid">
-            <div class="service-item">
-                <span style="color:var(--opay-green)">▶️</span>
-                <div class="service-info"><b>Pri 1-3</b><small>select this class</small></div>
+                <div class="service-item" onclick="alert('SSS1 Selected')">
+                    <span>🔬</span>
+                    <div class="service-info"><b>SSS 1</b><small>Science/Arts</small></div>
+                </div>
+                <div class="service-item" onclick="alert('SSS2 Selected')">
+                    <span>🧬</span>
+                    <div class="service-info"><b>SSS 2</b><small>Core Subjects</small></div>
+                </div>
+                <a href="https://official-gocbt.github.io/goCBT-Drill-Center/JAMB_drill.html" style="text-decoration: none; color: inherit;">
+                <div class="service-item highlight" onclick="alert('SSS3 Selected')">
+                    <span>🎖️</span>
+                    <div class="service-info"><b>SSS 3</b><small>WAEC/JAMB</small></div>
+                </div>
+                </a>
             </div>
-        </a>
-        <a href="#" style="text-decoration: none; color: inherit;">
-            <div class="service-item">
-                <span style="color:var(--opay-green)">▶️</span>
-                <div class="service-info"><b>Pri 4&5</b><small>Select Subject</small></div>
-            </div>
-        </a>
-        <a href="jss_subjects.html" style="text-decoration: none; color: inherit;">
-            <div class="service-item">
-                <span style="color:var(--opay-green)">▶️</span>
-                <div class="service-info"><b>JSS 1</b><small>Select this Class</small></div>
-            </div>
-        </a>
-        <a href="[Practice]exams_class_selector.html" style="text-decoration: none; color: inherit;">
-            <div class="service-item">
-                <span style="color:var(--opay-green)">▶️</span>
-                <div class="service-info"><b>Exam Classes</b><small>Select Class</small></div>
-            </div>
-        </a>
-        <a href="#" style="text-decoration: none; color: inherit;">
-            <div class="service-item highlight">
-                <span>▶️</span>
-                <div class="service-info"><b>JSS 2</b><small>Enter this class</small></div>
-            </div>
-        </a>
-        <a href="#" style="text-decoration: none; color: inherit;">
-            <div class="service-item">
-                <span style="color:var(--opay-green)">▶️</span>
-                <div class="service-info"><b>JSS 3</b><small>Submit NOW</small></div>
-            </div>
-        </a>
-        <a href="#" style="text-decoration: none; color: inherit;">
-            <div class="service-item">
-                <span class="ride-icon">▶️</span>
-                <div class="service-info"><b>SSS 1</b><small>Enter this Class</small></div>
-            </div>
-        </a>
-        <a href="#" style="text-decoration: none; color: inherit;">
-            <div class="service-item">
-                <span style="color:var(--opay-green)">▶️</span>
-                <div class="service-info"><b>SSS 2</b><small>Enter Class</small></div>
-            </div>
-        </a>
-        <a href="tv-subscription.html" style="text-decoration: none; color: inherit;">
-            <div class="service-item">
-                <span style="color:var(--opay-green)">▶️</span>
-                <div class="service-info"><b>SSS 3</b><small>Enter Class</small></div>
-            </div>
-        </a>
-        <a href="#" style="text-decoration: none; color: inherit;">
-            <div class="service-item">
-                <span style="color:var(--opay-green)">▶️</span>
-                <div class="service-info"><b>Tertiary</b><small>Admin Login</small></div>
-            </div>
-        </a>
-        <a href="#" style="text-decoration: none; color: inherit;">
-            <div class="service-item">
-                <span style="color:var(--opay-green)">▶️</span>
-                <div class="service-info"><b>Professional</b><small>Start</small></div>
-            </div>
-        </a>
-        <a href="tv-subscription.html" style="text-decoration: none; color: inherit;">
-            <div class="service-item" style="border:none; background:transparent; justify-content:flex-end;">
-                <span class="badge-red">Get coupons now!</span>
-            </div>
-        </a>
         </div>
+
+        <div id="transfer-modal" class="modal-overlay">
+            <div class="modal-content">
+                <h3 style="color: var(--primary); margin-bottom: 15px;">Unlock Practice PIN</h3>
+                <p style="font-size: 0.8rem; color: var(--text2); margin-bottom: 20px;">Select a transfer method to proceed</p>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <button class="service-item" style="width:100%;" onclick="sendWhatsApp('Opay')"><b>Opay</b></button>
+                    <button class="service-item" style="width:100%;" onclick="sendWhatsApp('PalmPay')"><b>PalmPay</b></button>
+                    <button class="service-item" style="width:100%;" onclick="sendWhatsApp('MoniePoint')"><b>MoniePoint</b></button>
+                    <button class="service-item" style="width:100%;" onclick="sendWhatsApp('eTranzact')"><b>eTranzact</b></button>
+                    <button class="service-item highlight" style="width:100%; grid-column: span 2;" onclick="sendWhatsApp('goCOINs')"><b>goCOINs</b></button>
+                </div>
+                
+                <p onclick="closeModal()" style="margin-top: 20px; font-size: 0.8rem; color: var(--text2); cursor: pointer;">Cancel</p>
+            </div>
+        </div>
+
+        <nav>
+            <a href="https://goapps-official.github.io/Welcome/"><span>🏠</span><br>Home</a>
+            <a href="#" class="active"><span>📝</span><br>Practice</a>
+            <a href="#"><span>🎁</span><br>Rewards</a>
+            <a href="#"><span>⚙️</span><br>Settings</a>
+        </nav>
     </div>
 
-    <nav>
-        
-        <a href="reward.html" class="nav-item">
-            <span class="nav-icon">🎁</span>Rewards
-        </a>
-        <a href="balance.html" class="nav-item">
-            <span class="nav-icon">💰</span>Wallet
-        </a>
-        <a href="https://goapps-official.github.io/Welcome-to-goAPPs/" class="nav-item active">
-            <span class="nav-icon">🏧</span>Home
-        </a>
-        <a href="transfer.html" class="nav-item">
-            <span class="nav-icon">📊</span>Market
-        </a>
-        <a href="settings.html" class="nav-item">
-            <span class="nav-icon">⚙️</span>Settings
-        </a>
-    </nav>
+    <script>
+        function openTransferModal() {
+            document.getElementById('transfer-modal').style.display = 'flex';
+        }
 
-</div>
-<script>
-    // Connection Monitoring
-    window.addEventListener('online', () => {
-        document.getElementById('offline-screen').style.display = 'none';
-        
-        // Connection Restored Toast
-        const toast = document.createElement('div');
-        toast.style = "position:fixed; bottom:100px; left:50%; transform:translateX(-50%); background:#00d28d; color:white; padding:10px 20px; border-radius:30px; font-size:0.8rem; z-index:2000; box-shadow: 0 4px 12px rgba(0,0,0,0.2);";
-        toast.innerText = "⚡ Connection Restored!";
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
-    });
-    
-    window.addEventListener('offline', () => {
-        document.getElementById('offline-screen').style.display = 'flex';
-    });
+        function closeModal() {
+            document.getElementById('transfer-modal').style.display = 'none';
+        }
 
-    // Initial check
-    if (!navigator.onLine) {
-        document.getElementById('offline-screen').style.display = 'flex';
-    }
-
-    // PWA INSTALL LOGIC
-    let deferredPrompt;
-    const installBanner = document.getElementById('install-banner');
-    const installBtn = document.getElementById('install-btn');
-
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        installBanner.style.display = 'flex';
-
-        installBtn.addEventListener('click', () => {
-            installBanner.style.display = 'none';
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((choiceResult) => {
-                deferredPrompt = null;
-            });
-        });
-    });
-
-    // Service Worker registration
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js').catch(err => {
-                console.log('SW registration failed: ', err);
-            });
-        });
-    }
-</script>
+        function sendWhatsApp(method) {
+            const phoneNumber = "2340265544737";
+            const message = `Hello goAPPs,\n\nI want to unlock a *Practice PIN* using *${method}*.\n\nPlease provide payment details.`;
+            const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(url, '_blank');
+            closeModal();
+        }
+    </script>
 </body>
-
 </html>
-
-
