@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>↪️ goAPPs Transfer</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<!-- jsQR for QR decode from uploaded image -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.4.0/jsQR.min.js"></script>
 <style>
 :root{
   --green:#00d28d;--purple:#4b44e0;
@@ -19,43 +21,25 @@ body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
 a{text-decoration:none;color:inherit}
 button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none}
 
-/* ══ PAGE LOAD BLUR OVERLAY ══ */
-#page-loader{
-  position:fixed;inset:0;background:rgba(15,15,15,.92);
-  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-  z-index:9999;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:18px;
-  transition:opacity .5s ease,visibility .5s ease
-}
+/* ══ PAGE LOADER ══ */
+#page-loader{position:fixed;inset:0;background:rgba(15,15,15,.93);backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);z-index:9999;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:18px;transition:opacity .5s ease,visibility .5s ease}
 #page-loader.gone{opacity:0;visibility:hidden;pointer-events:none}
 .loader-lock{font-size:3.2rem;animation:lockBounce 1.2s ease-in-out infinite}
-@keyframes lockBounce{
-  0%,100%{transform:scale(1) rotate(0deg)}
-  25%{transform:scale(1.15) rotate(-8deg)}
-  75%{transform:scale(1.15) rotate(8deg)}
-}
-.loader-ring{
-  width:54px;height:54px;border-radius:50%;
-  border:3px solid var(--border);
-  border-top-color:var(--green);
-  animation:spin .9s linear infinite
-}
+@keyframes lockBounce{0%,100%{transform:scale(1) rotate(0deg)}25%{transform:scale(1.15) rotate(-8deg)}75%{transform:scale(1.15) rotate(8deg)}}
+.loader-ring{width:54px;height:54px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--green);animation:spin .9s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loader-txt{font-size:.78rem;font-weight:700;color:var(--sub);letter-spacing:.8px;text-transform:uppercase}
 
 /* ══ DRAWER ══ */
 .drw-ov{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:800;display:none;backdrop-filter:blur(4px)}
 .drw-ov.open{display:block}
-.drw{position:fixed;left:-295px;top:0;bottom:0;width:295px;background:var(--surface);
-  z-index:900;transition:.28s cubic-bezier(.4,0,.2,1);overflow-y:auto;border-right:1px solid var(--border)}
+.drw{position:fixed;left:-295px;top:0;bottom:0;width:295px;background:var(--surface);z-index:900;transition:.28s cubic-bezier(.4,0,.2,1);overflow-y:auto;border-right:1px solid var(--border)}
 .drw.open{left:0;box-shadow:8px 0 36px rgba(0,0,0,.6)}
 .drw-head{padding:28px 18px 20px;background:var(--grad);display:flex;align-items:center;gap:14px;position:relative}
-.drw-x{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.18);color:#fff;
-  width:28px;height:28px;border-radius:50%;font-size:1.1rem;display:flex;align-items:center;
-  justify-content:center;cursor:pointer;border:none;line-height:1}
-.drw-av{width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.22);
-  border:2.5px solid rgba(255,255,255,.55);display:flex;align-items:center;
-  justify-content:center;font-size:1.35rem;overflow:hidden;flex-shrink:0}
+.drw-x{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.18);color:#fff;width:28px;height:28px;border-radius:50%;font-size:1.1rem;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;line-height:1}
+.drw-av{width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.22);border:2.5px solid rgba(255,255,255,.55);display:flex;align-items:center;justify-content:center;font-size:1.35rem;overflow:hidden;flex-shrink:0}
 .drw-av img{width:100%;height:100%;object-fit:cover}
 .drw-name{font-size:.98rem;font-weight:800;color:#fff}
 .drw-sub{font-size:.63rem;color:rgba(255,255,255,.74);margin-top:2px}
@@ -64,8 +48,7 @@ button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none
 .dw-bal{font-size:1.35rem;font-weight:800;font-family:'JetBrains Mono',monospace}
 .dw-row{display:flex;justify-content:space-between;font-size:.67rem;opacity:.85;margin-top:5px}
 .drw-nav{padding:8px 0}
-.dn{display:flex;align-items:center;gap:13px;padding:13px 18px;font-size:.82rem;font-weight:600;
-  color:var(--sub);cursor:pointer;border-bottom:1px solid var(--border);transition:.15s}
+.dn{display:flex;align-items:center;gap:13px;padding:13px 18px;font-size:.82rem;font-weight:600;color:var(--sub);cursor:pointer;border-bottom:1px solid var(--border);transition:.15s}
 .dn:hover,.dn.cur{color:var(--green);background:rgba(0,210,141,.05)}
 .dn-ico{font-size:1rem;width:22px;text-align:center;flex-shrink:0}
 .drw-foot{padding:14px 18px;border-top:1px solid var(--border)}
@@ -77,84 +60,50 @@ button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none
 .drw-btn-p{background:rgba(75,68,224,.08);border:1px solid rgba(75,68,224,.2);color:#a5b4fc}
 
 /* ══ HEADER ══ */
-.hdr{position:sticky;top:0;z-index:400;background:var(--bg);border-bottom:1px solid var(--border);
-  padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.hdr{position:sticky;top:0;z-index:400;background:var(--bg);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
 .hdr-l{display:flex;align-items:center;gap:10px}
 .ham{display:flex;flex-direction:column;gap:5px;padding:4px;cursor:pointer}
 .ham span{display:block;height:2px;border-radius:2px;background:var(--green);transition:.28s}
-.ham span:nth-child(1){width:22px}
-.ham span:nth-child(2){width:15px}
-.ham span:nth-child(3){width:22px}
+.ham span:nth-child(1){width:22px}.ham span:nth-child(2){width:15px}.ham span:nth-child(3){width:22px}
 .ham.open span:nth-child(1){transform:translateY(7px) rotate(45deg);width:22px}
 .ham.open span:nth-child(2){opacity:0;width:22px}
 .ham.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
-.back-btn{display:flex;align-items:center;gap:5px;color:var(--green);font-size:.78rem;font-weight:700;
-  padding:5px 10px;border-radius:9px;border:1px solid rgba(0,210,141,.25);cursor:pointer;transition:.15s}
+.back-btn{display:flex;align-items:center;gap:5px;color:var(--green);font-size:.78rem;font-weight:700;padding:5px 10px;border-radius:9px;border:1px solid rgba(0,210,141,.25);cursor:pointer;transition:.15s}
 .back-btn:hover{background:rgba(0,210,141,.07)}
-.hdr-logo{font-size:.96rem;font-weight:800;letter-spacing:-.2px;
-  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hdr-logo{font-size:.96rem;font-weight:800;letter-spacing:-.2px;background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .hdr-r{display:flex;align-items:center;gap:9px}
 .hpill{padding:5px 11px;border-radius:16px;font-size:.62rem;font-weight:700}
 .hp-str{background:rgba(0,210,141,.1);border:1px solid rgba(0,210,141,.25);color:var(--green)}
 .hp-xp{background:rgba(75,68,224,.12);border:1px solid rgba(75,68,224,.3);color:#a5b4fc}
-.hdr-av{width:32px;height:32px;border-radius:50%;background:var(--grad);display:flex;align-items:center;
-  justify-content:center;font-size:.82rem;font-weight:800;color:#fff;overflow:hidden;flex-shrink:0;cursor:pointer}
+.hdr-av{width:32px;height:32px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:800;color:#fff;overflow:hidden;flex-shrink:0;cursor:pointer}
 .hdr-av img{width:100%;height:100%;object-fit:cover}
 
-/* ══ MAIN SCROLL ══ */
+/* ══ MAIN ══ */
 .main{padding:15px 15px 80px}
-
-/* ══ SECTION HEADER ══ */
 .sec-hdr{display:flex;align-items:center;justify-content:space-between;margin:0 0 13px}
 .sec-ttl{font-size:.88rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px}
 .sec-ttl::before{content:'';width:3px;height:16px;background:var(--green);border-radius:2px;display:block}
 
-/* ══ QUICK SEND ROW ══ */
+/* ══ QUICK SEND ══ */
 .qs-row{display:flex;gap:14px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none;-ms-overflow-style:none}
 .qs-row::-webkit-scrollbar{display:none}
-.qs-item{
-  display:flex;flex-direction:column;align-items:center;gap:7px;
-  min-width:62px;cursor:pointer;
-  animation:fadeUp .4s ease both
-}
+.qs-item{display:flex;flex-direction:column;align-items:center;gap:7px;min-width:62px;cursor:pointer;animation:fadeUp .4s ease both}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-.qs-item:nth-child(1){animation-delay:.05s}
-.qs-item:nth-child(2){animation-delay:.1s}
-.qs-item:nth-child(3){animation-delay:.15s}
-.qs-item:nth-child(4){animation-delay:.2s}
-.qs-item:nth-child(5){animation-delay:.25s}
-.qs-av{
-  width:54px;height:54px;border-radius:50%;
-  background:var(--card);border:2px solid rgba(0,210,141,.3);
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.3rem;transition:.18s;position:relative;overflow:hidden
-}
-.qs-av::after{
-  content:'';position:absolute;inset:0;border-radius:50%;
-  background:rgba(0,210,141,.15);opacity:0;transition:.18s
-}
+.qs-item:nth-child(1){animation-delay:.05s}.qs-item:nth-child(2){animation-delay:.1s}.qs-item:nth-child(3){animation-delay:.15s}.qs-item:nth-child(4){animation-delay:.2s}.qs-item:nth-child(5){animation-delay:.25s}
+.qs-av{width:54px;height:54px;border-radius:50%;background:var(--card);border:2px solid rgba(0,210,141,.3);display:flex;align-items:center;justify-content:center;font-size:1.3rem;transition:.18s;position:relative;overflow:hidden}
+.qs-av::after{content:'';position:absolute;inset:0;border-radius:50%;background:rgba(0,210,141,.15);opacity:0;transition:.18s}
 .qs-item:hover .qs-av::after{opacity:1}
 .qs-item:active .qs-av{transform:scale(.92)}
 .qs-av.add{border-style:dashed;border-color:var(--border);color:var(--sub)}
-.qs-name{font-size:.62rem;font-weight:700;color:var(--sub);text-align:center;width:62px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.qs-name{font-size:.62rem;font-weight:700;color:var(--sub);text-align:center;width:62px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
 /* ══ TRANSFER GRID ══ */
 .tr-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
-.tr-card{
-  background:var(--card);padding:17px 15px;border-radius:16px;
-  border:1px solid var(--border);cursor:pointer;transition:.18s;
-  text-decoration:none;display:block;
-  animation:fadeUp .5s ease both
-}
-.tr-card:nth-child(1){animation-delay:.1s}
-.tr-card:nth-child(2){animation-delay:.15s}
-.tr-card:nth-child(3){animation-delay:.2s}
-.tr-card:nth-child(4){animation-delay:.25s}
+.tr-card{background:var(--card);padding:17px 15px;border-radius:16px;border:1px solid var(--border);cursor:pointer;transition:.18s;text-decoration:none;display:block;animation:fadeUp .5s ease both}
+.tr-card:nth-child(1){animation-delay:.1s}.tr-card:nth-child(2){animation-delay:.15s}.tr-card:nth-child(3){animation-delay:.2s}.tr-card:nth-child(4){animation-delay:.25s}
 .tr-card:hover{border-color:rgba(0,210,141,.3);background:rgba(0,210,141,.04);transform:translateY(-2px)}
 .tr-card:active{transform:scale(.97)}
-.tr-ico{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;
-  justify-content:center;font-size:1.15rem;margin-bottom:11px}
+.tr-ico{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;margin-bottom:11px}
 .tr-card b{font-size:.82rem;color:var(--text);display:block;margin-bottom:3px}
 .tr-card small{font-size:.62rem;color:var(--sub)}
 
@@ -165,130 +114,182 @@ button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none
 .limit-val{font-size:.7rem;color:var(--green);font-weight:700;font-family:'JetBrains Mono',monospace}
 .limit-sub{font-size:.64rem;color:var(--sub);margin-bottom:10px}
 .limit-bar{height:7px;background:var(--border);border-radius:4px;overflow:hidden}
-.limit-fill{height:100%;background:var(--grad);border-radius:4px;width:40%;
-  box-shadow:0 0 8px rgba(0,210,141,.4)}
+.limit-fill{height:100%;background:var(--grad);border-radius:4px;width:40%;box-shadow:0 0 8px rgba(0,210,141,.4)}
 
-/* ══ RECENT TRANSACTIONS ══ */
-.tx-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--card);
-  border:1px solid var(--border);border-radius:13px;margin-bottom:8px}
-.tx-ico{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;
-  justify-content:center;font-size:1rem;flex-shrink:0}
+/* ══ RECENT ══ */
+.tx-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:13px;margin-bottom:8px}
+.tx-ico{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
 .tx-body{flex:1;min-width:0}
 .tx-name{font-size:.8rem;font-weight:700;color:var(--text)}
 .tx-date{font-size:.62rem;color:var(--sub);margin-top:2px}
 .tx-amt{font-size:.82rem;font-weight:800;font-family:'JetBrains Mono',monospace}
-.tx-out{color:var(--danger)}
-.tx-in{color:var(--green)}
+.tx-out{color:var(--danger)}.tx-in{color:var(--green)}
 
 /* ══ BOTTOM NAV ══ */
-.bnav{position:fixed;bottom:0;left:0;right:0;height:64px;background:var(--surface);
-  border-top:1px solid var(--border);display:flex;align-items:stretch;z-index:300;
-  padding-bottom:env(safe-area-inset-bottom,0)}
-.bn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:3px;cursor:pointer;color:var(--sub);font-size:.58rem;font-weight:700;
-  transition:.15s;text-decoration:none;background:none;border:none;padding:0}
+.bnav{position:fixed;bottom:0;left:0;right:0;height:64px;background:var(--surface);border-top:1px solid var(--border);display:flex;align-items:stretch;z-index:300;padding-bottom:env(safe-area-inset-bottom,0)}
+.bn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;color:var(--sub);font-size:.58rem;font-weight:700;transition:.15s;text-decoration:none;background:none;border:none;padding:0}
 .bn.on,.bn:hover{color:var(--green)}
 .bn-ico{font-size:1.1rem;display:block}
 
-/* ══ MODALS ══ */
-.mov{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;z-index:1000;
-  align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
+/* ══ MODAL BASE ══ */
+.mov{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;z-index:1000;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
 .mov.open{display:flex}
-
-/* send transfer sheet */
-.send-sheet{
-  background:var(--surface);width:100%;max-width:480px;
-  border-radius:22px 22px 0 0;padding:24px 20px 36px;
-  border-top:1px solid var(--border);
-  animation:slideUp .3s cubic-bezier(.4,0,.2,1)
-}
+.send-sheet{background:var(--surface);width:100%;max-width:480px;border-radius:22px 22px 0 0;padding:24px 20px 36px;border-top:1px solid var(--border);animation:slideUp .3s cubic-bezier(.4,0,.2,1);max-height:92vh;overflow-y:auto}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .sheet-drag{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px}
-.send-av-big{width:64px;height:64px;border-radius:50%;background:var(--card);
-  border:2.5px solid rgba(0,210,141,.4);display:flex;align-items:center;
-  justify-content:center;font-size:1.6rem;margin:0 auto 10px}
+.send-av-big{width:64px;height:64px;border-radius:50%;background:var(--card);border:2.5px solid rgba(0,210,141,.4);display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin:0 auto 10px}
 .send-name-big{text-align:center;font-size:1rem;font-weight:800;margin-bottom:3px}
 .send-sub{text-align:center;font-size:.68rem;color:var(--sub);margin-bottom:22px}
-
 .sinp-lbl{font-size:.68rem;font-weight:700;color:var(--sub);margin-bottom:5px;display:block}
-.sinp{width:100%;padding:11px 14px;border-radius:12px;border:1.5px solid var(--border);
-  background:rgba(255,255,255,.04);color:var(--text);font-size:.88rem;
-  font-family:'Inter',sans-serif;outline:none;margin-bottom:13px;transition:.2s}
+.sinp{width:100%;padding:11px 14px;border-radius:12px;border:1.5px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);font-size:.88rem;font-family:'Inter',sans-serif;outline:none;margin-bottom:13px;transition:.2s}
 .sinp:focus{border-color:rgba(0,210,141,.5);background:rgba(0,210,141,.03)}
 .sinp::placeholder{color:var(--sub)}
-.sinp-prefix{display:flex;align-items:center;border-radius:12px;border:1.5px solid var(--border);
-  background:rgba(255,255,255,.04);margin-bottom:13px;overflow:hidden;transition:.2s}
+.sinp-prefix{display:flex;align-items:center;border-radius:12px;border:1.5px solid var(--border);background:rgba(255,255,255,.04);margin-bottom:13px;overflow:hidden;transition:.2s}
 .sinp-prefix:focus-within{border-color:rgba(0,210,141,.5);background:rgba(0,210,141,.03)}
-.sinp-tag{padding:11px 12px;font-size:.78rem;font-weight:700;color:var(--green);
-  border-right:1px solid var(--border);white-space:nowrap;background:rgba(0,210,141,.06)}
-.sinp-inner{flex:1;padding:11px 13px;background:transparent;border:none;outline:none;
-  color:var(--text);font-size:.88rem;font-family:'JetBrains Mono',monospace;width:100%}
+.sinp-tag{padding:11px 12px;font-size:.78rem;font-weight:700;color:var(--green);border-right:1px solid var(--border);white-space:nowrap;background:rgba(0,210,141,.06)}
+.sinp-inner{flex:1;padding:11px 13px;background:transparent;border:none;outline:none;color:var(--text);font-size:.88rem;font-family:'JetBrains Mono',monospace;width:100%}
 .sinp-inner::placeholder{color:var(--sub);font-family:'Inter',sans-serif;font-size:.82rem}
-
-/* amount quick buttons */
 .amt-quick{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap}
-.aq-btn{padding:6px 13px;background:rgba(0,210,141,.08);border:1px solid rgba(0,210,141,.18);
-  color:var(--green);border-radius:8px;font-size:.68rem;font-weight:800;cursor:pointer;transition:.15s}
+.aq-btn{padding:6px 13px;background:rgba(0,210,141,.08);border:1px solid rgba(0,210,141,.18);color:var(--green);border-radius:8px;font-size:.68rem;font-weight:800;cursor:pointer;transition:.15s}
 .aq-btn:hover{background:rgba(0,210,141,.15)}
-
 .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
-.btn-confirm{padding:13px;background:var(--grad);border:none;border-radius:13px;
-  color:#fff;font-size:.82rem;font-weight:800;cursor:pointer;display:flex;
-  align-items:center;justify-content:center;gap:7px;transition:.15s}
+.btn-confirm{padding:13px;background:var(--grad);border:none;border-radius:13px;color:#fff;font-size:.82rem;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:.15s}
 .btn-confirm:hover{opacity:.9}
-.btn-cancel{padding:13px;background:rgba(255,255,255,.04);border:1px solid var(--border);
-  border-radius:13px;color:var(--sub);font-size:.82rem;font-weight:800;cursor:pointer;transition:.15s}
+.btn-cancel{padding:13px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:13px;color:var(--sub);font-size:.82rem;font-weight:800;cursor:pointer;transition:.15s}
 .btn-cancel:hover{background:rgba(255,255,255,.08);color:var(--text)}
 
-/* success flash */
-.success-flash{
-  position:fixed;inset:0;background:var(--bg);z-index:2000;
-  display:none;flex-direction:column;align-items:center;
-  justify-content:center;text-align:center;padding:32px
-}
+/* ══ SUCCESS FLASH ══ */
+.success-flash{position:fixed;inset:0;background:var(--bg);z-index:2000;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:32px}
 .success-flash.show{display:flex;animation:flashIn .35s ease}
 @keyframes flashIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
-.sf-ring{
-  width:80px;height:80px;border-radius:50%;
-  background:rgba(0,210,141,.12);border:2px solid rgba(0,210,141,.4);
-  display:flex;align-items:center;justify-content:center;
-  font-size:2.2rem;margin-bottom:18px;
-  animation:pulseGlow 1.6s ease-in-out infinite
-}
-@keyframes pulseGlow{
-  0%,100%{box-shadow:0 0 0 0 rgba(0,210,141,.3)}
-  50%{box-shadow:0 0 0 14px rgba(0,210,141,0)}
-}
+.sf-ring{width:80px;height:80px;border-radius:50%;background:rgba(0,210,141,.12);border:2px solid rgba(0,210,141,.4);display:flex;align-items:center;justify-content:center;font-size:2.2rem;margin-bottom:18px;animation:pulseGlow 1.6s ease-in-out infinite}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(0,210,141,.3)}50%{box-shadow:0 0 0 14px rgba(0,210,141,0)}}
 
 /* ══ TOAST ══ */
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(14px);
-  background:var(--card2);border:1px solid var(--green);color:var(--green);
-  padding:10px 20px;border-radius:20px;font-size:.74rem;font-weight:700;
-  z-index:9999;opacity:0;transition:.28s;white-space:nowrap;
-  box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--card2);border:1px solid var(--green);color:var(--green);padding:10px 20px;border-radius:20px;font-size:.74rem;font-weight:700;z-index:9999;opacity:0;transition:.28s;white-space:nowrap;box-shadow:0 6px 20px rgba(0,0,0,.4)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* pin modal */
-.pin-modal{background:var(--surface);width:100%;max-width:480px;
-  border-radius:22px 22px 0 0;padding:24px 20px 36px;
-  border-top:1px solid var(--border);animation:slideUp .3s cubic-bezier(.4,0,.2,1);
-  text-align:center}
-.pdots{display:flex;gap:13px;justify-content:center;margin:14px 0 8px}
-.pd{width:17px;height:17px;border-radius:50%;border:2px solid rgba(75,68,224,.45);background:transparent;transition:.2s}
-.pd.fill{background:var(--purple);border-color:var(--purple)}
-.ppad{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:11px}
-.pkey{padding:14px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.04);
-  font-size:1rem;font-weight:800;cursor:pointer;color:var(--text);text-align:center;
-  font-family:'JetBrains Mono',monospace;transition:.15s}
-.pkey:hover{background:rgba(0,210,141,.08);border-color:rgba(0,210,141,.2)}
-.pkey:active{transform:scale(.93)}
-.pkey.del{color:var(--danger);font-size:.8rem}
-.perr{font-size:.7rem;color:var(--danger);min-height:17px;margin-bottom:3px}
+/* ════════════════════════════════
+   QR SCANNER MODAL
+════════════════════════════════ */
+#m-qr .send-sheet{padding-bottom:30px}
+
+/* QR tab switcher */
+.qr-tabs{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--border);border-radius:13px;overflow:hidden;margin-bottom:18px}
+.qr-tab{padding:11px;font-size:.76rem;font-weight:800;text-align:center;cursor:pointer;color:var(--sub);background:rgba(255,255,255,.02);transition:.2s;border:none;font-family:'Inter',sans-serif}
+.qr-tab.on{background:var(--grad);color:#fff}
+
+/* camera viewfinder */
+.cam-wrap{position:relative;width:100%;aspect-ratio:1/1;border-radius:16px;overflow:hidden;background:#000;margin-bottom:14px}
+#cam-video{width:100%;height:100%;object-fit:cover;display:block}
+.cam-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.cam-frame{
+  width:62%;height:62%;border-radius:12px;
+  border:2.5px solid var(--green);
+  box-shadow:0 0 0 9999px rgba(0,0,0,.55);
+  position:relative
+}
+/* corner markers */
+.cam-frame::before,.cam-frame::after,
+.cf-br,.cf-bl{content:'';position:absolute;width:18px;height:18px;border-color:var(--green);border-style:solid;}
+.cam-frame::before{top:-2px;left:-2px;border-width:3px 0 0 3px;border-radius:4px 0 0 0}
+.cam-frame::after{top:-2px;right:-2px;border-width:3px 3px 0 0;border-radius:0 4px 0 0}
+.cf-br{bottom:-2px;right:-2px;border-width:0 3px 3px 0;border-radius:0 0 4px 0}
+.cf-bl{bottom:-2px;left:-2px;border-width:0 0 3px 3px;border-radius:0 0 0 4px}
+
+/* scanning laser line */
+.cam-laser{
+  position:absolute;left:19%;right:19%;height:2px;
+  background:linear-gradient(90deg,transparent,var(--green),transparent);
+  box-shadow:0 0 8px var(--green);
+  animation:scanLine 2s ease-in-out infinite;
+  top:19%
+}
+@keyframes scanLine{0%,100%{top:19%;opacity:.6}50%{top:81%;opacity:1}}
+
+/* camera status badge */
+.cam-badge{
+  position:absolute;bottom:10px;left:50%;transform:translateX(-50%);
+  padding:4px 12px;background:rgba(0,0,0,.7);
+  border:1px solid rgba(0,210,141,.3);border-radius:20px;
+  font-size:.62rem;font-weight:700;color:var(--green);white-space:nowrap
+}
+
+/* upload zone */
+.upload-zone{
+  border:2px dashed var(--border);border-radius:16px;
+  padding:28px 20px;text-align:center;
+  cursor:pointer;transition:.2s;margin-bottom:14px;
+  position:relative
+}
+.upload-zone:hover,.upload-zone.drag{border-color:rgba(0,210,141,.5);background:rgba(0,210,141,.04)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.uz-icon{font-size:2.2rem;margin-bottom:10px}
+.uz-title{font-size:.82rem;font-weight:800;color:var(--text);margin-bottom:4px}
+.uz-sub{font-size:.64rem;color:var(--sub)}
+
+/* preview thumbnail */
+#qr-preview-wrap{display:none;margin-bottom:14px;text-align:center}
+#qr-preview{max-width:160px;border-radius:12px;border:2px solid rgba(0,210,141,.3)}
+
+/* ── processing state ── */
+.qr-processing{
+  display:none;flex-direction:column;align-items:center;
+  justify-content:center;padding:24px 0;gap:14px
+}
+.qr-processing.show{display:flex}
+.proc-ring{
+  width:62px;height:62px;border-radius:50%;
+  border:3px solid var(--border);border-top-color:var(--green);
+  animation:spin .85s linear infinite
+}
+.proc-orb{
+  width:62px;height:62px;border-radius:50%;
+  background:rgba(0,210,141,.08);border:2px solid rgba(0,210,141,.25);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.6rem;position:absolute;
+  animation:orbPulse 1.2s ease-in-out infinite
+}
+@keyframes orbPulse{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.12);opacity:1}}
+.proc-wrap{position:relative;width:62px;height:62px;margin-bottom:4px}
+.proc-txt{font-size:.76rem;font-weight:700;color:var(--sub);text-align:center}
+.proc-status{font-size:.68rem;color:var(--green);font-weight:800;margin-top:2px;text-align:center;min-height:18px}
+
+/* ── result state ── */
+.qr-result{
+  display:none;padding:14px;
+  background:rgba(0,210,141,.06);border:1px solid rgba(0,210,141,.2);
+  border-radius:13px;margin-bottom:14px
+}
+.qr-result.show{display:block}
+.qr-res-lbl{font-size:.6rem;color:var(--sub);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.qr-res-val{font-size:.78rem;font-weight:800;color:var(--green);word-break:break-all;font-family:'JetBrains Mono',monospace}
+
+/* ── countdown redirect ── */
+.qr-redirect{
+  display:none;flex-direction:column;align-items:center;gap:8px;
+  padding:18px 14px;background:rgba(0,0,0,.35);border-radius:14px;
+  border:1px solid rgba(0,210,141,.15);margin-bottom:14px;text-align:center
+}
+.qr-redirect.show{display:flex}
+.qr-cd-circle{
+  width:64px;height:64px;border-radius:50%;
+  background:var(--grad);display:flex;align-items:center;
+  justify-content:center;font-size:1.5rem;font-weight:800;color:#fff;
+  font-family:'JetBrains Mono',monospace;
+  box-shadow:0 0 0 0 rgba(0,210,141,.4);
+  animation:cdPulse 1s ease-in-out infinite
+}
+@keyframes cdPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,210,141,.4)}50%{box-shadow:0 0 0 10px rgba(0,210,141,0)}}
+.qr-cd-lbl{font-size:.74rem;font-weight:800;color:var(--text)}
+.qr-cd-sub{font-size:.62rem;color:var(--sub)}
+.qr-cd-cancel{margin-top:4px;padding:7px 18px;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--sub);border-radius:8px;font-size:.7rem;font-weight:700;cursor:pointer;transition:.15s}
+.qr-cd-cancel:hover{background:rgba(255,255,255,.08);color:var(--text)}
 </style>
 </head>
 <body>
 
-<!-- ══ PAGE LOAD BLUR OVERLAY ══ -->
+<!-- PAGE LOADER -->
 <div id="page-loader">
   <div class="loader-lock">🔒</div>
   <div class="loader-ring"></div>
@@ -297,7 +298,7 @@ button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none
 
 <div id="toast-el" class="toast"></div>
 
-<!-- ══ SUCCESS FLASH ══ -->
+<!-- SUCCESS FLASH -->
 <div class="success-flash" id="sf">
   <div class="sf-ring">✅</div>
   <div style="font-size:1.1rem;font-weight:800;margin-bottom:6px">Transfer Sent!</div>
@@ -307,14 +308,12 @@ button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none
   <button onclick="hideSF()" style="padding:12px 28px;background:rgba(0,210,141,.1);border:1px solid rgba(0,210,141,.2);color:var(--green);border-radius:12px;font-size:.78rem;font-weight:800;cursor:pointer">Done</button>
 </div>
 
-<!-- ══ DRAWER ══ -->
+<!-- DRAWER -->
 <div id="drw-ov" class="drw-ov" onclick="closeDrw()"></div>
 <div id="drw" class="drw">
   <div class="drw-head">
     <button class="drw-x" onclick="closeDrw()">×</button>
-    <div class="drw-av">
-      <img src="https://i.pravatar.cc/100?img=7" alt="" onerror="this.style.display='none';this.parentElement.textContent='👤'">
-    </div>
+    <div class="drw-av"><img src="https://i.pravatar.cc/100?img=7" alt="" onerror="this.style.display='none';this.parentElement.textContent='👤'"></div>
     <div>
       <div class="drw-name" id="d-uname">Digital</div>
       <div class="drw-sub">📊 goAPPs · Transfer</div>
@@ -344,78 +343,62 @@ button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none
   </div>
 </div>
 
-<!-- ══ HEADER ══ -->
+<!-- HEADER -->
 <header class="hdr">
   <div class="hdr-l">
-    <button class="ham" id="ham" onclick="toggleDrw()">
-      <span></span><span></span><span></span>
-    </button>
+    <button class="ham" id="ham" onclick="toggleDrw()"><span></span><span></span><span></span></button>
     <button class="back-btn" onclick="history.back()">← Back</button>
     <span class="hdr-logo">📊 Transfer</span>
   </div>
   <div class="hdr-r">
     <span class="hpill hp-str" id="streak-el">🔥 1d</span>
     <span class="hpill hp-xp">⚡ 0 XP</span>
-    <div class="hdr-av">
-      <img src="https://i.pravatar.cc/100?img=7" alt="" onerror="this.style.display='none';this.parentElement.textContent='👤'">
-    </div>
+    <div class="hdr-av"><img src="https://i.pravatar.cc/100?img=7" alt="" onerror="this.style.display='none';this.parentElement.textContent='👤'"></div>
   </div>
 </header>
 
-<!-- ══ MAIN ══ -->
+<!-- MAIN -->
 <div class="main">
 
-  <!-- Quick Send -->
   <div class="sec-hdr"><span class="sec-ttl">📤 Quick Push</span></div>
   <div class="qs-row">
     <div class="qs-item" onclick="openSend('goMETRO TopUp','🚎','Enter Number here')">
-      <div class="qs-av">🚎</div>
-      <div class="qs-name">goMETRO</div>
+      <div class="qs-av">🚎</div><div class="qs-name">goMETRO</div>
     </div>
-    <div class="qs-item" onclick="openSend('goMECID Topup','🚑','Enter Number here')">
-      <div class="qs-av">🚑</div>
-      <div class="qs-name">goMEDIC</div>
+    <div class="qs-item" onclick="openSend('goMEDIC Topup','🚑','Enter Number here')">
+      <div class="qs-av">🚑</div><div class="qs-name">goMEDIC</div>
     </div>
     <div class="qs-item" onclick="openSend('goCHOPs','🥗','Enter Number here')">
-      <div class="qs-av">🥗</div>
-      <div class="qs-name">goCHOPs</div>
+      <div class="qs-av">🥗</div><div class="qs-name">goCHOPs</div>
     </div>
     <div class="qs-item" onclick="openSend('goUTILITY','🎁','Enter Number here')">
-      <div class="qs-av">🎁</div>
-      <div class="qs-name">goUTILITY</div>
+      <div class="qs-av">🎁</div><div class="qs-name">goUTILITY</div>
     </div>
     <div class="qs-item" onclick="openSend('New','➕','')">
-      <div class="qs-av add">➕</div>
-      <div class="qs-name">New</div>
+      <div class="qs-av add">➕</div><div class="qs-name">New</div>
     </div>
   </div>
 
-  <!-- Transfer Options -->
   <div class="sec-hdr" style="margin-top:22px"><span class="sec-ttl">🔀 Send Token</span></div>
   <div class="tr-grid">
     <div class="tr-card" onclick="openSend('between goAPPs-2-2goAPPs user','🏦','')">
       <div class="tr-ico" style="background:rgba(0,210,141,.1)">🏦</div>
-      <b>To goCOINs</b>
-      <small>Send to goAPPs User</small>
+      <b>To goCOINs</b><small>Send to goAPPs User</small>
     </div>
     <div class="tr-card" onclick="openSend('OPay Wallet','📱','')">
       <div class="tr-ico" style="background:rgba(75,68,224,.1)">📱</div>
-      <b>To OPay</b>
-      <small>Instant &amp; Free</small>
+      <b>To OPay</b><small>Instant &amp; Free</small>
     </div>
-    <div class="tr-card" onclick="openSend('QR Payment','🧾','')">
+    <div class="tr-card" onclick="openQR()">
       <div class="tr-ico" style="background:rgba(245,158,11,.1)">🧾</div>
-      <b>Scan QR</b>
-      <small>Pay merchants</small>
+      <b>Scan QR</b><small>Pay merchants</small>
     </div>
     <div class="tr-card" onclick="openSend('Self Transfer','🔄','')">
       <div class="tr-ico" style="background:rgba(219,39,119,.1)">🔄</div>
-      <b>Self</b>
-      <small>To your own goCOINs</small>
+      <b>Self</b><small>To your own goCOINs</small>
     </div>
   </div>
 
-  <!-- Transfer Limit -->
   <div class="limit-card">
     <div class="limit-top">
       <span class="limit-lbl">📈 Transfer Limit</span>
@@ -425,7 +408,6 @@ button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none
     <div class="limit-bar"><div class="limit-fill"></div></div>
   </div>
 
-  <!-- Recent Transactions -->
   <div class="sec-hdr"><span class="sec-ttl">🕒 Recent</span></div>
   <div class="tx-item">
     <div class="tx-ico" style="background:rgba(255,77,77,.1)">👨🏾‍💻</div>
@@ -442,38 +424,37 @@ button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none
     <div class="tx-body"><div class="tx-name">Purchase Data</div><div class="tx-date">Mon, 8:00 AM</div></div>
     <div class="tx-amt tx-out">2GB</div>
   </div>
-
 </div>
 
-<!-- ══ BOTTOM NAV ══ -->
+<!-- BOTTOM NAV -->
 <nav class="bnav">
-  <button class="bn" onclick="window.location.href='goclass-home.html'"><span class="bn-ico">🎁</span>Rewards</button>
-  <button class="bn" onclick="window.location.href='goclass-home.html'"><span class="bn-ico">💰</span>Wallet</button>
-  <button class="bn" onclick="window.location.href='goclass-home.html'"><span class="bn-ico">🏧</span>Home</button>
+  <button class="bn" onclick="window.location.href='https://wa.me/2348157505037?text=Update%20on%20goREWARDs'"><span class="bn-ico">🎁</span>Rewards</button>
+  <button class="bn" onclick="window.location.href='https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/balance.html'"><span class="bn-ico">💰</span>Wallet</button>
+  <button class="bn" onclick="window.location.href='https://goapps-official.github.io/Welcome/'"><span class="bn-ico">🏧</span>Home</button>
   <button class="bn on"><span class="bn-ico">📊</span>Market</button>
-  <button class="bn" onclick="window.location.href='goclass-home.html'"><span class="bn-ico">⚙️</span>Settings</button>
+  <button class="bn" onclick="window.location.href='https://wa.me/2348157505037?text=Access%20my%20Settings'"><span class="bn-ico">⚙️</span>Settings</button>
 </nav>
 
-<!-- ══ SEND MODAL SHEET ══ -->
+<!-- ══════════════════════════════════
+     SEND MODAL SHEET
+══════════════════════════════════ -->
 <div id="m-send" class="mov">
   <div class="send-sheet">
     <div class="sheet-drag"></div>
     <div class="send-av-big" id="send-av">👤</div>
     <div class="send-name-big" id="send-name">Send Token</div>
-    <div class="send-sub" id="send-sub">Enter details to verify this transaction via WhatsApp</div>
+    <div class="send-sub" id="send-sub">Enter details to verify via WhatsApp</div>
 
     <label class="sinp-lbl">📱 Receiver's WhatsApp Number</label>
     <div class="sinp-prefix">
       <span class="sinp-tag">🇳🇬 +234</span>
-      <input type="tel" id="recv-num" class="sinp-inner" placeholder="080XXXXXXXX"
-             maxlength="11" inputmode="numeric">
+      <input type="tel" id="recv-num" class="sinp-inner" placeholder="080XXXXXXXX" maxlength="11" inputmode="numeric">
     </div>
 
     <label class="sinp-lbl">💰 Amount to Transfer (goCOINs)</label>
     <div class="sinp-prefix">
       <span class="sinp-tag">📤</span>
-      <input type="number" id="recv-amt" class="sinp-inner" placeholder="Enter amount"
-             inputmode="numeric" min="1">
+      <input type="number" id="recv-amt" class="sinp-inner" placeholder="Enter amount" inputmode="numeric" min="1">
     </div>
 
     <div class="amt-quick">
@@ -488,156 +469,393 @@ button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none
     <input type="text" id="recv-note" class="sinp" placeholder="e.g. School fees, Metro Topup, etc" maxlength="80">
 
     <div style="font-size:.64rem;color:var(--sub);margin-bottom:14px;padding:9px 12px;background:rgba(0,210,141,.04);border:1px solid rgba(0,210,141,.1);border-radius:9px">
-      ℹ️ Clicking <b style="color:var(--green)">Verify &amp; Approve</b> will open WhatsApp with the details of this transaction details for processing.
+      ℹ️ Clicking <b style="color:var(--green)">Verify &amp; Approve</b> will open WhatsApp with this transaction pre-filled for processing.
     </div>
 
     <div class="btn-row">
-      <button class="btn-cancel" onclick="closeSend()">✕ Stop Transacion</button>
-      <button class="btn-confirm" onclick="verifyAndApprove()">
-        <span>✅</span> Verify &amp; Approve
-      </button>
+      <button class="btn-cancel" onclick="closeSend()">✕ Stop Transaction</button>
+      <button class="btn-confirm" onclick="verifyAndApprove()"><span>✅</span> Verify &amp; Approve</button>
     </div>
   </div>
 </div>
 
+<!-- ══════════════════════════════════
+     QR SCANNER MODAL
+══════════════════════════════════ -->
+<div id="m-qr" class="mov">
+  <div class="send-sheet">
+    <div class="sheet-drag"></div>
+    <div style="text-align:center;margin-bottom:18px">
+      <div style="font-size:1.8rem;margin-bottom:6px">🧾</div>
+      <div style="font-size:1rem;font-weight:800">Scan QR Code</div>
+      <div style="font-size:.68rem;color:var(--sub);margin-top:3px">Use camera or upload a QR image to pay a merchant</div>
+    </div>
+
+    <!-- TABS -->
+    <div class="qr-tabs">
+      <button class="qr-tab on" id="tab-cam" onclick="switchQRTab('cam')">📷 Camera</button>
+      <button class="qr-tab" id="tab-upload" onclick="switchQRTab('upload')">📁 Upload Image</button>
+    </div>
+
+    <!-- CAMERA PANEL -->
+    <div id="panel-cam">
+      <div class="cam-wrap" id="cam-wrap">
+        <video id="cam-video" autoplay playsinline muted></video>
+        <div class="cam-overlay">
+          <div class="cam-frame">
+            <div class="cf-br"></div>
+            <div class="cf-bl"></div>
+            <div class="cam-laser"></div>
+          </div>
+        </div>
+        <div class="cam-badge" id="cam-badge">🔍 Point at QR code</div>
+      </div>
+      <div style="text-align:center;font-size:.66rem;color:var(--sub);margin-bottom:10px">
+        Hold QR code steady inside the frame
+      </div>
+      <button onclick="startCamera()" id="cam-start-btn"
+        style="width:100%;padding:12px;background:var(--grad);border:none;border-radius:13px;color:#fff;font-size:.82rem;font-weight:800;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
+        📷 Start Camera
+      </button>
+    </div>
+
+    <!-- UPLOAD PANEL -->
+    <div id="panel-upload" style="display:none">
+      <div class="upload-zone" id="upload-zone">
+        <input type="file" id="qr-file-input" accept="image/*" onchange="handleQRUpload(event)">
+        <div class="uz-icon">📂</div>
+        <div class="uz-title">Upload QR Image</div>
+        <div class="uz-sub">Tap to select or drag &amp; drop a QR code image</div>
+      </div>
+      <div id="qr-preview-wrap">
+        <img id="qr-preview" src="" alt="QR Preview">
+        <div style="font-size:.62rem;color:var(--sub);margin-top:6px">Uploaded image — scanning…</div>
+      </div>
+    </div>
+
+    <!-- PROCESSING ANIMATION -->
+    <div class="qr-processing" id="qr-proc">
+      <div class="proc-wrap">
+        <div class="proc-ring"></div>
+        <div class="proc-orb">🔍</div>
+      </div>
+      <div class="proc-txt">Scanning QR Code…</div>
+      <div class="proc-status" id="proc-status">Detecting pattern</div>
+    </div>
+
+    <!-- RESULT BOX -->
+    <div class="qr-result" id="qr-result">
+      <div class="qr-res-lbl">✅ QR Decoded</div>
+      <div class="qr-res-val" id="qr-res-val">—</div>
+    </div>
+
+    <!-- COUNTDOWN REDIRECT -->
+    <div class="qr-redirect" id="qr-redirect">
+      <div class="qr-cd-circle" id="cd-num">5</div>
+      <div class="qr-cd-lbl">Redirecting to goSUPPORT</div>
+      <div class="qr-cd-sub" id="cd-sub">Sending your QR profile to WhatsApp…</div>
+      <button class="qr-cd-cancel" onclick="cancelRedirect()">✕ Cancel Redirect</button>
+    </div>
+
+    <!-- HIDDEN CANVAS for decoding -->
+    <canvas id="qr-canvas" style="display:none"></canvas>
+
+    <button onclick="closeQR()" style="width:100%;padding:12px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:13px;color:var(--sub);font-size:.78rem;font-weight:800;cursor:pointer;margin-top:8px">
+      ✕ Close
+    </button>
+  </div>
+</div>
+
 <script>
-// ── storage ──
-const S={
-  get:(k,fb)=>{try{const d=localStorage.getItem(k);return d!==null?JSON.parse(d):fb}catch{return fb}}
-};
+/* ══ STORAGE ══ */
+const S={get:(k,fb)=>{try{const d=localStorage.getItem(k);return d!==null?JSON.parse(d):fb}catch{return fb}}};
 
-// ── init ──
+/* ══ INIT ══ */
 window.addEventListener('load',()=>{
-  // page loader
-  setTimeout(()=>{
-    document.getElementById('page-loader').classList.add('gone');
-  },1600);
-
-  // wallet
+  setTimeout(()=>document.getElementById('page-loader').classList.add('gone'),1600);
   const w=S.get('gc_wallet',1000);
   const fmt='₦'+w.toLocaleString();
   document.getElementById('d-wbal').textContent=fmt;
   document.getElementById('d-wtotal').textContent=fmt;
   document.getElementById('d-uname').textContent=S.get('gc_name','Digital');
-
-  // streak
-  const streak=S.get('gc_streak',1);
-  document.getElementById('streak-el').textContent='🔥 '+streak+'d';
-
-  // online check
+  document.getElementById('streak-el').textContent='🔥 '+S.get('gc_streak',1)+'d';
   if(!navigator.onLine) showToast('📡 You appear to be offline');
   window.addEventListener('online',()=>showToast('⚡ Connection Restored!'));
 });
 
-// ── drawer ──
+/* ══ DRAWER ══ */
 function toggleDrw(){
-  document.getElementById('drw').classList.toggle('open');
-  document.getElementById('drw-ov').classList.toggle('open');
-  document.getElementById('ham').classList.toggle('open');
+  ['drw','drw-ov','ham'].forEach(id=>document.getElementById(id).classList.toggle('open'));
 }
 function closeDrw(){
-  document.getElementById('drw').classList.remove('open');
-  document.getElementById('drw-ov').classList.remove('open');
-  document.getElementById('ham').classList.remove('open');
+  ['drw','drw-ov','ham'].forEach(id=>document.getElementById(id).classList.remove('open'));
 }
 
-// ── send modal ──
-let currentRecipient={name:'',icon:'👤',phone:''};
-
-function openSend(name, icon, phone){
-  currentRecipient={name,icon,phone};
+/* ══ SEND MODAL ══ */
+let curR={name:'',icon:'👤',phone:''};
+function openSend(name,icon,phone){
+  curR={name,icon,phone};
   document.getElementById('send-av').textContent=icon;
   document.getElementById('send-name').textContent=name||'New Recipient';
   document.getElementById('send-sub').textContent=
     name&&name!=='New'?'Sending to '+name+' via WhatsApp':'Enter receiver details below';
-
-  // pre-fill phone if known (strip +234 prefix for display)
-  const numField=document.getElementById('recv-num');
-  if(phone&&phone.startsWith('+234')){
-    numField.value='0'+phone.slice(4);
-  } else if(phone){
-    numField.value=phone;
-  } else {
-    numField.value='';
-  }
+  const nf=document.getElementById('recv-num');
+  nf.value=phone&&phone.startsWith('+234')?'0'+phone.slice(4):(phone||'');
   document.getElementById('recv-amt').value='';
   document.getElementById('recv-note').value='';
   document.getElementById('m-send').classList.add('open');
 }
-
-function closeSend(){
-  document.getElementById('m-send').classList.remove('open');
-}
-
-// ── amount quick-fill ──
-function setAmt(v){
-  document.getElementById('recv-amt').value=v;
-}
-
-// ── verify & approve → redirect to WhatsApp ──
+function closeSend(){document.getElementById('m-send').classList.remove('open');}
+function setAmt(v){document.getElementById('recv-amt').value=v;}
 function verifyAndApprove(){
   const rawNum=document.getElementById('recv-num').value.trim();
   const amt=document.getElementById('recv-amt').value.trim();
   const note=document.getElementById('recv-note').value.trim();
-  const name=currentRecipient.name||'Recipient';
-
-  // validation
-  if(!rawNum||rawNum.length<10){
-    showToast('⚠️ Please enter a valid WhatsApp number');
-    document.getElementById('recv-num').style.border='1.5px solid var(--danger)';
-    return;
-  }
-  if(!amt||isNaN(amt)||Number(amt)<1){
-    showToast('⚠️ Please enter a valid amount');
-    document.getElementById('recv-amt').style.border='1.5px solid var(--danger)';
-    return;
-  }
-
-  // normalise to international format
+  const name=curR.name||'Recipient';
+  if(!rawNum||rawNum.length<10){showToast('⚠️ Please enter a valid WhatsApp number');document.getElementById('recv-num').style.border='1.5px solid var(--danger)';return;}
+  if(!amt||isNaN(amt)||Number(amt)<1){showToast('⚠️ Please enter a valid amount');document.getElementById('recv-amt').style.border='1.5px solid var(--danger)';return;}
   let waNum=rawNum.replace(/\D/g,'');
   if(waNum.startsWith('0')) waNum='234'+waNum.slice(1);
   else if(!waNum.startsWith('234')) waNum='234'+waNum;
-
-  // build message
-  const formattedAmt='₦'+Number(amt).toLocaleString();
-  const msgLines=[
-    '🏦 *goAPPs Token Transfer Request*',
-    '─────────────────',
-    '👤 Recipient: '+name,
-    '📱 Number: +'+waNum,
-    '💰 Amount: '+formattedAmt,
-    note?'📝 Note: '+note:'',
-    '─────────────────',
-    '✅ I have verified and approved this transfer.',
-    'Please process. Thank you!'
-  ].filter(Boolean).join('\n');
-
-  const waURL='https://wa.me/2348157505037?text='+encodeURIComponent(msgLines);
-
-  // show success flash then open WA
-  const sf=document.getElementById('sf');
+  const fAmt='₦'+Number(amt).toLocaleString();
+  const msg=['🏦 *goAPPs Token Transfer Request*','─────────────────','👤 Recipient: '+name,'📱 Number: +'+waNum,'💰 Amount: '+fAmt,note?'📝 Note: '+note:'','─────────────────','✅ I have verified and approved this transfer.','Please process. Thank you!'].filter(Boolean).join('\n');
+  const waURL='https://wa.me/2348157505037?text='+encodeURIComponent(msg);
   document.getElementById('sf-name').textContent='To: '+name+' ('+rawNum+')';
-  document.getElementById('sf-amt').textContent=formattedAmt;
+  document.getElementById('sf-amt').textContent=fAmt;
   closeSend();
-  sf.classList.add('show');
+  document.getElementById('sf').classList.add('show');
+  setTimeout(()=>window.open(waURL,'_blank'),900);
+}
+function hideSF(){document.getElementById('sf').classList.remove('show');}
 
-  setTimeout(()=>{
-    window.open(waURL,'_blank');
-  },900);
+/* ══════════════════════════════════
+   QR SCANNER — full logic
+══════════════════════════════════ */
+let camStream=null;
+let camAnimFrame=null;
+let cdTimer=null;
+let cdCancelled=false;
+let qrActive=false;
+
+const REDIRECT_URL='https://wa.me/2348157505037?text=My%20goPROFILE';
+const CD_SECONDS=5;
+
+function openQR(){
+  // reset state
+  resetQRModal();
+  document.getElementById('m-qr').classList.add('open');
+}
+function closeQR(){
+  stopCamera();
+  cancelRedirect();
+  document.getElementById('m-qr').classList.remove('open');
+  resetQRModal();
 }
 
-function hideSF(){
-  document.getElementById('sf').classList.remove('show');
+function resetQRModal(){
+  // hide all dynamic panels
+  document.getElementById('qr-proc').classList.remove('show');
+  document.getElementById('qr-result').classList.remove('show');
+  document.getElementById('qr-redirect').classList.remove('show');
+  document.getElementById('qr-res-val').textContent='—';
+  document.getElementById('proc-status').textContent='Detecting pattern';
+  document.getElementById('qr-preview-wrap').style.display='none';
+  document.getElementById('qr-file-input').value='';
+  document.getElementById('cam-badge').textContent='🔍 Point at QR code';
+  switchQRTab('cam');
 }
 
-// ── toast ──
+/* ── TAB SWITCH ── */
+function switchQRTab(tab){
+  document.getElementById('tab-cam').classList.toggle('on',tab==='cam');
+  document.getElementById('tab-upload').classList.toggle('on',tab==='upload');
+  document.getElementById('panel-cam').style.display=tab==='cam'?'block':'none';
+  document.getElementById('panel-upload').style.display=tab==='upload'?'block':'none';
+  if(tab!=='cam') stopCamera();
+}
+
+/* ── CAMERA ── */
+async function startCamera(){
+  const btn=document.getElementById('cam-start-btn');
+  btn.textContent='⏳ Starting…';
+  btn.disabled=true;
+  try{
+    camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});
+    const vid=document.getElementById('cam-video');
+    vid.srcObject=camStream;
+    vid.play();
+    document.getElementById('cam-badge').textContent='🟢 Camera active — scanning…';
+    btn.style.display='none';
+    qrActive=true;
+    scanCameraFrame();
+  }catch(e){
+    btn.textContent='📷 Start Camera';
+    btn.disabled=false;
+    showToast('📷 Camera access denied — try Upload instead');
+  }
+}
+
+function stopCamera(){
+  qrActive=false;
+  if(camAnimFrame){cancelAnimationFrame(camAnimFrame);camAnimFrame=null;}
+  if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}
+  const vid=document.getElementById('cam-video');
+  vid.srcObject=null;
+  const btn=document.getElementById('cam-start-btn');
+  btn.style.display='flex';
+  btn.textContent='📷 Start Camera';
+  btn.disabled=false;
+}
+
+function scanCameraFrame(){
+  if(!qrActive) return;
+  const vid=document.getElementById('cam-video');
+  if(vid.readyState===vid.HAVE_ENOUGH_DATA){
+    const canvas=document.getElementById('qr-canvas');
+    canvas.width=vid.videoWidth;
+    canvas.height=vid.videoHeight;
+    const ctx=canvas.getContext('2d');
+    ctx.drawImage(vid,0,0,canvas.width,canvas.height);
+    const imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
+    const code=jsQR(imageData.data,imageData.width,imageData.height,{inversionAttempts:'dontInvert'});
+    if(code){
+      qrActive=false;
+      stopCamera();
+      handleQRFound(code.data);
+      return;
+    }
+  }
+  camAnimFrame=requestAnimationFrame(scanCameraFrame);
+}
+
+/* ── UPLOAD ── */
+function handleQRUpload(e){
+  const file=e.target.files[0];
+  if(!file) return;
+
+  // show preview
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    document.getElementById('qr-preview').src=ev.target.result;
+    document.getElementById('qr-preview-wrap').style.display='block';
+    decodeQRFromFile(ev.target.result);
+  };
+  reader.readAsDataURL(file);
+}
+
+function decodeQRFromFile(dataURL){
+  showProcessing(true);
+  const img=new Image();
+  img.onload=function(){
+    const canvas=document.getElementById('qr-canvas');
+    canvas.width=img.width;
+    canvas.height=img.height;
+    const ctx=canvas.getContext('2d');
+    ctx.drawImage(img,0,0);
+
+    // Animate processing steps
+    const steps=['Detecting pattern','Analysing pixels','Verifying checksum','Reading data…'];
+    let si=0;
+    const stepTimer=setInterval(()=>{
+      si++;
+      if(si<steps.length) document.getElementById('proc-status').textContent=steps[si];
+      else clearInterval(stepTimer);
+    },400);
+
+    setTimeout(()=>{
+      clearInterval(stepTimer);
+      const imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
+      const code=jsQR(imageData.data,imageData.width,imageData.height,{inversionAttempts:'attemptBoth'});
+      showProcessing(false);
+      if(code){
+        handleQRFound(code.data);
+      }else{
+        showToast('❌ No QR code found in image. Try a clearer photo.');
+        document.getElementById('proc-status').textContent='No QR detected';
+      }
+    },2000);
+  };
+  img.onerror=()=>{showProcessing(false);showToast('❌ Could not read image.');};
+  img.src=dataURL;
+}
+
+function showProcessing(show){
+  document.getElementById('qr-proc').classList.toggle('show',show);
+}
+
+/* ── QR FOUND → show result + countdown ── */
+function handleQRFound(data){
+  // result box
+  document.getElementById('qr-res-val').textContent=data;
+  document.getElementById('qr-result').classList.add('show');
+  document.getElementById('cam-badge').textContent='✅ QR Detected!';
+  showToast('✅ QR Code Detected!');
+
+  // countdown redirect
+  cdCancelled=false;
+  startCountdown(data);
+}
+
+function startCountdown(qrData){
+  let remaining=CD_SECONDS;
+  const cdNum=document.getElementById('cd-num');
+  const cdSub=document.getElementById('cd-sub');
+  cdNum.textContent=remaining;
+  document.getElementById('qr-redirect').classList.add('show');
+
+  // Build redirect URL — append QR data as param if URL, else as text
+  let finalURL=REDIRECT_URL;
+  try{
+    // if QR is itself a URL, also pass it along
+    new URL(qrData);
+    finalURL=REDIRECT_URL+'%0A%F0%9F%94%97%20QR+Data%3A+'+encodeURIComponent(qrData);
+  }catch(_){
+    finalURL=REDIRECT_URL+'%0A%F0%9F%94%8D%20QR+Data%3A+'+encodeURIComponent(qrData);
+  }
+
+  cdTimer=setInterval(()=>{
+    if(cdCancelled){clearInterval(cdTimer);return;}
+    remaining--;
+    cdNum.textContent=remaining;
+    if(remaining<=2) cdSub.textContent='Opening WhatsApp now…';
+    if(remaining<=0){
+      clearInterval(cdTimer);
+      if(!cdCancelled) window.open(finalURL,'_blank');
+    }
+  },1000);
+}
+
+function cancelRedirect(){
+  cdCancelled=true;
+  if(cdTimer){clearInterval(cdTimer);cdTimer=null;}
+  document.getElementById('qr-redirect').classList.remove('show');
+  showToast('↩️ Redirect cancelled');
+}
+
+/* drag-over highlight on upload zone */
+const uz=document.getElementById('upload-zone');
+if(uz){
+  uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('drag');});
+  uz.addEventListener('dragleave',()=>uz.classList.remove('drag'));
+  uz.addEventListener('drop',e=>{
+    e.preventDefault();uz.classList.remove('drag');
+    const f=e.dataTransfer.files[0];
+    if(f&&f.type.startsWith('image/')){
+      const dt=new DataTransfer();dt.items.add(f);
+      document.getElementById('qr-file-input').files=dt.files;
+      handleQRUpload({target:{files:dt.files}});
+    }
+  });
+}
+
+/* ══ TOAST ══ */
 function showToast(msg){
   const t=document.getElementById('toast-el');
-  t.textContent=msg; t.classList.add('show');
+  t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),3200);
 }
 
-// PWA
+/* PWA */
 let dp;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;});
 if('serviceWorker' in navigator)
