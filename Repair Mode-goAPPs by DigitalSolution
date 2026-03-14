@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🚀 goAPPs — Content Updating</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Syne:wght@700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ══ TOKENS ══ */
+:root{
+  --green:#00d28d;--purple:#4b44e0;
+  --grad:linear-gradient(135deg,#00d28d 0%,#4b44e0 100%);
+  --grad2:linear-gradient(135deg,#4b44e0 0%,#00d28d 100%);
+  --bg:#0a0a0a;--surface:#141414;--card:#1e1e1e;--card2:#242424;
+  --border:#282828;--text:#f0f0f0;--sub:#666;--danger:#ff4d4d;
+  --glow:0 0 40px rgba(0,210,141,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow-x:hidden}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--green);border-radius:2px}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none}
+
+/* ══ ANIMATED BG MESH ══ */
+.bg-mesh{
+  position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;
+}
+.bg-orb{
+  position:absolute;border-radius:50%;filter:blur(80px);opacity:.18;
+  animation:orbFloat 8s ease-in-out infinite;
+}
+.bg-orb-1{width:400px;height:400px;background:var(--green);top:-100px;left:-100px;animation-delay:0s}
+.bg-orb-2{width:350px;height:350px;background:var(--purple);bottom:-80px;right:-80px;animation-delay:-3s}
+.bg-orb-3{width:250px;height:250px;background:var(--green);top:50%;left:60%;animation-delay:-5s;opacity:.1}
+@keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-20px) scale(1.05)}66%{transform:translate(-15px,25px) scale(.97)}}
+
+/* grid overlay */
+.bg-grid{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(0,210,141,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,210,141,.04) 1px,transparent 1px);
+  background-size:48px 48px;
+  animation:gridPan 20s linear infinite;
+}
+@keyframes gridPan{0%{background-position:0 0}100%{background-position:48px 48px}}
+
+/* ══ DRAWER ══ */
+.drw-ov{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:800;display:none;backdrop-filter:blur(4px)}
+.drw-ov.open{display:block}
+.drw{position:fixed;left:-295px;top:0;bottom:0;width:295px;background:var(--surface);
+  z-index:900;transition:.28s cubic-bezier(.4,0,.2,1);overflow-y:auto;border-right:1px solid var(--border)}
+.drw.open{left:0;box-shadow:8px 0 40px rgba(0,0,0,.7)}
+
+.drw-head{padding:28px 18px 20px;background:var(--grad);display:flex;align-items:center;gap:14px;position:relative}
+.drw-x{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.18);color:#fff;
+  width:28px;height:28px;border-radius:50%;font-size:1.1rem;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;line-height:1}
+.drw-av{width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.22);
+  border:2.5px solid rgba(255,255,255,.55);display:flex;align-items:center;justify-content:center;
+  font-size:1.35rem;color:#fff;overflow:hidden;flex-shrink:0}
+.drw-av img{width:100%;height:100%;object-fit:cover}
+.drw-name{font-size:.98rem;font-weight:800;color:#fff}
+.drw-sub{font-size:.63rem;color:rgba(255,255,255,.74);margin-top:2px}
+
+.drw-wallet{margin:14px 15px;padding:14px 16px;background:var(--grad);border-radius:15px;color:#fff}
+.dw-lbl{font-size:.58rem;letter-spacing:.6px;text-transform:uppercase;opacity:.82;font-weight:700;margin-bottom:3px}
+.dw-bal{font-size:1.35rem;font-weight:800;font-family:'JetBrains Mono',monospace}
+.dw-row{display:flex;justify-content:space-between;font-size:.67rem;opacity:.85;margin-top:5px}
+
+.drw-nav{padding:8px 0}
+.dn{display:flex;align-items:center;gap:13px;padding:13px 18px;font-size:.82rem;font-weight:600;
+  color:var(--sub);cursor:pointer;border-bottom:1px solid var(--border);transition:.15s}
+.dn:hover{color:var(--green);background:rgba(0,210,141,.05)}
+.dn-ico{font-size:1rem;width:22px;text-align:center;flex-shrink:0}
+.drw-foot{padding:14px 18px;border-top:1px solid var(--border)}
+.drw-foot-lbl{font-size:.6rem;color:var(--sub);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.drw-wa{display:flex;align-items:center;gap:8px;color:#25d366;font-weight:700;font-size:.74rem;margin-bottom:12px}
+.drw-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-btn{display:block;text-align:center;padding:9px;border-radius:10px;font-size:.65rem;font-weight:800;text-decoration:none}
+.drw-btn-g{background:rgba(0,210,141,.08);border:1px solid rgba(0,210,141,.2);color:var(--green)}
+.drw-btn-p{background:rgba(75,68,224,.08);border:1px solid rgba(75,68,224,.2);color:#a5b4fc}
+
+/* ══ HEADER ══ */
+.hdr{position:sticky;top:0;z-index:400;background:rgba(10,10,10,.92);
+  border-bottom:1px solid var(--border);padding:12px 16px;
+  display:flex;align-items:center;justify-content:space-between;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.hdr-l{display:flex;align-items:center;gap:10px}
+.ham{display:flex;flex-direction:column;gap:5px;padding:4px;cursor:pointer}
+.ham span{display:block;height:2px;border-radius:2px;background:var(--green);transition:.28s}
+.ham span:nth-child(1){width:22px}
+.ham span:nth-child(2){width:15px}
+.ham span:nth-child(3){width:22px}
+.ham.open span:nth-child(1){transform:translateY(7px) rotate(45deg);width:22px}
+.ham.open span:nth-child(2){opacity:0;width:22px}
+.ham.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.hdr-logo{font-size:.96rem;font-weight:800;font-family:'Syne',sans-serif;letter-spacing:-.3px;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hdr-r{display:flex;align-items:center;gap:9px}
+.hpill{padding:5px 11px;border-radius:16px;font-size:.62rem;font-weight:700}
+.hp-str{background:rgba(0,210,141,.1);border:1px solid rgba(0,210,141,.25);color:var(--green)}
+.hdr-av{width:32px;height:32px;border-radius:50%;background:var(--grad);display:flex;align-items:center;
+  justify-content:center;font-size:.82rem;font-weight:800;color:#fff;overflow:hidden;flex-shrink:0}
+.hdr-av img{width:100%;height:100%;object-fit:cover}
+
+/* ══ MAIN SCROLL ══ */
+.wrap{position:relative;z-index:1;padding:0 16px 100px}
+
+/* ══ HERO SECTION ══ */
+.hero{
+  text-align:center;padding:48px 8px 32px;
+  animation:fadeUp .8s ease both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+/* spinning icon ring */
+.hero-ring{
+  position:relative;width:110px;height:110px;margin:0 auto 28px;
+}
+.ring-outer{
+  position:absolute;inset:0;border-radius:50%;
+  border:2px solid transparent;
+  background:linear-gradient(var(--bg),var(--bg)) padding-box,
+             var(--grad) border-box;
+  animation:spin 3s linear infinite;
+}
+.ring-inner{
+  position:absolute;inset:8px;border-radius:50%;
+  border:2px dashed rgba(0,210,141,.3);
+  animation:spinR 4s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes spinR{to{transform:rotate(-360deg)}}
+.ring-icon{
+  position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;font-size:2.6rem;
+  animation:iconPulse 2s ease-in-out infinite;
+}
+@keyframes iconPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+
+/* progress bar */
+.progress-track{
+  height:4px;background:var(--card);border-radius:4px;
+  overflow:hidden;margin:0 auto 10px;max-width:260px;
+}
+.progress-fill{
+  height:100%;border-radius:4px;background:var(--grad);
+  width:0%;animation:fillBar 3.5s ease forwards 1s;
+}
+@keyframes fillBar{to{width:72%}}
+.progress-label{font-size:.65rem;color:var(--sub);margin-bottom:28px;font-family:'JetBrains Mono',monospace}
+
+.hero-tag{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(0,210,141,.08);border:1px solid rgba(0,210,141,.2);
+  color:var(--green);font-size:.62rem;font-weight:700;
+  padding:5px 12px;border-radius:20px;margin-bottom:18px;
+  letter-spacing:.5px;text-transform:uppercase;
+  animation:blink 2.4s ease-in-out infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
+.tag-dot{width:6px;height:6px;border-radius:50%;background:var(--green);
+  animation:tagDot 1.2s ease-in-out infinite}
+@keyframes tagDot{0%,100%{transform:scale(1)}50%{transform:scale(1.6)}}
+
+.hero-title{
+  font-size:1.9rem;font-weight:800;font-family:'Syne',sans-serif;
+  line-height:1.12;margin-bottom:14px;letter-spacing:-.5px;
+  background:var(--grad);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-sub{font-size:.82rem;color:var(--sub);line-height:1.6;max-width:310px;margin:0 auto 32px}
+
+/* ══ NOTIFY CTA ══ */
+.cta-wrap{
+  display:flex;flex-direction:column;align-items:center;gap:12px;
+  margin-bottom:10px;
+  animation:fadeUp .8s ease .3s both;
+}
+.inp-row{display:flex;gap:8px;width:100%;max-width:340px}
+.notify-inp{
+  flex:1;padding:13px 16px;border-radius:13px;
+  border:1.5px solid var(--border);background:rgba(255,255,255,.04);
+  color:var(--text);font-size:.82rem;font-family:'Inter',sans-serif;
+  outline:none;transition:.2s;
+}
+.notify-inp:focus{border-color:rgba(0,210,141,.5);background:rgba(0,210,141,.04)}
+.notify-inp::placeholder{color:var(--sub)}
+.notify-btn{
+  padding:13px 20px;background:var(--grad);border:none;
+  border-radius:13px;color:#fff;font-size:.82rem;font-weight:800;
+  white-space:nowrap;cursor:pointer;position:relative;overflow:hidden;
+  box-shadow:0 4px 20px rgba(0,210,141,.35);transition:.2s;
+  font-family:'Inter',sans-serif;
+}
+.notify-btn::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.25) 50%,transparent 100%);
+  transform:translateX(-100%);
+  animation:shimmer 2.5s ease infinite 1.5s;
+}
+@keyframes shimmer{to{transform:translateX(200%)}}
+.notify-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,210,141,.45)}
+.notify-btn:active{transform:scale(.97)}
+
+.notify-note{font-size:.64rem;color:var(--sub)}
+.notify-note span{color:var(--green);font-weight:700}
+
+/* success state */
+.notify-success{
+  display:none;align-items:center;gap:10px;
+  padding:13px 18px;background:rgba(0,210,141,.08);
+  border:1px solid rgba(0,210,141,.2);border-radius:13px;
+  font-size:.8rem;font-weight:700;color:var(--green);
+  width:100%;max-width:340px;
+}
+.notify-success.show{display:flex}
+
+/* ══ DIVIDER ══ */
+.divider{display:flex;align-items:center;gap:12px;margin:32px 0 24px}
+.div-line{flex:1;height:1px;background:var(--border)}
+.div-txt{font-size:.62rem;color:var(--sub);font-weight:700;white-space:nowrap;text-transform:uppercase;letter-spacing:.6px}
+
+/* ══ QUICK LINKS — goAPPs ══ */
+.apps-label{
+  font-size:.72rem;font-weight:800;color:var(--sub);
+  text-transform:uppercase;letter-spacing:.7px;
+  margin-bottom:14px;display:flex;align-items:center;gap:8px;
+}
+.apps-label::before{content:'';width:3px;height:14px;background:var(--green);border-radius:2px;display:block}
+
+/* horizontal scroll strip */
+.apps-strip{
+  display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;
+  scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;
+}
+.apps-strip::-webkit-scrollbar{display:none}
+
+.app-card{
+  flex-shrink:0;width:130px;
+  background:var(--card);border:1px solid var(--border);
+  border-radius:18px;padding:16px 14px 14px;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  cursor:pointer;transition:.22s;
+  scroll-snap-align:start;position:relative;overflow:hidden;
+  text-decoration:none;
+}
+.app-card::before{
+  content:'';position:absolute;inset:0;
+  background:var(--grad);opacity:0;transition:.22s;border-radius:18px;
+}
+.app-card:hover::before,.app-card:active::before{opacity:.07}
+.app-card:hover{border-color:rgba(0,210,141,.35);transform:translateY(-4px);
+  box-shadow:0 12px 32px rgba(0,0,0,.4),0 0 0 1px rgba(0,210,141,.15)}
+.app-card:active{transform:scale(.96)}
+
+/* staggered entrance */
+.app-card{animation:cardIn .6s ease both}
+.app-card:nth-child(1){animation-delay:.1s}
+.app-card:nth-child(2){animation-delay:.2s}
+.app-card:nth-child(3){animation-delay:.3s}
+.app-card:nth-child(4){animation-delay:.4s}
+.app-card:nth-child(5){animation-delay:.5s}
+.app-card:nth-child(6){animation-delay:.6s}
+@keyframes cardIn{from{opacity:0;transform:translateY(20px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+.app-icon{
+  width:52px;height:52px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.6rem;position:relative;z-index:1;
+  transition:.22s;
+}
+.app-card:hover .app-icon{transform:scale(1.1) rotate(-4deg)}
+.app-name{font-size:.74rem;font-weight:800;color:var(--text);text-align:center;
+  position:relative;z-index:1;font-family:'Syne',sans-serif}
+.app-sub{font-size:.58rem;color:var(--sub);text-align:center;position:relative;z-index:1;line-height:1.3}
+.app-badge{
+  position:absolute;top:8px;right:8px;font-size:.5rem;font-weight:800;
+  padding:2px 6px;border-radius:5px;z-index:2;text-transform:uppercase;letter-spacing:.3px;
+}
+.badge-live{background:rgba(0,210,141,.15);border:1px solid rgba(0,210,141,.3);color:var(--green)}
+.badge-new{background:rgba(75,68,224,.15);border:1px solid rgba(75,68,224,.3);color:#a5b4fc}
+.badge-soon{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.25);color:#fbbf24}
+.badge-hot{background:rgba(255,77,77,.1);border:1px solid rgba(255,77,77,.25);color:#fca5a5}
+
+/* icon backgrounds */
+.ib-green{background:rgba(0,210,141,.12);border:1px solid rgba(0,210,141,.2)}
+.ib-purple{background:rgba(75,68,224,.12);border:1px solid rgba(75,68,224,.2)}
+.ib-amber{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2)}
+.ib-red{background:rgba(255,77,77,.1);border:1px solid rgba(255,77,77,.2)}
+.ib-blue{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.2)}
+.ib-teal{background:rgba(20,184,166,.1);border:1px solid rgba(20,184,166,.2)}
+
+/* ══ WHAT'S COMING ══ */
+.coming-section{
+  margin-top:10px;
+  animation:fadeUp .8s ease .6s both;
+}
+.feature-list{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.feat-item{
+  display:flex;align-items:center;gap:13px;
+  padding:13px 15px;background:var(--card);
+  border:1px solid var(--border);border-radius:14px;
+  transition:.15s;cursor:default;
+}
+.feat-item:hover{border-color:rgba(0,210,141,.2);background:rgba(0,210,141,.03)}
+/* staggered entrance */
+.feat-item{animation:fadeUp .5s ease both}
+.feat-item:nth-child(1){animation-delay:.7s}
+.feat-item:nth-child(2){animation-delay:.85s}
+.feat-item:nth-child(3){animation-delay:1s}
+.feat-item:nth-child(4){animation-delay:1.15s}
+.fi-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.fi-dot-g{background:var(--green);box-shadow:0 0 8px rgba(0,210,141,.6)}
+.fi-dot-p{background:var(--purple);box-shadow:0 0 8px rgba(75,68,224,.5)}
+.fi-dot-a{background:#fbbf24;box-shadow:0 0 8px rgba(251,191,36,.5)}
+.fi-body{flex:1}
+.fi-title{font-size:.8rem;font-weight:700;color:var(--text);display:block}
+.fi-sub{font-size:.62rem;color:var(--sub);margin-top:2px}
+.fi-tag{font-size:.55rem;font-weight:800;padding:2px 7px;border-radius:5px;flex-shrink:0}
+.fi-tag-g{background:rgba(0,210,141,.1);border:1px solid rgba(0,210,141,.2);color:var(--green)}
+.fi-tag-p{background:rgba(75,68,224,.1);border:1px solid rgba(75,68,224,.2);color:#a5b4fc}
+.fi-tag-a{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);color:#fbbf24}
+
+/* ══ BOTTOM CTA STRIP ══ */
+.bottom-strip{
+  margin-top:32px;padding:18px;
+  background:linear-gradient(135deg,rgba(0,210,141,.08),rgba(75,68,224,.08));
+  border:1px solid rgba(0,210,141,.15);border-radius:18px;
+  text-align:center;
+  animation:fadeUp .6s ease 1.2s both;
+}
+.bs-title{font-size:.92rem;font-weight:800;margin-bottom:6px;font-family:'Syne',sans-serif}
+.bs-sub{font-size:.7rem;color:var(--sub);margin-bottom:16px;line-height:1.5}
+.bs-row{display:flex;gap:9px;justify-content:center;flex-wrap:wrap}
+.bs-btn{
+  display:flex;align-items:center;gap:7px;
+  padding:11px 18px;border-radius:11px;font-size:.74rem;font-weight:800;
+  text-decoration:none;transition:.2s;
+}
+.bs-btn-g{background:rgba(37,211,102,.1);border:1px solid rgba(37,211,102,.2);color:#25d366}
+.bs-btn-p{background:rgba(75,68,224,.1);border:1px solid rgba(75,68,224,.2);color:#a5b4fc}
+.bs-btn:hover{transform:translateY(-2px)}
+
+/* ══ TOAST ══ */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(14px);
+  background:var(--card2);border:1px solid var(--green);color:var(--green);
+  padding:11px 22px;border-radius:20px;font-size:.74rem;font-weight:700;
+  z-index:9999;opacity:0;transition:.28s;white-space:nowrap;
+  box-shadow:0 6px 24px rgba(0,0,0,.5)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ══ MODAL (profile) ══ */
+.mov{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;z-index:1000;
+  align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.mov.open{display:flex}
+.modal{background:var(--card);width:92%;max-width:400px;border-radius:22px;padding:22px;
+  border:1px solid var(--border);max-height:92vh;overflow-y:auto}
+.mcl{background:none;border:none;font-size:1.3rem;color:var(--sub);line-height:1;float:right;cursor:pointer}
+.pinp{width:100%;padding:10px 13px;border-radius:11px;border:1.5px solid var(--border);
+  background:rgba(255,255,255,.04);color:var(--text);font-size:.82rem;font-family:'Inter',sans-serif;
+  outline:none;margin-bottom:10px;transition:.2s}
+.pinp:focus{border-color:rgba(75,68,224,.5)}
+.pinp::placeholder{color:var(--sub)}
+.btnpri{width:100%;padding:12px;background:var(--grad);border:none;border-radius:12px;
+  color:#fff;font-size:.82rem;font-weight:800;margin-bottom:9px;cursor:pointer}
+
+/* sec header */
+.sec-hdr{display:flex;align-items:center;margin:0 0 14px}
+.sec-ttl{font-size:.88rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px}
+.sec-ttl::before{content:'';width:3px;height:16px;background:var(--green);border-radius:2px;display:block}
+</style>
+</head>
+<body>
+
+<!-- BG FX -->
+<div class="bg-mesh">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+  <div class="bg-orb bg-orb-3"></div>
+</div>
+<div class="bg-grid"></div>
+
+<div id="toast-el" class="toast"></div>
+
+<!-- ══ DRAWER ══ -->
+<div id="drw-ov" class="drw-ov" onclick="closeDrw()"></div>
+<div id="drw" class="drw">
+  <div class="drw-head">
+    <button class="drw-x" onclick="closeDrw()">×</button>
+    <div class="drw-av">
+      <img src="https://i.pravatar.cc/100?img=7" alt=""
+           onerror="this.style.display='none';this.parentElement.textContent='👤'">
+    </div>
+    <div>
+      <div class="drw-name" id="d-uname">Student</div>
+      <div class="drw-sub" id="d-usub">🚀 goAPPs · All-in-One</div>
+    </div>
+  </div>
+
+  <div class="drw-wallet">
+    <div class="dw-lbl">Token Wallet</div>
+    <div class="dw-bal" id="d-wbal">₦1,000</div>
+    <div class="dw-row"><span>Bonus Credits</span><span>🏆 0.00gc</span></div>
+    <div class="dw-row"><span>💰 Total Token</span><span id="d-wtotal">₦1,000</span></div>
+  </div>
+
+  <div class="drw-nav">
+    <div class="dn" onclick="goApp('https://goapps-official.github.io/Welcome-to-goAPPs/');closeDrw()">
+      <span class="dn-ico">🏧</span>goAPPs Home
+    </div>
+    <div class="dn" onclick="goApp('goclass-home.html');closeDrw()">
+      <span class="dn-ico">🎓</span>goCLASS
+    </div>
+    <div class="dn" onclick="goApp('computer-basics-academy.html');closeDrw()">
+      <span class="dn-ico">💻</span>CompuLearn Academy
+    </div>
+    <div class="dn" onclick="goApp('https://official-gocbt.github.io/goCBT-Drill-Center/[Practice]JAMB.html');closeDrw()">
+      <span class="dn-ico">📝</span>goCBT Practice
+    </div>
+    <div class="dn" onclick="showToast('🔔 Notifications coming soon!');closeDrw()">
+      <span class="dn-ico">📲</span>Notifications
+    </div>
+    <div class="dn" onclick="openMod('m-profile');closeDrw()">
+      <span class="dn-ico">👤</span>Update Profile
+    </div>
+    <div class="dn" onclick="showToast('💰 Wallet coming soon!');closeDrw()">
+      <span class="dn-ico">💰</span>Wallet &amp; Tokens
+    </div>
+  </div>
+
+  <div class="drw-foot">
+    <div class="drw-foot-lbl">Admin Support</div>
+    <a href="https://wa.me/2348157505037" target="_blank" class="drw-wa">📲 Contact Admin on WhatsApp</a>
+    <div class="drw-btns">
+      <a href="https://wa.me/2348157505037?text=I%20want%20to%20purchase%20a%20goAPPs%20PIN"
+         target="_blank" class="drw-btn drw-btn-g">💳 BUY PIN</a>
+      <a href="https://wa.me/2348157505037?text=Please%20verify%20my%20payment"
+         target="_blank" class="drw-btn drw-btn-p">📄 VERIFY</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HEADER ══ -->
+<header class="hdr">
+  <div class="hdr-l">
+    <button class="ham" id="ham" onclick="toggleDrw()">
+      <span></span><span></span><span></span>
+    </button>
+    <span class="hdr-logo">🚀 goAPPs</span>
+  </div>
+  <div class="hdr-r">
+    <span class="hpill hp-str" id="streak-el">🔥 0d</span>
+    <div class="hdr-av">
+      <img src="https://i.pravatar.cc/100?img=7" alt=""
+           onerror="this.style.display='none';this.parentElement.textContent='👤'">
+    </div>
+  </div>
+</header>
+
+<!-- ══ MAIN CONTENT ══ -->
+<div class="wrap">
+
+  <!-- ── HERO ── -->
+  <div class="hero">
+
+    <!-- spinning ring -->
+    <div class="hero-ring">
+      <div class="ring-outer"></div>
+      <div class="ring-inner"></div>
+      <div class="ring-icon">🛠️</div>
+    </div>
+
+    <!-- live updating tag -->
+    <div class="hero-tag">
+      <span class="tag-dot"></span>
+      Content Being Updated
+    </div>
+
+    <h1 class="hero-title">Something<br>Incredible is<br>Coming</h1>
+    <p class="hero-sub">We're polishing every detail to bring you the best learning experience. Our team is working around the clock — stay tuned!</p>
+
+    <!-- progress bar -->
+    <div class="progress-track">
+      <div class="progress-fill" id="prog-fill"></div>
+    </div>
+    <div class="progress-label" id="prog-label">Loading… 0%</div>
+
+  </div>
+
+  <!-- ── NOTIFY CTA ── -->
+  <div class="cta-wrap" id="cta-wrap">
+    <div class="inp-row">
+      <input type="email" id="notify-email" class="notify-inp"
+             placeholder="Your email address…" autocomplete="email">
+      <button class="notify-btn" id="notify-btn" onclick="handleNotify()">
+        🔔 Notify Me
+      </button>
+    </div>
+    <div class="notify-note">🔒 No spam. We'll only email when it's <span>ready</span>.</div>
+
+    <!-- success state -->
+    <div class="notify-success" id="notify-success">
+      <span style="font-size:1.3rem">✅</span>
+      <div>
+        <div style="font-size:.8rem;font-weight:800">You're on the list!</div>
+        <div style="font-size:.64rem;opacity:.8;margin-top:2px">We'll notify you the moment it's live.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DIVIDER ── -->
+  <div class="divider">
+    <div class="div-line"></div>
+    <div class="div-txt">⚡ Explore goAPPs</div>
+    <div class="div-line"></div>
+  </div>
+
+  <!-- ── QUICK LINKS STRIP ── -->
+  <div class="apps-label">Quick Links</div>
+
+  <div class="apps-strip">
+
+    <a href="goclass-home.html" class="app-card">
+      <span class="app-badge badge-live">Live</span>
+      <div class="app-icon ib-green">🎓</div>
+      <div class="app-name">goCLASS</div>
+      <div class="app-sub">All class levels</div>
+    </a>
+
+    <a href="computer-basics-academy.html" class="app-card">
+      <span class="app-badge badge-live">Live</span>
+      <div class="app-icon ib-purple">💻</div>
+      <div class="app-name">CompuLearn</div>
+      <div class="app-sub">Computer basics</div>
+    </a>
+
+    <a href="https://official-gocbt.github.io/goCBT-Drill-Center/[Practice]JAMB.html"
+       target="_blank" class="app-card">
+      <span class="app-badge badge-hot">Hot</span>
+      <div class="app-icon ib-red">📝</div>
+      <div class="app-name">goCBT</div>
+      <div class="app-sub">JAMB · WAEC · NECO</div>
+    </a>
+
+    <a href="https://wa.me/2348157505037" target="_blank" class="app-card">
+      <span class="app-badge badge-live">Live</span>
+      <div class="app-icon ib-teal">💬</div>
+      <div class="app-name">goSUPPORT</div>
+      <div class="app-sub">WhatsApp admin</div>
+    </a>
+
+    <div class="app-card" onclick="showToast('📊 goMARKET launching soon!')">
+      <span class="app-badge badge-soon">Soon</span>
+      <div class="app-icon ib-amber">🛒</div>
+      <div class="app-name">goMARKET</div>
+      <div class="app-sub">Study materials</div>
+    </div>
+
+    <div class="app-card" onclick="showToast('🏆 goREWARDS launching soon!')">
+      <span class="app-badge badge-new">New</span>
+      <div class="app-icon ib-blue">🎁</div>
+      <div class="app-name">goREWARDS</div>
+      <div class="app-sub">Earn & redeem</div>
+    </div>
+
+  </div>
+
+  <!-- ── WHAT'S COMING ── -->
+  <div class="coming-section">
+    <div class="divider" style="margin-top:32px">
+      <div class="div-line"></div>
+      <div class="div-txt">🔮 What's Coming</div>
+      <div class="div-line"></div>
+    </div>
+
+    <div class="feature-list">
+      <div class="feat-item">
+        <div class="fi-dot fi-dot-g"></div>
+        <div class="fi-body">
+          <span class="fi-title">📚 New Curriculum Modules</span>
+          <span class="fi-sub">Fresh content for all class levels Pri 1 – SSS 3</span>
+        </div>
+        <span class="fi-tag fi-tag-g">In Progress</span>
+      </div>
+      <div class="feat-item">
+        <div class="fi-dot fi-dot-p"></div>
+        <div class="fi-body">
+          <span class="fi-title">🎥 Video + Audio Lessons</span>
+          <span class="fi-sub">Offline-ready multimedia learning library</span>
+        </div>
+        <span class="fi-tag fi-tag-p">Review</span>
+      </div>
+      <div class="feat-item">
+        <div class="fi-dot fi-dot-g"></div>
+        <div class="fi-body">
+          <span class="fi-title">📝 AI-Powered Quizzes</span>
+          <span class="fi-sub">Adaptive CBT practice with instant feedback</span>
+        </div>
+        <span class="fi-tag fi-tag-g">Beta</span>
+      </div>
+      <div class="feat-item">
+        <div class="fi-dot fi-dot-a"></div>
+        <div class="fi-body">
+          <span class="fi-title">🏆 Live Leaderboard</span>
+          <span class="fi-sub">Compete school-wide & earn goTokens</span>
+        </div>
+        <span class="fi-tag fi-tag-a">Soon</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── BOTTOM CONTACT STRIP ── -->
+  <div class="bottom-strip">
+    <div class="bs-title">Need help right now? 👋</div>
+    <div class="bs-sub">Our admin team is always available on WhatsApp. Reach out to purchase a PIN, verify payment, or get support.</div>
+    <div class="bs-row">
+      <a href="https://wa.me/2348157505037?text=Hi!%20I%20need%20help%20with%20goAPPs"
+         target="_blank" class="bs-btn bs-btn-g">
+        💬 Chat on WhatsApp
+      </a>
+      <a href="https://wa.me/2348157505037?text=I%20want%20to%20buy%20a%20PIN"
+         target="_blank" class="bs-btn bs-btn-p">
+        💳 Buy a PIN
+      </a>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<!-- ══ MODAL: PROFILE ══ -->
+<div id="m-profile" class="mov">
+  <div class="modal" style="text-align:center">
+    <button class="mcl" onclick="closeMod('m-profile')">×</button>
+    <div style="font-size:1.8rem;margin-bottom:8px">👤</div>
+    <h3 style="color:var(--green);margin-bottom:5px;font-size:.92rem">Update Profile</h3>
+    <p style="font-size:.68rem;color:var(--sub);margin-bottom:15px">Personalize your goAPPs experience.</p>
+    <input type="text"  id="pe-name"  class="pinp" placeholder="Full Name *">
+    <input type="email" id="pe-email" class="pinp" placeholder="Email address">
+    <input type="text"  id="pe-class" class="pinp" placeholder="Class Level (e.g. JSS 2)">
+    <button class="btnpri" onclick="saveProfile()">✅ Save Profile</button>
+    <p onclick="closeMod('m-profile')" style="font-size:.7rem;cursor:pointer;color:var(--sub)">Cancel</p>
+  </div>
+</div>
+
+<script>
+/* ── STORAGE ── */
+const S={
+  set:(k,v)=>localStorage.setItem(k,JSON.stringify(v)),
+  get:(k,fb)=>{try{const d=localStorage.getItem(k);return d!==null?JSON.parse(d):fb}catch{return fb}}
+};
+const el=id=>document.getElementById(id);
+
+/* ── INIT ── */
+window.addEventListener('load',()=>{
+  syncDrawer();
+  updateStreak();
+  animateProgress();
+});
+
+/* ── DRAWER SYNC ── */
+function syncDrawer(){
+  const name=S.get('gc_name','Student');
+  const cls=S.get('gc_class','');
+  const wallet=S.get('gc_wallet',1000);
+  const fmt='₦'+wallet.toLocaleString();
+  el('d-uname').textContent=name;
+  el('d-usub').textContent='🚀 goAPPs · '+(cls||'All-in-One');
+  el('d-wbal').textContent=fmt;
+  el('d-wtotal').textContent=fmt;
+  el('pe-name').value=name!=='Student'?name:'';
+  el('pe-email').value=S.get('gc_email','');
+  el('pe-class').value=cls;
+}
+
+/* ── STREAK ── */
+function updateStreak(){
+  const today=new Date().toDateString();const last=S.get('gc_last','');
+  let s=S.get('gc_streak',0);
+  if(last!==today){const y=new Date(Date.now()-86400000).toDateString();s=(last===y)?s+1:1;S.set('gc_last',today);S.set('gc_streak',s);}
+  el('streak-el').textContent='🔥 '+s+'d';
+}
+
+/* ── PROGRESS ANIMATION ── */
+function animateProgress(){
+  let pct=0;
+  const lbl=el('prog-label');
+  const bar=el('prog-fill');
+  const target=72;
+  const step=()=>{
+    if(pct<target){pct=Math.min(pct+1,target);bar.style.width=pct+'%';lbl.textContent='Loading… '+pct+'%';requestAnimationFrame(step);}
+    else{lbl.textContent='✅ 72% — Almost ready!'}
+  };
+  setTimeout(step,1200);
+}
+
+/* ── NOTIFY ME ── */
+function handleNotify(){
+  const email=el('notify-email').value.trim();
+  if(!email||!email.includes('@')){
+    el('notify-email').style.borderColor='var(--danger)';
+    el('notify-email').placeholder='Enter a valid email!';
+    setTimeout(()=>{el('notify-email').style.borderColor='';el('notify-email').placeholder='Your email address…';},2500);
+    return;
+  }
+  /* save locally */
+  S.set('notify_email',email);
+  /* show success */
+  el('notify-btn').textContent='✅ Done!';
+  el('notify-btn').style.background='rgba(0,210,141,.15)';
+  el('notify-btn').style.color='var(--green)';
+  el('notify-btn').style.border='1px solid rgba(0,210,141,.3)';
+  el('notify-btn').style.boxShadow='none';
+  el('notify-email').style.display='none';
+  el('notify-success').classList.add('show');
+  showToast('🎉 You\'ll be notified when it\'s live!');
+
+  /* WhatsApp notification to admin */
+  const msg=encodeURIComponent('📣 New Notification Request!\nEmail: '+email+'\nFrom: goAPPs Content Page');
+  // Silent - no redirect, just log
+}
+
+/* ── PROFILE ── */
+function saveProfile(){
+  const name=el('pe-name').value.trim();
+  if(!name){el('pe-name').style.border='1.5px solid var(--danger)';return;}
+  S.set('gc_name',name);
+  S.set('gc_email',el('pe-email').value.trim());
+  S.set('gc_class',el('pe-class').value.trim());
+  closeMod('m-profile');
+  syncDrawer();
+  showToast('✅ Profile updated!');
+}
+
+/* ── APP NAV ── */
+function goApp(url){
+  showToast('🚀 Launching…');
+  setTimeout(()=>window.location.href=url,500);
+}
+
+/* ── DRAWER ── */
+function toggleDrw(){
+  el('drw').classList.toggle('open');
+  el('drw-ov').classList.toggle('open');
+  el('ham').classList.toggle('open');
+}
+function closeDrw(){
+  el('drw').classList.remove('open');
+  el('drw-ov').classList.remove('open');
+  el('ham').classList.remove('open');
+}
+
+/* ── MODALS ── */
+function openMod(id){el(id).classList.add('open');}
+function closeMod(id){el(id).classList.remove('open');}
+
+/* ── TOAST ── */
+function showToast(msg){
+  const t=el('toast-el');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
+</script>
+</body>
+</html>
