@@ -1,234 +1,559 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>goWALLETS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --opay-green: #00d28d;
-            --owealth-blue: #4b44e0;
-            --text-dark: #333;
-            --text-light: #888;
-            --bg-gray: #f8f9fb;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>💰 goWALLET | goAPPs</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#00d28d;--purple:#4b44e0;
+  --grad:linear-gradient(135deg,#00d28d 0%,#4b44e0 100%);
+  --grad-p:linear-gradient(135deg,#4b44e0 0%,#7d77f5 100%);
+  --bg:#0f0f0f;--surface:#1a1a1a;--card:#222;--card2:#2a2a2a;
+  --border:#2e2e2e;--text:#f0f0f0;--sub:#888;--danger:#ff4d4d;
+  --glow:0 4px 24px rgba(0,210,141,.18);
+  --glow-p:0 4px 24px rgba(75,68,224,.2);
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--green);border-radius:2px}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none}
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+/* ── OFFLINE ── */
+#offline-screen{display:none;position:fixed;inset:0;background:var(--bg);z-index:4000;
+  flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:28px}
+#offline-screen.show{display:flex}
 
-        body { background-color: #121212; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+/* ── DRAWER ── */
+.drw-ov{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:800;display:none;backdrop-filter:blur(4px)}
+.drw-ov.open{display:block}
+.drw{position:fixed;left:-295px;top:0;bottom:0;width:295px;background:var(--surface);
+  z-index:900;transition:.28s cubic-bezier(.4,0,.2,1);overflow-y:auto;border-right:1px solid var(--border)}
+.drw.open{left:0;box-shadow:8px 0 36px rgba(0,0,0,.6)}
+.drw-head{padding:28px 18px 20px;background:var(--grad);display:flex;align-items:center;gap:14px;position:relative}
+.drw-x{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.18);color:#fff;
+  width:28px;height:28px;border-radius:50%;font-size:1.1rem;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;line-height:1}
+.drw-av{width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.22);
+  border:2.5px solid rgba(255,255,255,.55);display:flex;align-items:center;justify-content:center;
+  font-size:1.35rem;font-weight:800;color:#fff;overflow:hidden;flex-shrink:0}
+.drw-av img{width:100%;height:100%;object-fit:cover}
+.drw-name{font-size:.98rem;font-weight:800;color:#fff}
+.drw-sub{font-size:.63rem;color:rgba(255,255,255,.74);margin-top:2px}
+.drw-wallet{margin:14px 15px;padding:14px 16px;background:var(--grad);border-radius:15px;color:#fff}
+.dw-lbl{font-size:.58rem;letter-spacing:.6px;text-transform:uppercase;opacity:.82;font-weight:700;margin-bottom:3px}
+.dw-bal{font-size:1.35rem;font-weight:800;font-family:'JetBrains Mono',monospace}
+.dw-row{display:flex;justify-content:space-between;font-size:.67rem;opacity:.85;margin-top:5px}
+.drw-nav{padding:8px 0}
+.dn{display:flex;align-items:center;gap:13px;padding:13px 18px;font-size:.82rem;font-weight:600;
+  color:var(--sub);cursor:pointer;border-bottom:1px solid var(--border);transition:.15s}
+.dn:hover,.dn.cur{color:var(--green);background:rgba(0,210,141,.05)}
+.dn-ico{font-size:1rem;width:22px;text-align:center;flex-shrink:0}
+.drw-foot{padding:14px 18px;border-top:1px solid var(--border)}
+.drw-foot-lbl{font-size:.6rem;color:var(--sub);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.drw-wa{display:flex;align-items:center;gap:8px;color:#25d366;font-weight:700;font-size:.74rem}
 
-        .phone-container {
-            width: 375px;
-            height: 750px;
-            background: var(--bg-gray);
-            border-radius: 40px;
-            overflow: hidden;
-            position: relative;
-            border: 8px solid #333;
-            display: flex;
-            flex-direction: column;
-        }
+/* ── HEADER ── */
+.hdr{position:sticky;top:0;z-index:400;background:var(--bg);border-bottom:1px solid var(--border);
+  padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.hdr-l{display:flex;align-items:center;gap:10px}
+.ham{display:flex;flex-direction:column;gap:5px;padding:4px;cursor:pointer}
+.ham span{display:block;height:2px;border-radius:2px;background:var(--green);transition:.28s}
+.ham span:nth-child(1){width:22px}
+.ham span:nth-child(2){width:15px}
+.ham span:nth-child(3){width:22px}
+.ham.open span:nth-child(1){transform:translateY(7px) rotate(45deg);width:22px}
+.ham.open span:nth-child(2){opacity:0;width:22px}
+.ham.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.back-btn{display:flex;align-items:center;gap:5px;color:var(--green);font-size:.78rem;font-weight:700;
+  padding:5px 10px;border-radius:9px;border:1px solid rgba(0,210,141,.25);transition:.15s;cursor:pointer}
+.back-btn:hover{background:rgba(0,210,141,.07)}
+.hdr-logo{font-size:.96rem;font-weight:800;letter-spacing:-.2px;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hdr-r{display:flex;align-items:center;gap:9px}
+.hpill{padding:5px 11px;border-radius:16px;font-size:.62rem;font-weight:700}
+.hp-str{background:rgba(0,210,141,.1);border:1px solid rgba(0,210,141,.25);color:var(--green)}
+.hdr-av{width:32px;height:32px;border-radius:50%;background:var(--grad);display:flex;align-items:center;
+  justify-content:center;font-size:.82rem;overflow:hidden;flex-shrink:0;cursor:pointer;
+  border:2px solid rgba(0,210,141,.35)}
+.hdr-av img{width:100%;height:100%;object-fit:cover}
 
-        /* HEADER */
-        header { padding: 40px 20px 10px; background: white; text-align: center; }
-        .tab-switcher { display: flex; background: #eee; border-radius: 20px; padding: 4px; margin-top: 15px; }
-        .tab { flex: 1; padding: 8px; border-radius: 18px; font-size: 0.75rem; font-weight: 600; cursor: pointer; }
-        .tab.active { background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+/* ── TABS ── */
+.tabs{display:flex;background:var(--card);border-radius:14px;padding:4px;margin:14px 15px 0;gap:4px}
+.tab{flex:1;padding:9px;border-radius:11px;font-size:.72rem;font-weight:700;
+  cursor:pointer;color:var(--sub);text-align:center;transition:.2s}
+.tab.on{background:var(--grad);color:#fff;box-shadow:0 2px 8px rgba(0,210,141,.3)}
 
-        /* OWEALTH CARD */
-        .owealth-card {
-            background: var(--owealth-blue);
-            color: white;
-            margin: 20px 15px;
-            padding: 25px;
-            border-radius: 25px;
-            background-image: linear-gradient(135deg, #4b44e0 0%, #7d77f5 100%);
-        }
+/* ── MAIN SCROLL ── */
+.main{padding:15px 15px 80px;overflow-y:auto}
 
-        .growth-chip { background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 12px; font-size: 0.65rem; }
+/* ── WALLET HERO CARD ── */
+.hero-card{border-radius:22px;padding:22px 22px 24px;position:relative;
+  margin-bottom:16px;overflow:hidden;cursor:pointer}
+.hero-card.savings{background:var(--grad);box-shadow:var(--glow)}
+.hero-card.fixed{background:var(--grad-p);box-shadow:var(--glow-p)}
+.hero-card.adashe{background:linear-gradient(135deg,#ff6b35,#f7931e);box-shadow:0 4px 24px rgba(255,107,53,.22)}
+.hero-card::after{content:'';position:absolute;bottom:-14px;left:-14px;right:-14px;
+  height:60px;background:rgba(255,255,255,.06);border-radius:50%}
+.hc-lbl{font-size:.62rem;letter-spacing:.6px;text-transform:uppercase;
+  color:rgba(255,255,255,.82);font-weight:700;margin-bottom:4px}
+.hc-bal{font-size:2.2rem;font-weight:800;color:#fff;font-family:'JetBrains Mono',monospace;
+  letter-spacing:-.5px;display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.hc-eye{background:rgba(255,255,255,.2);border:none;color:#fff;width:30px;height:30px;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;cursor:pointer;flex-shrink:0;transition:.2s}
+.hc-eye:hover{background:rgba(255,255,255,.35)}
+.hc-chip{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.2);
+  padding:4px 10px;border-radius:12px;font-size:.62rem;color:#fff;font-weight:700}
+.hc-sub{font-size:.7rem;color:rgba(255,255,255,.82);margin-top:8px}
+.hc-tap-hint{font-size:.58rem;color:rgba(255,255,255,.55);margin-top:5px;display:flex;align-items:center;gap:4px}
 
-        /* STATS GRID */
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 15px; }
-        .stat-box { background: white; padding: 15px; border-radius: 15px; text-align: center; }
-        .stat-label { font-size: 0.65rem; color: var(--text-light); display: block; margin-bottom: 5px; }
-        .stat-value { font-weight: 800; color: var(--text-dark); }
+/* ── STATS GRID ── */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:15px;
+  padding:14px;text-align:center;position:relative;overflow:hidden}
+.stat-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.stat-box.green::before{background:var(--green)}
+.stat-box.purple::before{background:var(--purple)}
+.stat-box.orange::before{background:#f7931e}
+.stat-box.red::before{background:var(--danger)}
+.stat-lbl{font-size:.6rem;color:var(--sub);display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px}
+.stat-val{font-size:1rem;font-weight:800;font-family:'JetBrains Mono',monospace}
 
-        /* CALCULATOR SECTION */
-        .calc-section { background: white; margin: 20px 15px; padding: 20px; border-radius: 20px; }
-        .input-group { margin-top: 15px; }
-        input[type="range"] { width: 100%; accent-color: var(--opay-green); }
+/* ── CALCULATOR ── */
+.calc-card{background:var(--card);border:1px solid var(--border);border-radius:18px;
+  padding:18px;margin-bottom:16px}
+.calc-title{font-size:.85rem;font-weight:800;color:var(--text);margin-bottom:14px;
+  display:flex;align-items:center;gap:8px}
+.calc-title::before{content:'';width:3px;height:16px;background:var(--green);border-radius:2px;display:block}
+.calc-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.calc-lbl{font-size:.72rem;color:var(--sub)}
+.calc-val{font-size:.82rem;font-weight:800;color:var(--text);font-family:'JetBrains Mono',monospace}
+input[type="range"]{width:100%;accent-color:var(--green);height:4px;border-radius:2px;margin:8px 0 14px;cursor:pointer}
+.calc-result{background:rgba(75,68,224,.08);border:1px solid rgba(75,68,224,.2);border-radius:12px;
+  padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
+.cr-lbl{font-size:.7rem;color:var(--sub)}
+.cr-val{font-size:1rem;font-weight:800;color:#a5b4fc;font-family:'JetBrains Mono',monospace}
 
-        /* LIST */
-        .main-scroll { flex: 1; overflow-y: auto; padding-bottom: 80px; }
-        .list-item { display: flex; justify-content: space-between; padding: 15px 20px; background: white; border-bottom: 1px solid #f2f2f2; }
+/* ── LIST ITEMS ── */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin:16px 0 11px}
+.sec-ttl{font-size:.88rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px}
+.sec-ttl::before{content:'';width:3px;height:16px;background:var(--green);border-radius:2px;display:block}
+.list-item{display:flex;align-items:center;justify-content:space-between;
+  padding:13px 15px;background:var(--card);border:1px solid var(--border);
+  border-radius:13px;margin-bottom:8px;cursor:pointer;transition:.15s}
+.list-item:hover{border-color:rgba(0,210,141,.25);background:rgba(0,210,141,.03)}
+.li-l{display:flex;align-items:center;gap:12px}
+.li-ico{width:38px;height:38px;border-radius:11px;background:rgba(0,210,141,.1);
+  display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0}
+.li-name{font-size:.8rem;font-weight:700;color:var(--text)}
+.li-sub{font-size:.62rem;color:var(--sub);margin-top:1px}
+.li-arr{color:var(--sub);font-size:.82rem}
 
-        /* NAVIGATION UPDATED */
-        nav { 
-            display: flex; 
-            justify-content: space-around; 
-            padding: 12px 0; 
-            background: white; 
-            border-top: 1px solid #eee; 
-            position: absolute; 
-            bottom: 0; 
-            width: 100%; 
-        }
+/* ── BOTTOM NAV ── */
+.bnav{position:fixed;bottom:0;left:0;right:0;height:64px;background:var(--surface);
+  border-top:1px solid var(--border);display:flex;align-items:stretch;z-index:300;
+  padding-bottom:env(safe-area-inset-bottom,0)}
+.bn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;cursor:pointer;color:var(--sub);font-size:.58rem;font-weight:700;
+  transition:.15s;text-decoration:none;background:none;border:none;padding:0;position:relative}
+.bn.on,.bn:hover{color:var(--green)}
+.bn.on::after{content:'';position:absolute;top:0;left:15%;right:15%;
+  height:2.5px;background:var(--grad);border-radius:0 0 4px 4px}
+.bn-ico{font-size:1.15rem;display:block}
 
-        /* Nav Link Styles */
-        .nav-link {
-            text-decoration: none; /* Removes underline */
-            color: var(--text-light);
-            text-align: center;
-            font-size: 0.6rem;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+/* ── MODALS ── */
+.mov{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;z-index:1000;
+  align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.mov.open{display:flex}
+.modal{background:var(--card);width:92%;max-width:400px;border-radius:22px;padding:24px;
+  border:1px solid var(--border);max-height:92vh;overflow-y:auto}
+.mcl{background:none;border:none;font-size:1.3rem;color:var(--sub);line-height:1;float:right;cursor:pointer}
+.pinp{width:100%;padding:11px 14px;border-radius:11px;border:1.5px solid var(--border);
+  background:rgba(255,255,255,.04);color:var(--text);font-size:.88rem;
+  font-family:'Inter',sans-serif;outline:none;margin-bottom:12px;transition:.2s}
+.pinp:focus{border-color:rgba(0,210,141,.5)}
+.pinp::placeholder{color:var(--sub)}
+.btnpri{width:100%;padding:13px;background:var(--grad);border:none;border-radius:12px;
+  color:#fff;font-size:.84rem;font-weight:800;margin-bottom:9px;cursor:pointer;transition:.2s}
+.btnpri:hover{opacity:.9;transform:translateY(-1px)}
+.btnghost{width:100%;padding:11px;background:rgba(255,255,255,.04);border:1px solid var(--border);
+  color:var(--sub);border-radius:12px;font-size:.78rem;font-weight:700;cursor:pointer}
+.inp-icon-wrap{position:relative;margin-bottom:12px}
+.inp-icon-wrap .pinp{margin-bottom:0;padding-left:44px}
+.inp-icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:1rem;pointer-events:none}
+.field-lbl{font-size:.7rem;font-weight:700;color:var(--sub);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:.5px}
+.perr{font-size:.7rem;color:var(--danger);min-height:17px;margin-bottom:4px;display:flex;align-items:center;gap:5px}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.shake{animation:shake .35s}
 
-        .nav-link.active {
-            color: var(--opay-green);
-        }
-
-        .nav-link:active {
-            opacity: 0.7; /* Visual feedback when tapped */
-        }
-    </style>
+/* ── TOAST ── */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(14px);
+  background:var(--card2);border:1px solid var(--green);color:var(--green);
+  padding:10px 20px;border-radius:20px;font-size:.74rem;font-weight:700;
+  z-index:9999;opacity:0;transition:.28s;white-space:nowrap;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
 </head>
 <body>
 
-<div class="phone-container">
-    <header>
-        <b style="font-size: 1.1rem;">Accounts</b>
-        <div class="tab-switcher">
-            <div class="tab active">Savings</div>
-            <div class="tab">Fixed</div>
-            <div class="tab">Adashe</div>
-        </div>
-    </header>
+<!-- OFFLINE -->
+<div id="offline-screen">
+  <div style="font-size:3.5rem;margin-bottom:16px">📡</div>
+  <h2 style="font-size:1.1rem;margin-bottom:8px">You're Offline</h2>
+  <p style="color:var(--sub);font-size:.78rem;margin-bottom:24px;line-height:1.5;max-width:260px">Check your internet connection to continue using goAPPs.</p>
+  <button onclick="window.location.reload()" style="background:var(--grad);color:#fff;border:none;padding:13px 30px;border-radius:12px;font-size:.82rem;font-weight:800;cursor:pointer">Reload Page</button>
+</div>
 
-    <div class="main-scroll">
-        <div class="owealth-card">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-                <div>
-                    <small style="opacity: 0.8; font-size: 0.7rem;">goCOINs Balance</small>
-                    <h2 style="font-size: 2rem; margin: 5px 0;">₦540,200</h2>
-                </div>
-                <span class="growth-chip">15% P.A.</span>
-            </div>
-            <p style="font-size: 0.7rem; margin-top: 10px;">Daily Interest: +₦ 01.45</p>
-        </div>
+<div id="toast-el" class="toast"></div>
 
-        <div class="stats-grid">
-            <div class="stat-box">
-                <span class="stat-label">Total Profit</span>
-                <span class="stat-value" style="color: var(--opay-green);">+₦1,400</span>
-            </div>
-            <div class="stat-box">
-                <span class="stat-label">Yesterday's Pay</span>
-                <span class="stat-value">₦05.10</span>
-            </div>
-        </div>
+<!-- ══ DRAWER ══ -->
+<div id="drw-ov" class="drw-ov" onclick="closeDrw()"></div>
+<div id="drw" class="drw">
+  <div class="drw-head">
+    <button class="drw-x" onclick="closeDrw()">×</button>
+    <div class="drw-av"><img src="https://i.pravatar.cc/100?img=7" alt="" onerror="this.style.display='none';this.parentElement.textContent='👤'"></div>
+    <div>
+      <div class="drw-name" id="d-name">Learner</div>
+      <div class="drw-sub">💰 goWALLET</div>
+    </div>
+  </div>
+  <div class="drw-wallet">
+    <div class="dw-lbl">goCOINs Balance</div>
+    <div class="dw-bal">₦•••,•••</div>
+    <div class="dw-row"><span>Daily Interest</span><span>+₦01.45</span></div>
+    <div class="dw-row"><span>Rate</span><span>15% P.A.</span></div>
+  </div>
+  <div class="drw-nav">
+    <div class="dn" onclick="location.href='https://goapps-official.github.io/Welcome-to-goAPPs/'"><span class="dn-ico">🏧</span>Home</div>
+    <div class="dn cur"><span class="dn-ico">💰</span>Wallet</div>
+    <div class="dn" onclick="location.href='transfer.html'"><span class="dn-ico">🔄</span>Transfer</div>
+    <div class="dn" onclick="location.href='reward.html'"><span class="dn-ico">🎁</span>Top-up</div>
+    <div class="dn" onclick="location.href='settings.html'"><span class="dn-ico">⚙️</span>Settings</div>
+    <div class="dn" onclick="openMod('m-balance')"><span class="dn-ico">👁️</span>View Balance</div>
+  </div>
+  <div class="drw-foot">
+    <div class="drw-foot-lbl">Admin Support</div>
+    <a href="https://wa.me/2348157505037" target="_blank" class="drw-wa">📲 Contact Admin on WhatsApp</a>
+  </div>
+</div>
 
-        <div class="calc-section">
-            <b style="font-size: 0.85rem;">Interest Calculator</b>
-            <div class="input-group">
-                <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                    <small>Investment Amount</small>
-                    <b id="calcAmt">₦100,000</b>
-                </div>
-                <input type="range" id="investRange" min="10000" max="1000000" step="10000" value="100000" oninput="calculate()">
-            </div>
-            <div style="margin-top: 20px; background: var(--bg-gray); padding: 10px; border-radius: 10px; display: flex; justify-content: space-between;">
-                <small>Annual Returns:</small>
-                <b style="color: var(--owealth-blue);" id="annualReturn">₦15,000</b>
-            </div>
-        </div>
+<!-- ══ HEADER ══ -->
+<header class="hdr">
+  <div class="hdr-l">
+    <button class="ham" id="ham" onclick="toggleDrw()"><span></span><span></span><span></span></button>
+    <button class="back-btn" onclick="goBack()">← Back</button>
+    <span class="hdr-logo">💰 goWALLET</span>
+  </div>
+  <div class="hdr-r">
+    <span class="hpill hp-str">🪙 goCOINs</span>
+    <div class="hdr-av"><img src="https://i.pravatar.cc/100?img=7" alt="" onerror="this.style.display='none';this.parentElement.textContent='👤'"></div>
+  </div>
+</header>
 
-        <div class="list-item">
-            <div><b style="font-size: 0.8rem;">goCOINs FAQ</b><br><small>How is interest calculated?</small></div>
-            <span>❯</span>
-        </div>
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab on" id="tab-savings"  onclick="switchTab('savings')">Savings</div>
+  <div class="tab"    id="tab-fixed"    onclick="switchTab('fixed')">Fixed</div>
+  <div class="tab"    id="tab-adashe"   onclick="switchTab('adashe')">Adashe</div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div class="main" id="main-scroll">
+
+  <!-- ── SAVINGS TAB ── -->
+  <div id="pane-savings">
+    <!-- Hero card -->
+    <div class="hero-card savings" id="hero-savings" onclick="openMod('m-balance')" style="margin-top:14px">
+      <div class="hc-lbl">goCOINs Balance</div>
+      <div class="hc-bal">
+        <span id="bal-savings">₦•••,•••</span>
+        <button class="hc-eye" id="eye-savings" onclick="event.stopPropagation();toggleBal('savings')" title="Reveal balance">👁</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px">
+        <span class="hc-chip">📈 15% P.A.</span>
+        <span class="hc-chip">⚡ Active</span>
+      </div>
+      <div class="hc-sub">Daily Interest: <b>+₦01.45</b></div>
+      <div class="hc-tap-hint">🔒 Tap to verify &amp; view full balance</div>
     </div>
 
-    <nav>
-        <a href="index.html" class="nav-link">
-            <span style="display:block; font-size:1.2rem;">🏧</span>Home
-        </a>
-        <a href="transfer.html" class="nav-link">
-            <span style="display:block; font-size:1.2rem;">🔄</span>Transfer
-        </a>
-        <a href="balance.html" class="nav-link active">
-            <span style="display:block; font-size:1.2rem;">💰</span>Wallet
-        </a>
-        <a href="reward.html" class="nav-link">
-            <span style="display:block; font-size:1.2rem;">🎁</span>TopUp
-        </a>
-        <a href="settings.html" class="nav-link">
-            <span style="display:block; font-size:1.2rem;">⚙️</span>Settings
-        </a>
-    </nav>
+    <div class="stats-grid">
+      <div class="stat-box green"><span class="stat-lbl">Total Profit</span><span class="stat-val" style="color:var(--green)">+₦1,400</span></div>
+      <div class="stat-box purple"><span class="stat-lbl">Yesterday's Pay</span><span class="stat-val" style="color:#a5b4fc">₦05.10</span></div>
+      <div class="stat-box orange"><span class="stat-lbl">This Month</span><span class="stat-val" style="color:#fbbf24">₦43.50</span></div>
+      <div class="stat-box red"><span class="stat-lbl">Withdrawable</span><span class="stat-val" style="color:#fca5a5">₦540,200</span></div>
+    </div>
+
+    <!-- Calculator -->
+    <div class="calc-card">
+      <div class="calc-title">Interest Calculator</div>
+      <div class="calc-row">
+        <span class="calc-lbl">Investment Amount</span>
+        <span class="calc-val" id="calcAmt">₦100,000</span>
+      </div>
+      <input type="range" id="investRange" min="10000" max="1000000" step="10000" value="100000" oninput="calculate()">
+      <div class="calc-row" style="margin-top:4px">
+        <span class="calc-lbl">Duration</span>
+        <span class="calc-val" id="calcMo">12 months</span>
+      </div>
+      <input type="range" id="monthRange" min="1" max="24" step="1" value="12" oninput="calculate()" style="accent-color:var(--purple)">
+      <div class="calc-result">
+        <div>
+          <div class="cr-lbl">Annual Returns</div>
+          <div style="font-size:.6rem;color:var(--sub);margin-top:2px">at 15% P.A. rate</div>
+        </div>
+        <div class="cr-val" id="annualReturn">₦15,000</div>
+      </div>
+    </div>
+
+    <div class="sec-hdr"><span class="sec-ttl">📂 Resources</span></div>
+    <div class="list-item" onclick="showToast('ℹ️ FAQ coming soon!')">
+      <div class="li-l">
+        <div class="li-ico">❓</div>
+        <div><div class="li-name">goCOINs FAQ</div><div class="li-sub">How is interest calculated?</div></div>
+      </div>
+      <span class="li-arr">›</span>
+    </div>
+    <div class="list-item" onclick="showToast('📊 History coming soon!')">
+      <div class="li-l">
+        <div class="li-ico">📊</div>
+        <div><div class="li-name">Transaction History</div><div class="li-sub">View past deposits & earnings</div></div>
+      </div>
+      <span class="li-arr">›</span>
+    </div>
+    <div class="list-item" onclick="openMod('m-balance')">
+      <div class="li-l">
+        <div class="li-ico">🔒</div>
+        <div><div class="li-name">View Full Balance</div><div class="li-sub">Verify with WhatsApp number</div></div>
+      </div>
+      <span class="li-arr">›</span>
+    </div>
+  </div>
+
+  <!-- ── FIXED TAB ── -->
+  <div id="pane-fixed" style="display:none">
+    <div class="hero-card fixed" id="hero-fixed" onclick="openMod('m-balance')" style="margin-top:14px">
+      <div class="hc-lbl">Fixed Deposit Balance</div>
+      <div class="hc-bal">
+        <span id="bal-fixed">₦•••,•••</span>
+        <button class="hc-eye" onclick="event.stopPropagation();toggleBal('fixed')" title="Reveal">👁</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:6px">
+        <span class="hc-chip">🔒 Locked 90 Days</span>
+        <span class="hc-chip">📈 20% P.A.</span>
+      </div>
+      <div class="hc-sub">Matures: <b>Sep 12, 2025</b></div>
+      <div class="hc-tap-hint">🔒 Tap to verify &amp; view full balance</div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-box green"><span class="stat-lbl">Total Locked</span><span class="stat-val" style="color:var(--green)">₦200,000</span></div>
+      <div class="stat-box purple"><span class="stat-lbl">At Maturity</span><span class="stat-val" style="color:#a5b4fc">₦240,000</span></div>
+    </div>
+    <div class="calc-card" style="margin-top:8px">
+      <div class="calc-title">Fixed Deposit Calculator</div>
+      <div class="calc-row">
+        <span class="calc-lbl">Lock Amount</span>
+        <span class="calc-val" id="calcAmt2">₦100,000</span>
+      </div>
+      <input type="range" id="investRange2" min="10000" max="1000000" step="10000" value="100000" oninput="calculate2()">
+      <div class="calc-result">
+        <div><div class="cr-lbl">Maturity Value (90 days)</div><div style="font-size:.6rem;color:var(--sub);margin-top:2px">at 20% P.A.</div></div>
+        <div class="cr-val" id="fixedReturn">₦104,932</div>
+      </div>
+    </div>
+    <div class="list-item" onclick="showToast('🔒 Fixed deposit management coming soon!')">
+      <div class="li-l"><div class="li-ico">➕</div><div><div class="li-name">Open Fixed Deposit</div><div class="li-sub">Lock funds at 20% P.A.</div></div></div>
+      <span class="li-arr">›</span>
+    </div>
+  </div>
+
+  <!-- ── ADASHE TAB ── -->
+  <div id="pane-adashe" style="display:none">
+    <div class="hero-card adashe" onclick="openMod('m-balance')" style="margin-top:14px">
+      <div class="hc-lbl">Adashe (Cooperative) Balance</div>
+      <div class="hc-bal">
+        <span id="bal-adashe">₦•••,•••</span>
+        <button class="hc-eye" onclick="event.stopPropagation();toggleBal('adashe')" style="background:rgba(0,0,0,.2)" title="Reveal">👁</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:6px">
+        <span class="hc-chip" style="background:rgba(0,0,0,.2)">👥 Group: 10 Members</span>
+        <span class="hc-chip" style="background:rgba(0,0,0,.2)">🔁 Monthly Rotation</span>
+      </div>
+      <div class="hc-sub">Next payout: <b>July 2025 — ₦50,000</b></div>
+      <div class="hc-tap-hint">🔒 Tap to verify &amp; view full balance</div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-box green"><span class="stat-lbl">Your Contribution</span><span class="stat-val" style="color:var(--green)">₦5,000/mo</span></div>
+      <div class="stat-box orange"><span class="stat-lbl">Group Total</span><span class="stat-val" style="color:#fbbf24">₦50,000</span></div>
+      <div class="stat-box purple"><span class="stat-lbl">Your Position</span><span class="stat-val" style="color:#a5b4fc">#3 / 10</span></div>
+      <div class="stat-box red"><span class="stat-lbl">Months Paid</span><span class="stat-val" style="color:#fca5a5">3 / 10</span></div>
+    </div>
+    <div class="list-item" onclick="showToast('👥 Adashe group management coming soon!')">
+      <div class="li-l"><div class="li-ico">👥</div><div><div class="li-name">Join or Create Adashe</div><div class="li-sub">Start a cooperative savings circle</div></div></div>
+      <span class="li-arr">›</span>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<!-- ══ FULL-WIDTH BOTTOM NAV ══ -->
+<nav class="bnav">
+  <a href="https://goapps-official.github.io/Welcome-to-goAPPs/" class="bn"><span class="bn-ico">🏧</span>Home</a>
+  <a href="transfer.html"  class="bn"><span class="bn-ico">🔄</span>Transfer</a>
+  <a href="balance.html"   class="bn on"><span class="bn-ico">💰</span>Wallet</a>
+  <a href="reward.html"    class="bn"><span class="bn-ico">🎁</span>TopUp</a>
+  <a href="settings.html"  class="bn"><span class="bn-ico">⚙️</span>Settings</a>
+</nav>
+
+<!-- ══ MODAL: VIEW BALANCE (WhatsApp verify) ══ -->
+<div id="m-balance" class="mov">
+  <div class="modal">
+    <button class="mcl" onclick="closeMod('m-balance');resetBalModal()">×</button>
+
+    <!-- STEP 1: Enter WA number -->
+    <div id="bal-step1">
+      <div style="text-align:center;margin-bottom:18px">
+        <div style="font-size:2rem;margin-bottom:8px">🔒</div>
+        <h3 style="font-size:.95rem;color:var(--green);margin-bottom:5px">Verify Identity</h3>
+        <p style="font-size:.7rem;color:var(--sub);line-height:1.5">Enter your linked WhatsApp number to view your account balance. You will be redirected to confirm via WhatsApp.</p>
+      </div>
+      <label class="field-lbl">WhatsApp Number</label>
+      <div class="inp-icon-wrap">
+        <span class="inp-icon">📱</span>
+        <input type="tel" id="wa-input" class="pinp"
+          placeholder="e.g. 08012345678"
+          maxlength="15"
+          oninput="this.value=this.value.replace(/[^0-9+]/g,'')">
+      </div>
+      <div class="perr" id="wa-err"></div>
+      <button class="btnpri" onclick="submitWA()">🔐 Verify &amp; View Balance</button>
+      <button class="btnghost" onclick="closeMod('m-balance');resetBalModal()">Cancel</button>
+      <div style="margin-top:14px;padding:11px 13px;background:rgba(0,210,141,.06);
+          border:1px solid rgba(0,210,141,.15);border-radius:11px;
+          font-size:.64rem;color:var(--sub);line-height:1.5;display:flex;align-items:flex-start;gap:8px">
+        <span style="font-size:.9rem;flex-shrink:0">ℹ️</span>
+        <span>Your WhatsApp number is used only to verify your identity. You'll be redirected to WhatsApp to complete the balance check.</span>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <script>
-        // Connection Monitoring
-    window.addEventListener('online', () => {
-        document.getElementById('offline-screen').style.display = 'none';
-        
-        // Connection Restored Toast
-        const toast = document.createElement('div');
-        toast.style = "position:fixed; bottom:100px; left:50%; transform:translateX(-50%); background:#00d28d; color:white; padding:10px 20px; border-radius:30px; font-size:0.8rem; z-index:2000; box-shadow: 0 4px 12px rgba(0,0,0,0.2);";
-        toast.innerText = "⚡ Connection Restored!";
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
-    });
-    
-    window.addEventListener('offline', () => {
-        document.getElementById('offline-screen').style.display = 'flex';
-    });
+// ── HELPERS ──
+const el=id=>document.getElementById(id);
+function openMod(id){el(id).classList.add('open')}
+function closeMod(id){el(id).classList.remove('open')}
+function showToast(msg){
+  const t=el('toast-el');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
 
-    // Initial check
-    if (!navigator.onLine) {
-        document.getElementById('offline-screen').style.display = 'flex';
-    }
+// ── ONLINE/OFFLINE ──
+window.addEventListener('online',()=>{el('offline-screen').classList.remove('show');showToast('⚡ Connection Restored!');});
+window.addEventListener('offline',()=>el('offline-screen').classList.add('show'));
+if(!navigator.onLine)el('offline-screen').classList.add('show');
 
-    // PWA INSTALL LOGIC
-    let deferredPrompt;
-    const installBanner = document.getElementById('install-banner');
-    const installBtn = document.getElementById('install-btn');
+// ── DRAWER ──
+function toggleDrw(){
+  el('drw').classList.toggle('open');el('drw-ov').classList.toggle('open');el('ham').classList.toggle('open');
+}
+function closeDrw(){
+  el('drw').classList.remove('open');el('drw-ov').classList.remove('open');el('ham').classList.remove('open');
+}
 
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        installBanner.style.display = 'flex';
+// ── BACK BUTTON ──
+function goBack(){
+  if(history.length>1) history.back();
+  else location.href='https://goapps-official.github.io/Welcome-to-goAPPs/';
+}
 
-        installBtn.addEventListener('click', () => {
-            installBanner.style.display = 'none';
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((choiceResult) => {
-                deferredPrompt = null;
-            });
-        });
-    });
+// ── TABS ──
+const TABS=['savings','fixed','adashe'];
+function switchTab(tab){
+  TABS.forEach(t=>{
+    el('tab-'+t).classList.toggle('on',t===tab);
+    el('pane-'+t).style.display=t===tab?'block':'none';
+  });
+}
 
-    // Service Worker registration
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js').catch(err => {
-                console.log('SW registration failed: ', err);
-            });
-        });
-    }
-    function calculate() {
-        const amount = document.getElementById('investRange').value;
-        const annualRate = 0.15; 
-        const profit = amount * annualRate;
-        
-        document.getElementById('calcAmt').innerText = `₦ ${parseInt(amount).toLocaleString()}`;
-        document.getElementById('annualReturn').innerText = `₦ ${profit.toLocaleString()}`;
-    }
+// ── BALANCE HASH / REVEAL ──
+// Real values — hashed by default
+const REAL_BAL={savings:'₦540,200.00',fixed:'₦200,000.00',adashe:'₦15,000.00'};
+const HASH_BAL='₦•••,•••';
+const revealed={savings:false,fixed:false,adashe:false};
+
+function toggleBal(type){
+  // clicking eye icon directly reveals temporarily (3s preview) IF already verified
+  if(!sessionStorage.getItem('bal_verified')){
+    openMod('m-balance'); return;
+  }
+  revealed[type]=!revealed[type];
+  el('bal-'+type).textContent=revealed[type]?REAL_BAL[type]:HASH_BAL;
+  el('eye-'+type).textContent=revealed[type]?'🙈':'👁';
+  if(revealed[type]) setTimeout(()=>{revealed[type]=false;el('bal-'+type).textContent=HASH_BAL;el('eye-'+type)&&(el('eye-'+type).textContent='👁');},8000);
+}
+
+// ── VERIFY WHATSAPP & REDIRECT ──
+function submitWA(){
+  const raw=el('wa-input').value.trim();
+  const err=el('wa-err');
+  err.textContent='';
+
+  // basic validation
+  const digits=raw.replace(/\D/g,'');
+  if(digits.length<10||digits.length>13){
+    el('wa-input').classList.add('shake');
+    err.innerHTML='⚠️ Please enter a valid WhatsApp number (10–13 digits).';
+    setTimeout(()=>el('wa-input').classList.remove('shake'),400);
+    return;
+  }
+
+  // format nicely
+  const formatted=raw.startsWith('+')?raw:'+234'+digits.replace(/^0/,'');
+
+  // Build WA redirect with prepopulated message
+  const msg=encodeURIComponent('Check balance '+formatted);
+  const waURL='https://wa.me/2348157505037?text='+msg;
+
+  // Mark verified for this session so eye icon works
+  sessionStorage.setItem('bal_verified','1');
+
+  // Close modal first, then redirect
+  closeMod('m-balance');
+  showToast('📲 Redirecting to WhatsApp…');
+  setTimeout(()=>window.open(waURL,'_blank'),700);
+}
+
+function resetBalModal(){
+  el('wa-input').value='';
+  el('wa-err').textContent='';
+}
+
+// ── CALCULATORS ──
+function calculate(){
+  const amt=parseInt(el('investRange').value);
+  const mo=parseInt(el('monthRange').value);
+  const annual=amt*0.15*(mo/12);
+  el('calcAmt').textContent='₦'+amt.toLocaleString();
+  el('calcMo').textContent=mo+' month'+(mo>1?'s':'');
+  el('annualReturn').textContent='₦'+Math.round(annual).toLocaleString();
+}
+function calculate2(){
+  const amt=parseInt(el('investRange2').value);
+  const ret=amt*(1+0.20*(90/365));
+  el('calcAmt2').textContent='₦'+amt.toLocaleString();
+  el('fixedReturn').textContent='₦'+Math.round(ret).toLocaleString();
+}
+
+// ── PWA ──
+let dp;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;});
+if('serviceWorker' in navigator)
+  window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
 </script>
-
 </body>
 </html>
