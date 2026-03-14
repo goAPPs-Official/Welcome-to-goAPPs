@@ -1,577 +1,666 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎓goCBT | goAPPs by DigitalSolution</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #081f14;
-            --bg2: #0a2a1a;
-            --card: #0d3d26;
-            --card2: #0f4a2e;
-            --text: #f0faf5;
-            --text2: #a8c5b5;
-            --primary: #00d28d;
-            --primary-glow: rgba(0, 210, 141, 0.25);
-            --primary-dim: rgba(0, 210, 141, 0.12);
-            --input-bg: #0d4d36;
-            --border: rgba(255,255,255,0.07);
-            --danger: #ff4d4d;
-            --gray: #6b8f7a;
-            --overlay: rgba(0,0,0,0.75);
-            --header-bg: #081f14;
-            --nav-bg: #0a2a1a;
-            --shadow: rgba(0,0,0,0.5);
-            --switch-track: rgba(255,255,255,0.15);
-            --balance-bg: linear-gradient(135deg, #00d28d 0%, #00a36e 100%);
-            --balance-text: #ffffff;
-            --balance-sub: rgba(255,255,255,0.75);
-            --balance-btn: rgba(255,255,255,0.2);
-            --balance-btn-text: #ffffff;
-            --balance-plus-bg: #ffffff;
-            --balance-plus-color: #00a36e;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🎓 goCBT | goAPPs by DigitalSolution</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root{
+  --green:#00d28d;--purple:#4b44e0;
+  --grad:linear-gradient(135deg,#00d28d 0%,#4b44e0 100%);
+  --bg:#0f0f0f;--surface:#1a1a1a;--card:#222;--card2:#2a2a2a;
+  --border:#2e2e2e;--text:#f0f0f0;--sub:#888;--danger:#ff4d4d;
+  --glow:0 4px 24px rgba(0,210,141,.2);
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--green);border-radius:2px}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none}
 
-        .light-mode {
-            --bg: #f0faf6;
-            --bg2: #e6f5ee;
-            --card: #ffffff;
-            --card2: #f7fdf9;
-            --text: #0d2b1c;
-            --text2: #4a7a5e;
-            --primary: #059669;
-            --primary-glow: rgba(5, 150, 105, 0.2);
-            --primary-dim: rgba(5, 150, 105, 0.1);
-            --input-bg: #e8f5ee;
-            --border: rgba(0,0,0,0.08);
-            --danger: #dc2626;
-            --gray: #6b7280;
-            --overlay: rgba(0,0,0,0.35);
-            --header-bg: #ffffff;
-            --nav-bg: #ffffff;
-            --shadow: rgba(0,0,0,0.12);
-            --switch-track: #d1d5db;
-            --balance-bg: linear-gradient(135deg, #ffffff 0%, #edfaf4 100%);
-            --balance-text: #064e35;
-            --balance-sub: #2d7a57;
-            --balance-btn: #059669;
-            --balance-btn-text: #ffffff;
-            --balance-plus-bg: #059669;
-            --balance-plus-color: #ffffff;
-        }
+/* ── SPLASH ── */
+#splash{position:fixed;inset:0;background:linear-gradient(135deg,#062c1e 0%,#00d28d 100%);
+  z-index:5000;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;transition:opacity .6s ease}
+#splash.hide{opacity:0;pointer-events:none}
+.spin{width:38px;height:38px;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;
+  border-radius:50%;margin:18px auto;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-        /* ── SMOOTH THEME TRANSITIONS ── */
-        *, *::before, *::after {
-            transition: background-color 0.35s ease, background 0.35s ease,
-                        color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
-        }
-        .spinner, .card-inner, .card-inner *, nav a { transition: none !important; }
-        nav a    { transition: color 0.2s ease, opacity 0.2s ease !important; }
-        #side-menu { transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important; }
+/* ── OFFLINE ── */
+#offline-screen{display:none;position:fixed;inset:0;background:var(--bg);z-index:4000;
+  flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:28px}
+#offline-screen.show{display:flex}
 
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background-color: #111;
-            color: var(--text);
-            overflow: hidden;
-        }
+/* ── PUSH NOTIFICATION ── */
+#push-notif{
+  position:fixed;top:-80px;left:50%;transform:translateX(-50%);
+  width:calc(100% - 28px);max-width:420px;
+  background:var(--card);border:1px solid var(--green);
+  border-radius:16px;padding:12px 16px;
+  display:flex;align-items:center;gap:12px;
+  z-index:3500;box-shadow:0 8px 28px rgba(0,0,0,.55);
+  transition:top .45s cubic-bezier(.175,.885,.32,1.275)
+}
+#push-notif.show{top:12px}
+.notif-ico{width:34px;height:34px;border-radius:9px;background:var(--grad);
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;color:#fff;flex-shrink:0}
+.notif-ttl{font-size:.72rem;font-weight:800;color:var(--green)}
+.notif-body{font-size:.63rem;color:var(--sub);margin-top:2px}
 
-        /* ── THEMED SHORTCUTS ── */
-        .phone-container { background: var(--bg); }
-        header { background: var(--header-bg); border-bottom: 1px solid var(--border); }
-        nav    { background: var(--nav-bg) !important; border-top: 1px solid var(--border) !important; }
-        nav a  { color: var(--text2) !important; }
-        nav a.active { color: var(--primary) !important; opacity: 1 !important; }
-        .service-item  { background: var(--card); border-color: var(--border); color: var(--text); }
-        .section-title { color: var(--text); }
-        .menu-item     { border-bottom-color: var(--border); color: var(--text); }
-        .slider-track  { background-color: var(--switch-track); }
+/* ── DRAWER ── */
+.drw-ov{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:800;display:none;backdrop-filter:blur(4px)}
+.drw-ov.open{display:block}
+.drw{position:fixed;left:-295px;top:0;bottom:0;width:295px;background:var(--surface);
+  z-index:900;transition:.28s cubic-bezier(.4,0,.2,1);overflow-y:auto;border-right:1px solid var(--border)}
+.drw.open{left:0;box-shadow:8px 0 36px rgba(0,0,0,.6)}
 
-        /* Light-mode extras */
-        .light-mode .phone-container   { box-shadow: 0 25px 50px rgba(0,0,0,0.18); }
-        .light-mode .service-item      { box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
-        .light-mode header             { box-shadow: 0 1px 8px rgba(0,0,0,0.06); }
-        .light-mode nav                { box-shadow: 0 -1px 8px rgba(0,0,0,0.06) !important; }
-        .light-mode .balance-card      { border: 1.5px solid #c8e8d8 !important; box-shadow: 0 10px 24px rgba(5,150,105,0.22) !important; }
-        .light-mode #side-menu         { background: var(--bg); border-right: 1px solid var(--border); }
-        body:not(.light-mode) .service-item:hover { background: var(--card2); }
+.drw-head{padding:28px 18px 20px;background:var(--grad);display:flex;align-items:center;gap:14px;position:relative}
+.drw-x{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.18);color:#fff;
+  width:28px;height:28px;border-radius:50%;font-size:1.1rem;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;line-height:1}
+.drw-av{width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.22);
+  border:2.5px solid rgba(255,255,255,.55);display:flex;align-items:center;justify-content:center;
+  font-size:1.35rem;font-weight:800;color:#fff;overflow:hidden;flex-shrink:0}
+.drw-av img{width:100%;height:100%;object-fit:cover}
+.drw-name{font-size:.98rem;font-weight:800;color:#fff}
+.drw-sub{font-size:.63rem;color:rgba(255,255,255,.74);margin-top:2px}
 
-        /* ── THEME RIPPLE ── */
-        .theme-ripple {
-            position: fixed; border-radius: 50%; pointer-events: none; z-index: 9999;
-            transform: scale(0); animation: ripple-expand 0.5s ease-out forwards;
-        }
-        @keyframes ripple-expand { to { transform: scale(40); opacity: 0; } }
+.drw-wallet{margin:14px 15px;padding:14px 16px;background:var(--grad);border-radius:15px;color:#fff}
+.dw-lbl{font-size:.58rem;letter-spacing:.6px;text-transform:uppercase;opacity:.82;font-weight:700;margin-bottom:3px}
+.dw-bal{font-size:1.35rem;font-weight:800;font-family:'JetBrains Mono',monospace}
+.dw-row{display:flex;justify-content:space-between;font-size:.67rem;opacity:.85;margin-top:5px}
 
-        /* ── PHONE SHELL ── */
-        .phone-container {
-            width: 375px; height: 750px;
-            border-radius: 40px; overflow: hidden;
-            position: relative; border: 8px solid #1a1a1a;
-            display: flex; flex-direction: column;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-            margin: 20px auto;
-        }
-        @media (max-width: 400px) {
-            .phone-container { width: 100vw; height: 100vh; margin: 0; border: none; border-radius: 0; }
-        }
+.drw-nav{padding:8px 0}
+.dn{display:flex;align-items:center;gap:13px;padding:13px 18px;font-size:.82rem;font-weight:600;
+  color:var(--sub);cursor:pointer;border-bottom:1px solid var(--border);transition:.15s}
+.dn:hover,.dn.cur{color:var(--green);background:rgba(0,210,141,.05)}
+.dn-ico{font-size:1rem;width:22px;text-align:center;flex-shrink:0}
 
-        /* ── PUSH NOTIFICATION ── */
-        #push-notification {
-            position: absolute; top: -100px; left: 10px; right: 10px;
-            background: var(--card); border: 1px solid var(--primary);
-            border-radius: 15px; padding: 12px 15px;
-            display: flex; align-items: center; gap: 12px;
-            z-index: 2000; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
-        }
-        #push-notification.show { transform: translateY(115px); }
+.drw-pin-btn{display:block;margin:16px 15px;padding:13px;background:var(--grad);
+  border-radius:13px;text-align:center;color:#fff;font-size:.82rem;font-weight:800;
+  text-decoration:none;box-shadow:var(--glow)}
+.drw-foot{padding:14px 18px;border-top:1px solid var(--border)}
+.drw-foot-lbl{font-size:.6rem;color:var(--sub);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.drw-wa{display:flex;align-items:center;gap:8px;color:#25d366;font-weight:700;font-size:.74rem}
 
-        /* ── SPLASH ── */
-        #splash-screen {
-            position: fixed; inset: 0;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background: linear-gradient(135deg, #062c1e 0%, #00d28d 100%);
-            z-index: 1000; transition: opacity 0.6s ease;
-        }
-        .spinner {
-            width: 40px; height: 40px;
-            border: 3px solid rgba(255,255,255,0.2);
-            border-top-color: #fff; border-radius: 50%;
-            margin: 20px auto; animation: spin 1s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
+/* ── HEADER ── */
+.hdr{position:sticky;top:0;z-index:400;background:var(--bg);border-bottom:1px solid var(--border);
+  padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.hdr-l{display:flex;align-items:center;gap:10px}
+.ham{display:flex;flex-direction:column;gap:5px;padding:4px;cursor:pointer}
+.ham span{display:block;height:2px;border-radius:2px;background:var(--green);transition:.28s}
+.ham span:nth-child(1){width:22px}
+.ham span:nth-child(2){width:15px}
+.ham span:nth-child(3){width:22px}
+.ham.open span:nth-child(1){transform:translateY(7px) rotate(45deg);width:22px}
+.ham.open span:nth-child(2){opacity:0;width:22px}
+.ham.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.hdr-logo{font-size:.96rem;font-weight:800;letter-spacing:-.2px;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hdr-r{display:flex;align-items:center;gap:9px}
+.hpill{padding:5px 11px;border-radius:16px;font-size:.62rem;font-weight:700}
+.hp-str{background:rgba(0,210,141,.1);border:1px solid rgba(0,210,141,.25);color:var(--green)}
+.hp-xp{background:rgba(75,68,224,.12);border:1px solid rgba(75,68,224,.3);color:#a5b4fc}
+.hdr-av{width:32px;height:32px;border-radius:50%;background:var(--grad);display:flex;align-items:center;
+  justify-content:center;font-size:.82rem;overflow:hidden;flex-shrink:0;cursor:pointer;
+  border:2px solid rgba(0,210,141,.35)}
+.hdr-av img{width:100%;height:100%;object-fit:cover}
 
-        /* ── OFFLINE SCREEN ── */
-        #offline-screen {
-            position: absolute; inset: 0;
-            background: var(--bg); z-index: 500;
-            display: none; flex-direction: column;
-            justify-content: center; align-items: center;
-            text-align: center; padding: 30px;
-        }
+/* ── RSS TICKER ── */
+.ticker-wrap{background:rgba(0,210,141,.06);border-bottom:1px solid rgba(0,210,141,.15);
+  padding:7px 0;overflow:hidden;position:relative}
+.ticker-wrap::before{content:'📢';position:absolute;left:0;top:50%;transform:translateY(-50%);
+  background:var(--green);padding:4px 10px;font-size:.7rem;z-index:2;border-radius:0 6px 6px 0}
+.ticker-track{display:flex;gap:0;animation:ticker 28s linear infinite;padding-left:100%;white-space:nowrap}
+.ticker-track:hover{animation-play-state:paused}
+.ticker-item{display:inline-flex;align-items:center;gap:8px;font-size:.68rem;font-weight:600;
+  color:var(--green);padding-right:60px;white-space:nowrap}
+.ticker-dot{width:5px;height:5px;border-radius:50%;background:var(--green);opacity:.5;flex-shrink:0}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
 
-        /* ── HEADER ── */
-        header { padding: 22px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .menu-icon { width: 22px; height: 16px; border-top: 2px solid var(--primary); border-bottom: 2px solid var(--primary); position: relative; cursor: pointer; }
-        .menu-icon::after { content: ''; position: absolute; top: 5px; width: 100%; height: 2px; background: var(--primary); }
-        .user-avatar { width: 34px; height: 34px; border-radius: 50%; overflow: hidden; border: 2px solid var(--primary); cursor: pointer; }
-        .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+/* ── MAIN ── */
+.main{padding-bottom:76px}
 
-        /* ── SIDE MENU ── */
-        #menu-overlay { position: absolute; inset: 0; background: var(--overlay); backdrop-filter: blur(3px); z-index: 100; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-        #side-menu {
-            position: absolute; left: -280px; top: 0; width: 280px; height: 100%;
-            background: var(--bg); z-index: 101;
-            display: flex; flex-direction: column; padding: 40px 20px;
-            border-right: 1px solid var(--border); box-sizing: border-box;
-        }
-        .menu-open #side-menu    { left: 0; }
-        .menu-open #menu-overlay { opacity: 1; pointer-events: auto; }
-        .menu-item {
-            display: flex; align-items: center; gap: 15px;
-            padding: 12px 0; color: var(--text); text-decoration: none;
-            font-size: 0.85rem; border-bottom: 1px solid var(--border); cursor: pointer;
-        }
-        .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; cursor: pointer; inset: 0;
-            background-color: var(--switch-track); transition: .4s; border-radius: 20px;
-        }
-        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--primary); }
+/* ── BALANCE CARD ── */
+.bal-card{background:var(--grad);border-radius:22px;padding:20px 20px 30px;
+  position:relative;overflow:hidden;box-shadow:var(--glow);margin-bottom:14px}
+.bal-card::after{content:'';position:absolute;bottom:-14px;left:-14px;right:-14px;
+  height:60px;background:rgba(255,255,255,.06);border-radius:50%}
+.bc-wlc{font-size:.66rem;color:rgba(255,255,255,.82);font-weight:600}
+.bc-name{font-size:1.25rem;font-weight:800;color:#fff;margin:4px 0 14px;letter-spacing:-.2px}
+.bc-row{display:flex;justify-content:space-between;font-size:.75rem;color:rgba(255,255,255,.88);margin-bottom:4px}
+.bc-total{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.bc-tlbl{font-size:.72rem;color:rgba(255,255,255,.82);font-weight:600}
+.bc-tval{font-size:1.6rem;font-weight:800;color:#fff;font-family:'JetBrains Mono',monospace}
+.bc-add{position:absolute;bottom:-19px;left:50%;transform:translateX(-50%);
+  width:42px;height:42px;background:var(--green);color:#fff;border:4px solid var(--bg);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;font-weight:800;cursor:pointer;z-index:2;
+  box-shadow:0 4px 14px rgba(0,210,141,.4);transition:.15s;text-decoration:none}
+.bc-add:active{transform:translateX(-50%) scale(1.1)}
 
-        /* ── MAIN SCROLL ── */
-        .main-scroll { flex: 1; overflow-y: auto; padding: 15px 15px 90px; scrollbar-width: none; }
-        .main-scroll::-webkit-scrollbar { display: none; }
+/* ── IMAGE BANNER SLIDER ── */
+.banner-wrap{margin:26px 0 14px;position:relative;overflow:hidden;border-radius:18px;box-shadow:var(--glow)}
+.banner-track{display:flex;transition:transform .5s cubic-bezier(.4,0,.2,1)}
+.banner-slide{min-width:100%;height:150px;border-radius:18px;position:relative;overflow:hidden;flex-shrink:0}
+.banner-slide img{width:100%;height:100%;object-fit:cover}
+.banner-slide .bs-overlay{position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.15) 100%);
+  display:flex;flex-direction:column;justify-content:flex-end;padding:14px 16px}
+.bs-tag{font-size:.55rem;font-weight:800;padding:3px 8px;border-radius:5px;
+  background:var(--green);color:#000;display:inline-block;margin-bottom:5px;width:fit-content}
+.bs-title{font-size:.9rem;font-weight:800;color:#fff;line-height:1.25}
+.bs-sub{font-size:.63rem;color:rgba(255,255,255,.8);margin-top:2px}
+/* fallback coloured slide (no image) */
+.bs-color-1{background:linear-gradient(135deg,#00d28d,#4b44e0)}
+.bs-color-2{background:linear-gradient(135deg,#ff6b35,#f7931e)}
+.bs-color-3{background:linear-gradient(135deg,#4b44e0,#7c3aed)}
+.bs-color-4{background:linear-gradient(135deg,#0ea5e9,#00d28d)}
 
-        /* ── BALANCE CARD ── */
-        .balance-card {
-            background: var(--balance-bg) !important;
-            border-radius: 22px; padding: 20px;
-            position: relative; margin-bottom: 36px;
-            box-shadow: 0 10px 28px var(--primary-glow);
-            border: 1px solid var(--border);
-        }
-        .balance-label {
-            font-size: 0.62rem; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 0.8px;
-            color: var(--balance-sub);
-        }
-        .balance-name {
-            font-size: 1.3rem; font-weight: 800;
-            color: var(--balance-text); margin: 2px 0 10px;
-        }
-        .balance-row {
-            display: flex; justify-content: space-between;
-            font-size: 0.78rem; color: var(--balance-sub);
-            margin-bottom: 4px;
-        }
-        .balance-total {
-            display: flex; justify-content: space-between; align-items: center;
-            font-size: 1.5rem; font-weight: 800; color: var(--balance-text);
-            margin-top: 8px;
-        }
-        .balance-total small { font-size: 0.75rem; font-weight: 400; color: var(--balance-sub); }
-        .balance-plus {
-            width: 44px; height: 44px;
-            background: var(--balance-plus-bg); color: var(--balance-plus-color);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; font-weight: 800;
-            position: absolute; bottom: -22px; left: 50%; transform: translateX(-50%);
-            box-shadow: 0 5px 18px rgba(0,0,0,0.18); cursor: pointer; z-index: 10;
-            border: 3px solid var(--bg); text-decoration: none;
-        }
+.banner-dots{display:flex;justify-content:center;gap:6px;margin-top:9px}
+.b-dot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:.3s;cursor:pointer}
+.b-dot.on{width:18px;background:var(--green);border-radius:4px}
 
-        /* ── INFO BANNER ── */
-        .info-banner {
-            display: flex; align-items: center; gap: 12px;
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 14px; padding: 12px 14px;
-            margin-bottom: 18px;
-        }
-        .info-banner p { font-size: 0.7rem; color: var(--text2); line-height: 1.4; margin: 0; }
+.banner-arrow{position:absolute;top:50%;transform:translateY(-50%);
+  width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.45);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:.75rem;
+  cursor:pointer;z-index:3;border:none;transition:.2s}
+.banner-arrow:hover{background:rgba(0,0,0,.7)}
+.banner-arrow.prev{left:10px}
+.banner-arrow.next{right:10px}
 
-        /* ── SECTION TITLE ── */
-        .section-title {
-            font-weight: 800; font-size: 0.88rem;
-            color: var(--text); margin: 0 0 12px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
+/* ── INFO BANNER ── */
+.info-banner{background:var(--card);border:1px solid var(--border);border-radius:13px;
+  padding:11px 14px;display:flex;align-items:center;gap:11px;
+  margin-bottom:14px;font-size:.68rem;color:var(--sub);line-height:1.4}
 
-        /* ── APPLY FULL-WIDTH CARD ── */
-        .apply-card {
-            display: flex; align-items: center; gap: 14px;
-            background: var(--primary); color: #062c1e;
-            border-radius: 16px; padding: 16px 14px;
-            margin-bottom: 12px; text-decoration: none;
-            cursor: pointer;
-            box-shadow: 0 6px 20px var(--primary-glow);
-        }
-        .apply-card .apply-icon { font-size: 1.6rem; flex-shrink: 0; }
-        .apply-card b   { font-size: 0.9rem; font-weight: 800; display: block; }
-        .apply-card small { font-size: 0.65rem; opacity: 0.8; line-height: 1.3; }
-        .apply-card:active { transform: scale(0.98); }
+/* ── APPLY FULL-WIDTH CARD ── */
+.apply-card{display:flex;align-items:center;gap:14px;background:var(--grad);color:#fff;
+  border-radius:16px;padding:16px 14px;margin-bottom:14px;cursor:pointer;
+  box-shadow:var(--glow);transition:.15s}
+.apply-card:active{transform:scale(.98)}
+.apply-icon{font-size:1.6rem;flex-shrink:0}
+.apply-card b{font-size:.9rem;font-weight:800;display:block}
+.apply-card small{font-size:.65rem;opacity:.82;line-height:1.3}
+.apply-arr{margin-left:auto;font-size:1.2rem;opacity:.75}
 
-        /* ── SERVICE GRID ── */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .service-item {
-            background: var(--card); padding: 13px 12px;
-            border-radius: 16px; display: flex; align-items: center;
-            gap: 10px; border: 1px solid var(--border);
-            text-decoration: none; cursor: pointer;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .service-item:active { transform: scale(0.96); }
-        .service-item.highlight { background: var(--primary); color: #062c1e !important; border: none; box-shadow: 0 4px 14px var(--primary-glow); }
-        .service-item .s-icon { font-size: 1.2rem; flex-shrink: 0; }
-        .service-item b     { font-size: 0.78rem; font-weight: 800; display: block; color: var(--text); }
-        .service-item small { font-size: 0.6rem; color: var(--text2); }
-        .service-item.highlight b,
-        .service-item.highlight small { color: #062c1e; }
+/* ── SECTION HEADER ── */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin:16px 0 11px}
+.sec-ttl{font-size:.88rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px}
+.sec-ttl::before{content:'';width:3px;height:16px;background:var(--green);border-radius:2px;display:block}
 
-        /* Promo tag */
-        .promo-tag {
-            display: inline-block; background: var(--danger);
-            color: white; font-size: 0.55rem; font-weight: 800;
-            padding: 2px 7px; border-radius: 20px; margin-top: 3px;
-        }
+/* ── SERVICE GRID ── */
+.svc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.svc-item{display:flex;align-items:center;gap:11px;padding:13px 12px;
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  cursor:pointer;transition:.18s;text-decoration:none;position:relative;overflow:hidden}
+.svc-item::before{content:'';position:absolute;left:0;top:0;bottom:0;
+  width:3px;background:transparent;border-radius:3px 0 0 3px;transition:.2s}
+.svc-item:hover::before,.svc-item:active::before{background:var(--green)}
+.svc-item:hover{border-color:rgba(0,210,141,.3);background:rgba(0,210,141,.04);transform:translateY(-1px)}
+.svc-item:active{transform:scale(.96)}
+.svc-item.hi{background:var(--grad);border:none;box-shadow:0 4px 14px rgba(0,210,141,.25)}
+.svc-item.hi:hover{transform:translateY(-1px);box-shadow:0 7px 20px rgba(0,210,141,.35)}
+.svc-item.hi::before{display:none}
+.s-ico{font-size:1.2rem;flex-shrink:0}
+.s-name{font-size:.78rem;font-weight:800;display:block;color:var(--text)}
+.s-sub{font-size:.6rem;color:var(--sub)}
+.svc-item.hi .s-name,.svc-item.hi .s-sub{color:#fff}
+.svc-item.hi .s-sub{opacity:.82}
 
-        /* ── NAV ── */
-        nav {
-            display: flex; justify-content: space-around;
-            padding: 12px 0 22px; position: absolute; bottom: 0; width: 100%;
-        }
-        nav a {
-            text-decoration: none; display: flex; flex-direction: column;
-            align-items: center; flex: 1; font-size: 0.6rem; gap: 2px;
-        }
-        nav a span { font-size: 1.2rem; }
+/* ── PROMO STRIP ── */
+.promo-strip{display:flex;justify-content:center;margin:4px 0 16px}
+.promo-btn{display:inline-flex;align-items:center;gap:7px;
+  background:rgba(0,210,141,.08);border:1px solid rgba(0,210,141,.3);
+  border-radius:30px;padding:9px 18px;color:var(--green);
+  font-size:.72rem;font-weight:800;cursor:pointer;transition:.2s;text-decoration:none}
+.promo-btn:hover{background:rgba(0,210,141,.14);transform:translateY(-1px)}
 
-        /* ── BTN ── */
-        .btn-action {
-            width: 100%; padding: 14px; border-radius: 12px; border: none;
-            font-weight: 800; cursor: pointer; margin-top: 10px;
-            display: flex; justify-content: center; align-items: center; gap: 8px;
-            font-size: 0.9rem;
-        }
-        .btn-primary { background: var(--primary); color: #062c1e; }
-        .btn-ghost   { background: transparent; color: var(--gray); }
-    </style>
+/* ── FULL-WIDTH BOTTOM NAV ── */
+.bnav{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--surface);border-top:1px solid var(--border);
+  display:flex;align-items:stretch;z-index:300;
+  padding-bottom:env(safe-area-inset-bottom,0);
+  height:64px
+}
+.bn{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:3px;cursor:pointer;color:var(--sub);
+  font-size:.58rem;font-weight:700;transition:.15s;
+  text-decoration:none;background:none;border:none;padding:0;
+  position:relative
+}
+.bn.on,.bn:hover{color:var(--green)}
+.bn-ico{font-size:1.15rem;display:block}
+/* active indicator bar */
+.bn.on::after{content:'';position:absolute;top:0;left:15%;right:15%;
+  height:2.5px;background:var(--grad);border-radius:0 0 4px 4px}
+
+/* ── MODALS ── */
+.mov{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;z-index:1000;
+  align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.mov.open{display:flex}
+.modal{background:var(--card);width:92%;max-width:400px;border-radius:22px;padding:22px;
+  border:1px solid var(--border);max-height:92vh;overflow-y:auto}
+.mcl{background:none;border:none;font-size:1.3rem;color:var(--sub);line-height:1;float:right;cursor:pointer}
+.pinp{width:100%;padding:10px 13px;border-radius:11px;border:1.5px solid var(--border);
+  background:rgba(255,255,255,.04);color:var(--text);font-size:.82rem;
+  font-family:'Inter',sans-serif;outline:none;margin-bottom:10px;transition:.2s}
+.pinp:focus{border-color:rgba(75,68,224,.5)}
+.pinp::placeholder{color:var(--sub)}
+.btnpri{width:100%;padding:12px;background:var(--grad);border:none;border-radius:12px;
+  color:#fff;font-size:.82rem;font-weight:800;margin-bottom:9px;cursor:pointer}
+
+/* PIN pad */
+.pdots{display:flex;gap:13px;justify-content:center;margin:14px 0 5px}
+.pd{width:17px;height:17px;border-radius:50%;border:2px solid rgba(75,68,224,.45);background:transparent;transition:.2s}
+.pd.fill{background:var(--purple);border-color:var(--purple)}
+.ppad{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:11px}
+.pkey{padding:14px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.04);
+  font-size:1rem;font-weight:800;cursor:pointer;color:var(--text);text-align:center;
+  font-family:'JetBrains Mono',monospace;transition:.15s}
+.pkey:hover{background:rgba(0,210,141,.08);border-color:rgba(0,210,141,.2)}
+.pkey:active{transform:scale(.93)}
+.pkey.del{color:var(--danger);font-size:.8rem}
+.perr{font-size:.7rem;color:var(--danger);min-height:17px;text-align:center;margin-bottom:3px}
+.meth{display:flex;align-items:center;gap:12px;padding:13px;background:rgba(255,255,255,.03);
+  border-radius:13px;margin-bottom:9px;cursor:pointer;border:1px solid var(--border);transition:.2s}
+.meth:hover{border-color:rgba(0,210,141,.3);background:rgba(0,210,141,.04)}
+.meth-ico{font-size:1.1rem}
+.meth-b b{font-size:.82rem;display:block;color:var(--text)}
+.meth-b span{font-size:.63rem;color:var(--sub)}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+.shake{animation:shake .35s;border:2px solid var(--danger)!important}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(14px);
+  background:var(--card2);border:1px solid var(--green);color:var(--green);
+  padding:10px 20px;border-radius:20px;font-size:.74rem;font-weight:700;
+  z-index:9999;opacity:0;transition:.28s;white-space:nowrap;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
 </head>
-<body id="app-body">
+<body>
 
-    <!-- SPLASH -->
-    <div id="splash-screen">
-        <div style="text-align:center; color:white;">
-            <div style="font-size:2.8rem; margin-bottom:6px;">🎓</div>
-            <h1 style="font-size:2rem; font-weight:800; margin:0;">goCBT<span style="background:rgba(255,255,255,0.2); padding:2px 8px; border-radius:6px; margin-left:6px; font-size:1rem;">NG</span></h1>
-            <div class="spinner"></div>
-            <p style="font-size:0.7rem; letter-spacing:1px; opacity:0.8;">LOADING CLASS...</p>
-        </div>
+<!-- SPLASH -->
+<div id="splash">
+  <div style="text-align:center;color:#fff">
+    <div style="font-size:2.8rem;margin-bottom:6px">🎓</div>
+    <h1 style="font-size:2rem;font-weight:800;margin:0">goCBT
+      <span style="background:rgba(255,255,255,.2);padding:2px 8px;border-radius:6px;margin-left:6px;font-size:1rem;vertical-align:middle">NG</span>
+    </h1>
+    <div class="spin"></div>
+    <p style="font-size:.7rem;letter-spacing:1px;opacity:.8">LOADING CLASS...</p>
+  </div>
+</div>
+
+<!-- OFFLINE -->
+<div id="offline-screen">
+  <div style="font-size:3.5rem;margin-bottom:16px">📡</div>
+  <h2 style="font-size:1.1rem;margin-bottom:8px">You're Offline</h2>
+  <p style="color:var(--sub);font-size:.78rem;margin-bottom:24px;line-height:1.5;max-width:260px">Check your internet connection to continue using goAPPs.</p>
+  <button onclick="window.location.reload()" style="background:var(--grad);color:#fff;border:none;padding:13px 30px;border-radius:12px;font-size:.82rem;font-weight:800;cursor:pointer">Reload Page</button>
+</div>
+
+<div id="toast-el" class="toast"></div>
+
+<!-- PUSH NOTIFICATION -->
+<div id="push-notif">
+  <div class="notif-ico">🎓</div>
+  <div>
+    <div class="notif-ttl" id="notif-ttl">goCBT</div>
+    <div class="notif-body" id="notif-body">Notification</div>
+  </div>
+  <button onclick="closePush()" style="margin-left:auto;color:var(--sub);font-size:1.1rem;background:none;border:none;cursor:pointer">×</button>
+</div>
+
+<!-- ══ DRAWER ══ -->
+<div id="drw-ov" class="drw-ov" onclick="closeDrw()"></div>
+<div id="drw" class="drw">
+  <div class="drw-head">
+    <button class="drw-x" onclick="closeDrw()">×</button>
+    <div class="drw-av"><img src="https://i.pravatar.cc/100?img=7" alt="" onerror="this.style.display='none';this.parentElement.textContent='🎓'"></div>
+    <div>
+      <div class="drw-name" id="d-name">Learner</div>
+      <div class="drw-sub">@goCBT_NG</div>
     </div>
+  </div>
 
-    <div class="phone-container">
+  <div class="drw-wallet">
+    <div class="dw-lbl">Token Wallet</div>
+    <div class="dw-bal" id="d-wbal">₦1,000</div>
+    <div class="dw-row"><span>Bonus Credits</span><span>🏆 2.00gc</span></div>
+    <div class="dw-row"><span>💰 Total Token</span><span id="d-wtotal">₦1,000</span></div>
+  </div>
 
-        <!-- PUSH NOTIFICATION -->
-        <div id="push-notification">
-            <div style="background:var(--primary); color:#062c1e; width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.85rem;">G</div>
-            <div style="flex:1;">
-                <div id="notify-title" style="font-size:0.75rem; font-weight:800; color:var(--primary);">goCBT</div>
-                <div id="notify-body"  style="font-size:0.65rem; opacity:0.8;">Notification</div>
-            </div>
+  <div class="drw-nav">
+    <div class="dn" onclick="location.href='https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/[practice]class_selector.html'"><span class="dn-ico">🧠</span>Practice Exam</div>
+    <div class="dn" onclick="location.href='https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/[EnterClass]class_selector.html'"><span class="dn-ico">📝</span>Enter Class</div>
+    <div class="dn" onclick="location.href='https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/result_checker.html'"><span class="dn-ico">📬</span>Result Checker</div>
+    <div class="dn" onclick="location.href='https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/timetable.html'"><span class="dn-ico">🗓️</span>Timetable</div>
+    <div class="dn" onclick="location.href='https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/tasks.html'"><span class="dn-ico">📂</span>Class Task</div>
+    <div class="dn" onclick="location.href='https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/settings.html'"><span class="dn-ico">⚙️</span>Settings</div>
+    <div class="dn" onclick="location.href='https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/login.html'"><span class="dn-ico">🔐</span>Facilitator Login</div>
+    <div class="dn" onclick="openMod('m-topup');closeDrw()"><span class="dn-ico">➕</span>Top-up Tokens</div>
+  </div>
+
+  <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/pin_purchase.html" class="drw-pin-btn">🔢 Buy Study PIN</a>
+
+  <div class="drw-foot">
+    <div class="drw-foot-lbl">Admin Support</div>
+    <a href="https://wa.me/2348157505037" target="_blank" class="drw-wa">📲 Contact Admin on WhatsApp</a>
+  </div>
+</div>
+
+<!-- ══ HEADER ══ -->
+<header class="hdr">
+  <div class="hdr-l">
+    <button class="ham" id="ham" onclick="toggleDrw()"><span></span><span></span><span></span></button>
+    <span class="hdr-logo">🎓 goCBT</span>
+  </div>
+  <div class="hdr-r">
+    <span class="hpill hp-str" id="streak-el">🔥 1d</span>
+    <span class="hpill hp-xp" id="xp-el">⚡ 0 XP</span>
+    <div class="hdr-av" onclick="location.href='https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/settings.html'">
+      <img src="https://i.pravatar.cc/100?img=7" alt="" onerror="this.style.display='none';this.parentElement.textContent='👤'">
+    </div>
+  </div>
+</header>
+
+<!-- ══ RSS TICKER ══ -->
+<div class="ticker-wrap">
+  <div class="ticker-track" id="ticker-track">
+    <!-- items duplicated inside JS for infinite loop -->
+  </div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div class="main" style="padding:15px 15px 10px">
+
+  <!-- Balance Card -->
+  <div class="bal-card" id="bal-card">
+    <div class="bc-wlc">Welcome to Class,</div>
+    <div class="bc-name" id="bc-name">Learner 👋</div>
+    <div class="bc-row"><span>Balance</span><span id="bc-bal">₦***.00</span></div>
+    <div class="bc-row"><span>Bonus</span><span>🏆 2.00gc</span></div>
+    <div class="bc-total">
+      <span class="bc-tlbl">💰 Total Token</span>
+      <span class="bc-tval" id="bc-total">₦1,000</span>
+    </div>
+    <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/balance.html" class="bc-add">+</a>
+  </div>
+
+  <!-- ══ IMAGE BANNER SLIDER ══ -->
+  <div class="banner-wrap" id="banner-wrap">
+    <button class="banner-arrow prev" onclick="bannerMove(-1)">‹</button>
+    <button class="banner-arrow next" onclick="bannerMove(1)">›</button>
+    <div class="banner-track" id="banner-track">
+      <div class="banner-slide bs-color-1">
+        <div class="bs-overlay">
+          <span class="bs-tag">🔥 NEW</span>
+          <div class="bs-title">JAMB 2026 Practice Now</div>
+          <div class="bs-sub">Over 10,000 past questions · AI-powered</div>
         </div>
-
-        <!-- OFFLINE SCREEN -->
-        <div id="offline-screen">
-            <div style="font-size:3.5rem; margin-bottom:16px;">📡</div>
-            <h2 style="color:var(--text); font-size:1.1rem; margin-bottom:8px;">You're Offline</h2>
-            <p style="color:var(--text2); font-size:0.78rem; margin-bottom:24px; line-height:1.5;">Check your internet connection to continue using goAPPs.</p>
-            <button class="btn-action btn-primary" style="width:180px;" onclick="window.location.reload()">Reload Page</button>
+      </div>
+      <div class="banner-slide bs-color-2">
+        <div class="bs-overlay">
+          <span class="bs-tag">📝 WAEC</span>
+          <div class="bs-title">WAEC Prep — Mock Exams Live</div>
+          <div class="bs-sub">Complete all subjects in one platform</div>
         </div>
-
-        <!-- MENU OVERLAY -->
-        <div id="menu-overlay" onclick="toggleMenu()"></div>
-
-        <!-- SIDE MENU -->
-        <div id="side-menu">
-            <div style="display:flex; align-items:center; gap:12px; margin-bottom:25px;">
-                <div style="width:45px; height:45px; border-radius:12px; background:var(--primary); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem; color:white;">🎓</div>
-                <div>
-                    <b style="color:var(--text); font-size:0.9rem;">Learner</b><br>
-                    <small style="color:var(--primary);">@goCBT_NG</small>
-                </div>
-            </div>
-
-            <div style="flex:1; overflow-y:auto; scrollbar-width:none;">
-                <small style="opacity:0.55; text-transform:uppercase; font-size:0.58rem; letter-spacing:1px; color:var(--text2);">Class Menu</small>
-                <div class="menu-item" onclick="location.href='https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/[practice]class_selector.html'"><span>🧠</span> Practice Exam</div>
-                <div class="menu-item" onclick="location.href='https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/[EnterClass]class_selector.html'"><span>📝</span> Enter Class</div>
-                <div class="menu-item" onclick="location.href='https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/result_checker.html'"><span>📬</span> Result Checker</div>
-                <div class="menu-item" onclick="location.href='https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/timetable.html'"><span>🗓️</span> Timetable</div>
-                <div class="menu-item" onclick="location.href='https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/tasks.html'"><span>📂</span> Class Task</div>
-
-                <div style="margin-top:18px;">
-                    <small style="opacity:0.55; text-transform:uppercase; font-size:0.58rem; letter-spacing:1px; color:var(--text2);">Settings</small>
-                    <div class="menu-item" style="justify-content:space-between;">
-                        <span>🌓 Light Mode</span>
-                        <label class="switch">
-                            <input type="checkbox" onchange="toggleTheme(this)">
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="menu-item" onclick="location.href='https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/settings.html'"><span>⚙️</span> Settings</div>
-                    <div class="menu-item" onclick="location.href='https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/login.html'"><span>🔐</span> Facilitator Login</div>
-                </div>
-            </div>
-
-            <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/pin_purchase.html"
-               style="display:flex; justify-content:center; align-items:center; gap:8px; width:100%; padding:14px; border-radius:12px; background:var(--primary); color:#062c1e; font-weight:800; font-size:0.85rem; text-decoration:none; margin-top:auto; box-sizing:border-box;">
-                🔢 Buy Study PIN
-            </a>
+      </div>
+      <div class="banner-slide bs-color-3">
+        <div class="bs-overlay">
+          <span class="bs-tag">💳 PIN</span>
+          <div class="bs-title">Get Your Study PIN Today</div>
+          <div class="bs-sub">Unlimited access for the full term</div>
         </div>
+      </div>
+      <div class="banner-slide bs-color-4">
+        <div class="bs-overlay">
+          <span class="bs-tag">🏆 RESULT</span>
+          <div class="bs-title">Check Your CBT Results Instantly</div>
+          <div class="bs-sub">Real-time grading · Detailed breakdown</div>
+        </div>
+      </div>
+    </div>
+    <div class="banner-dots" id="banner-dots"></div>
+  </div>
 
-        <!-- HEADER -->
-        <header>
-            <div class="menu-icon" onclick="toggleMenu()"></div>
-            <div style="font-weight:800; font-size:1rem;">🎓 goCBT</div>
-            <div class="user-avatar"><img src="https://i.pravatar.cc/100" alt="user"></div>
-        </header>
+  <!-- Info Banner -->
+  <div class="info-banner">
+    <span style="font-size:1.4rem;flex-shrink:0">ℹ️</span>
+    <p>Enjoy millions of educational materials, exam prep resources, and live class support — all in one place.</p>
+  </div>
 
-        <!-- MAIN SCROLL -->
-        <div class="main-scroll">
+  <!-- Apply Card -->
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLSf8PxRtz4MWmYk4ZdS9uBSf6eh224_HjQfUQibxhqBL46I2pw/viewform?usp=sharing" class="apply-card">
+    <div class="apply-icon">📋</div>
+    <div>
+      <b>Apply to Study</b>
+      <small>Register for any examination and pass with flying colours.</small>
+    </div>
+    <span class="apply-arr">›</span>
+  </a>
 
-            <!-- BALANCE CARD -->
-            <div class="balance-card">
-                <div class="balance-label">Welcome to Class</div>
-                <div class="balance-name">Learner 👋</div>
-                <div class="balance-row"><span>Balance</span><span>₦***.00</span></div>
-                <div class="balance-row"><span>Bonus</span><span>🏆 2.00 gc</span></div>
-                <div class="balance-total">
-                    <small>💰 Total Token</small>
-                    <span>₦1,000</span>
-                </div>
-                <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/balance.html" class="balance-plus">+</a>
-            </div>
+  <!-- Service Grid -->
+  <div class="sec-hdr"><span class="sec-ttl">Select an Option</span></div>
+  <div class="svc-grid">
 
-            <!-- INFO BANNER -->
-            <div class="info-banner">
-                <span style="font-size:1.4rem; flex-shrink:0;">ℹ️</span>
-                <p>Enjoy millions of educational materials, exam prep resources, and live class support — all in one place.</p>
-            </div>
+    <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/[practice]class_selector.html" class="svc-item hi">
+      <span class="s-ico">🧠</span>
+      <div><span class="s-name">Practice Exam</span><span class="s-sub">Start Test</span></div>
+    </a>
 
-            <!-- APPLY FULL-WIDTH -->
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSf8PxRtz4MWmYk4ZdS9uBSf6eh224_HjQfUQibxhqBL46I2pw/viewform?usp=sharing&ouid=107636568442282440326"
-               class="apply-card">
-                <div class="apply-icon">📋</div>
-                <div>
-                    <b>Apply to Study</b>
-                    <small>Register for any examination and pass with flying colours.</small>
-                </div>
-                <span style="margin-left:auto; font-size:1.2rem; opacity:0.7;">›</span>
-            </a>
+    <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/[EnterClass]class_selector.html" class="svc-item">
+      <span class="s-ico">📝</span>
+      <div><span class="s-name">Enter Class</span><span class="s-sub">Start Learning</span></div>
+    </a>
 
-            <!-- SERVICE GRID -->
-            <div class="section-title">Select an Option</div>
-            <div class="grid">
+    <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/result_checker.html" class="svc-item">
+      <span class="s-ico">📬</span>
+      <div><span class="s-name">Result Checker</span><span class="s-sub">Check Now</span></div>
+    </a>
 
-                <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/[practice]class_selector.html" style="text-decoration:none; color:inherit;">
-                    <div class="service-item highlight">
-                        <span class="s-icon">🧠</span>
-                        <div><b>Practice Exam</b><small>Start Test</small></div>
-                    </div>
-                </a>
+    <a href="https://official-gocbt.github.io/pin_purchase/practice_pin_purchase.html" class="svc-item hi">
+      <span class="s-ico">🔢</span>
+      <div><span class="s-name">Purchase PIN</span><span class="s-sub">Buy NOW</span></div>
+    </a>
 
-                <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/[EnterClass]class_selector.html" style="text-decoration:none; color:inherit;">
-                    <div class="service-item">
-                        <span class="s-icon">📝</span>
-                        <div><b>Enter Class</b><small>Start Learning</small></div>
-                    </div>
-                </a>
+    <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/tasks.html" class="svc-item hi">
+      <span class="s-ico">📂</span>
+      <div><span class="s-name">Class Task</span><span class="s-sub">Submit NOW</span></div>
+    </a>
 
-                <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/result_checker.html" style="text-decoration:none; color:inherit;">
-                    <div class="service-item">
-                        <span class="s-icon">📬</span>
-                        <div><b>Result Checker</b><small>Check Now</small></div>
-                    </div>
-                </a>
+    <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/timetable.html" class="svc-item">
+      <span class="s-ico">🗓️</span>
+      <div><span class="s-name">Timetable</span><span class="s-sub">Check Schedule</span></div>
+    </a>
 
-                <a href="https://official-gocbt.github.io/pin_purchase/practice_pin_purchase.html" style="text-decoration:none; color:inherit;">
-                    <div class="service-item highlight">
-                        <span class="s-icon">🔢</span>
-                        <div><b>Purchase PIN</b><small>Buy NOW</small></div>
-                    </div>
-                </a>
+    <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/login.html" class="svc-item hi">
+      <span class="s-ico">🔐</span>
+      <div><span class="s-name">Facilitator</span><span class="s-sub">Admin Login</span></div>
+    </a>
 
-                <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/tasks.html" style="text-decoration:none; color:inherit;">
-                    <div class="service-item highlight">
-                        <span class="s-icon">📂</span>
-                        <div><b>Class Task</b><small>Submit NOW</small></div>
-                    </div>
-                </a>
+    <a href="https://wa.me/2348157505037?text=Hello%20goSUPPORT" class="svc-item hi">
+      <span class="s-ico">🤝</span>
+      <div><span class="s-name">goSUPPORT</span><span class="s-sub">Get Help</span></div>
+    </a>
 
-                <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/timetable.html" style="text-decoration:none; color:inherit;">
-                    <div class="service-item">
-                        <span class="s-icon">🗓️</span>
-                        <div><b>Timetable</b><small>Check Schedule</small></div>
-                    </div>
-                </a>
+  </div>
 
-                <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/login.html" style="text-decoration:none; color:inherit;">
-                    <div class="service-item highlight">
-                        <span class="s-icon">🔐</span>
-                        <div><b>Facilitator</b><small>Admin Login</small></div>
-                    </div>
-                </a>
+  <!-- Promo Strip -->
+  <div class="promo-strip">
+    <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/pin_purchase.html" class="promo-btn">
+      🔢 Get your Study PIN now! →
+    </a>
+  </div>
 
-                <a href="https://wa.me/2348157505037?text=Hello%20goSUPPORT" style="text-decoration:none; color:inherit;">
-                    <div class="service-item highlight">
-                        <span class="s-icon">🤝</span>
-                        <div><b>goSUPPORT</b><small>Get Help</small></div>
-                    </div>
-                </a>
+</div><!-- /main -->
 
-            </div>
+<!-- ══ FULL-WIDTH BOTTOM NAV ══ -->
+<nav class="bnav">
+  <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/reward.html"   class="bn"><span class="bn-ico">🎁</span>Rewards</a>
+  <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/balance.html"  class="bn"><span class="bn-ico">💰</span>Wallet</a>
+  <a href="https://goapps-official.github.io/Welcome/" class="bn on"><span class="bn-ico">🏧</span>Home</a>
+  <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/transfer.html" class="bn"><span class="bn-ico">📊</span>Market</a>
+  <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/settings.html" class="bn"><span class="bn-ico">⚙️</span>Settings</a>
+</nav>
 
-            <!-- PROMO STRIP -->
-            <div style="text-align:center; margin: 18px 0 4px;">
-                <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/pin_purchase.html"
-                   style="display:inline-flex; align-items:center; gap:6px; background:var(--primary-dim); border:1px solid var(--primary); border-radius:30px; padding:8px 16px; text-decoration:none; color:var(--primary); font-size:0.72rem; font-weight:800;">
-                    🔢 Get your Study PIN now! →
-                </a>
-            </div>
+<!-- ══ MODAL: TOPUP ══ -->
+<div id="m-topup" class="mov">
+  <div class="modal">
+    <button class="mcl" onclick="closeMod('m-topup')">×</button>
+    <h3 style="margin-bottom:16px;font-size:.92rem">💳 Choose Top-up Method</h3>
+    <div class="meth" onclick="closeMod('m-topup');window.open('https://official-gocbt.github.io/pin_purchase/practice_pin_purchase.html','_blank')">
+      <span class="meth-ico">🔢</span>
+      <div class="meth-b"><b>Buy Study PIN</b><span>Purchase online and redeem instantly</span></div>
+    </div>
+    <div class="meth" onclick="closeMod('m-topup');window.open('https://wa.me/2348157505037?text=I%20want%20to%20purchase%20a%20goCBT%20PIN','_blank')">
+      <span class="meth-ico">💳</span>
+      <div class="meth-b"><b>Purchase via WhatsApp</b><span>Contact admin to buy a new PIN</span></div>
+    </div>
+    <p onclick="closeMod('m-topup')" style="text-align:center;margin-top:12px;font-size:.7rem;cursor:pointer;color:var(--sub)">Cancel</p>
+  </div>
+</div>
 
-        </div><!-- /.main-scroll -->
+<script>
+// ── HELPERS ──
+const el = id => document.getElementById(id);
+function openMod(id){el(id).classList.add('open')}
+function closeMod(id){el(id).classList.remove('open')}
+function showToast(msg){
+  const t=el('toast-el');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
 
-        <!-- NAV -->
-        <nav>
-            <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/reward.html">
-                <span>🎁</span>Rewards
-            </a>
-            <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/balance.html">
-                <span>💰</span>Wallet
-            </a>
-            <a href="https://goapps-official.github.io/Welcome/" class="active">
-                <span>🏧</span>Home
-            </a>
-            <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/transfer.html">
-                <span>📊</span>Market
-            </a>
-            <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/settings.html">
-                <span>⚙️</span>Settings
-            </a>
-        </nav>
+// ── SPLASH ──
+document.addEventListener('DOMContentLoaded',()=>{
+  setTimeout(()=>{
+    const s=el('splash');s.classList.add('hide');
+    setTimeout(()=>s.style.display='none',600);
+  },1400);
+});
 
-    </div><!-- /.phone-container -->
+// ── PUSH NOTIFICATION ──
+function pushNotif(title,body){
+  el('notif-ttl').textContent=title;
+  el('notif-body').textContent=body;
+  el('push-notif').classList.add('show');
+  if(navigator.vibrate) navigator.vibrate([50,30,50]);
+  setTimeout(()=>el('push-notif').classList.remove('show'),4500);
+}
+function closePush(){el('push-notif').classList.remove('show')}
 
-    <script>
-        // ── SPLASH ──────────────────────────────────────────────
-        document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(() => {
-                const s = document.getElementById('splash-screen');
-                s.style.opacity = '0';
-                setTimeout(() => s.style.display = 'none', 600);
-            }, 1400);
-        });
+// ── ONLINE / OFFLINE ──
+window.addEventListener('online',()=>{
+  el('offline-screen').classList.remove('show');
+  pushNotif('⚡ Connected','Connection restored!');
+});
+window.addEventListener('offline',()=>el('offline-screen').classList.add('show'));
+if(!navigator.onLine) el('offline-screen').classList.add('show');
 
-        // ── MENU ────────────────────────────────────────────────
-        function toggleMenu() {
-            document.getElementById('app-body').classList.toggle('menu-open');
-        }
+// ── DRAWER ──
+function toggleDrw(){
+  el('drw').classList.toggle('open');
+  el('drw-ov').classList.toggle('open');
+  el('ham').classList.toggle('open');
+}
+function closeDrw(){
+  el('drw').classList.remove('open');
+  el('drw-ov').classList.remove('open');
+  el('ham').classList.remove('open');
+}
 
-        // ── THEME ───────────────────────────────────────────────
-        function toggleTheme(el) {
-            const isLight = document.body.classList.toggle('light-mode');
-            const rect = el ? el.getBoundingClientRect() : { left: window.innerWidth/2, top: window.innerHeight/2, width: 0, height: 0 };
-            const ripple = document.createElement('div');
-            ripple.className = 'theme-ripple';
-            const size = 30;
-            ripple.style.cssText = `width:${size}px; height:${size}px; left:${rect.left + rect.width/2 - size/2}px; top:${rect.top + rect.height/2 - size/2}px; background:${isLight ? 'rgba(0,210,141,0.15)' : 'rgba(6,44,30,0.2)'};`;
-            document.body.appendChild(ripple);
-            setTimeout(() => ripple.remove(), 550);
-            const switches = document.querySelectorAll('input[onchange*="toggleTheme"]');
-            switches.forEach(s => s.checked = isLight);
-        }
+// ── WALLET DISPLAY ──
+(function(){
+  const w=parseInt(localStorage.getItem('gc_wallet')||'1000');
+  const name=localStorage.getItem('gc_name')||'Learner';
+  const fmt='₦'+w.toLocaleString();
+  el('bc-name').textContent=name+' 👋';
+  el('bc-bal').textContent=fmt;
+  el('bc-total').textContent=fmt;
+  el('d-wbal').textContent=fmt;
+  el('d-wtotal').textContent=fmt;
+  el('d-name').textContent=name;
+  const s=parseInt(localStorage.getItem('gc_streak')||'1');
+  el('streak-el').textContent='🔥 '+s+'d';
+})();
 
-        // ── PUSH NOTIFY ─────────────────────────────────────────
-        function triggerPushNotify(title, message) {
-            const el = document.getElementById('push-notification');
-            document.getElementById('notify-title').innerText = title;
-            document.getElementById('notify-body').innerText  = message;
-            el.classList.add('show');
-            if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
-            setTimeout(() => el.classList.remove('show'), 4000);
-        }
+// ── RSS TICKER ──
+const RSS_ITEMS=[
+  '📢 JAMB 2026 registration now open — Apply to Study today!',
+  '🏆 100+ students scored 300+ in last month\'s Practice Exam',
+  '🔢 New Study PINs available — buy yours now for full access',
+  '📬 WAEC 2026 timetable is now live — check yours under Timetable',
+  '🧠 Practice Mode updated with 5,000 new questions this week',
+  '📂 Submit your Class Task before the deadline — check Tasks tab',
+  '⚡ System upgrade complete — faster load times across all pages',
+  '🎓 Welcome to goCBT NG — your smart CBT learning companion!',
+  '📝 Enter Class feature now supports JSS 1 through SSS 3',
+  '🤝 Need help? Contact goSUPPORT on WhatsApp anytime',
+];
+(function buildTicker(){
+  const track=el('ticker-track');
+  // double for seamless loop
+  const all=[...RSS_ITEMS,...RSS_ITEMS];
+  track.innerHTML=all.map(t=>`
+    <span class="ticker-item">
+      <span class="ticker-dot"></span>${t}
+    </span>`).join('');
+})();
 
-        // ── CONNECTION MONITORING ────────────────────────────────
-        function setOnline() {
-            document.getElementById('offline-screen').style.display = 'none';
-            triggerPushNotify('⚡ Connected', 'Connection restored!');
-        }
-        function setOffline() {
-            document.getElementById('offline-screen').style.display = 'flex';
-        }
+// ── IMAGE BANNER SLIDER ──
+let bannerIdx=0;
+const SLIDE_COUNT=4;
 
-        window.addEventListener('online',  setOnline);
-        window.addEventListener('offline', setOffline);
-        if (!navigator.onLine) setOffline();
+function buildDots(){
+  const wrap=el('banner-dots');
+  wrap.innerHTML='';
+  for(let i=0;i<SLIDE_COUNT;i++){
+    const d=document.createElement('div');
+    d.className='b-dot'+(i===0?' on':'');
+    d.onclick=(()=>{const ii=i;return()=>goSlide(ii);})();
+    wrap.appendChild(d);
+  }
+}
+function goSlide(idx){
+  bannerIdx=(idx+SLIDE_COUNT)%SLIDE_COUNT;
+  el('banner-track').style.transform=`translateX(-${bannerIdx*100}%)`;
+  document.querySelectorAll('.b-dot').forEach((d,i)=>d.classList.toggle('on',i===bannerIdx));
+}
+function bannerMove(dir){goSlide(bannerIdx+dir)}
 
-        // ── PWA INSTALL ──────────────────────────────────────────
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-        });
+buildDots();
+// auto-advance every 4 s
+let bannerTimer=setInterval(()=>bannerMove(1),4000);
+el('banner-wrap').addEventListener('touchstart',()=>clearInterval(bannerTimer),{passive:true});
 
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').catch(() => {});
-            });
-        }
-    </script>
+// touch/swipe for banner
+(function(){
+  let sx=0;
+  const track=el('banner-track');
+  track.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;},{passive:true});
+  track.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-sx;
+    if(Math.abs(dx)>40) bannerMove(dx<0?1:-1);
+  },{passive:true});
+})();
+
+// ── WELCOME PUSH after splash ──
+setTimeout(()=>{
+  pushNotif('🎓 Welcome back!','Your study streak is active. Keep it up!');
+},2200);
+
+// ── PWA ──
+let dp;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;});
+if('serviceWorker' in navigator)
+  window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+</script>
 </body>
 </html>
