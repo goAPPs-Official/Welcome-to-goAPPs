@@ -1,386 +1,647 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OPay Transfer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --opay-green: #00d28d;
-            --text-dark: #333;
-            --text-light: #888;
-            --bg-gray: #f8f9fb;
-            --card-bg: white;
-            --nav-bg: white;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>↪️ goAPPs Transfer</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#00d28d;--purple:#4b44e0;
+  --grad:linear-gradient(135deg,#00d28d 0%,#4b44e0 100%);
+  --bg:#0f0f0f;--surface:#1a1a1a;--card:#222;--card2:#2a2a2a;
+  --border:#2e2e2e;--text:#f0f0f0;--sub:#888;--danger:#ff4d4d;
+  --glow:0 4px 24px rgba(0,210,141,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--green);border-radius:2px}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none}
 
-        .dark-theme {
-            --bg-gray: #121212;
-            --card-bg: #1e1e1e;
-            --text-dark: #ffffff;
-            --text-light: #b0b0b0;
-            --nav-bg: #1e1e1e;
-        }
+/* ══ PAGE LOAD BLUR OVERLAY ══ */
+#page-loader{
+  position:fixed;inset:0;background:rgba(15,15,15,.92);
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  z-index:9999;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:18px;
+  transition:opacity .5s ease,visibility .5s ease
+}
+#page-loader.gone{opacity:0;visibility:hidden;pointer-events:none}
+.loader-lock{font-size:3.2rem;animation:lockBounce 1.2s ease-in-out infinite}
+@keyframes lockBounce{
+  0%,100%{transform:scale(1) rotate(0deg)}
+  25%{transform:scale(1.15) rotate(-8deg)}
+  75%{transform:scale(1.15) rotate(8deg)}
+}
+.loader-ring{
+  width:54px;height:54px;border-radius:50%;
+  border:3px solid var(--border);
+  border-top-color:var(--green);
+  animation:spin .9s linear infinite
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-txt{font-size:.78rem;font-weight:700;color:var(--sub);letter-spacing:.8px;text-transform:uppercase}
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; transition: background 0.3s, color 0.3s; }
+/* ══ DRAWER ══ */
+.drw-ov{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:800;display:none;backdrop-filter:blur(4px)}
+.drw-ov.open{display:block}
+.drw{position:fixed;left:-295px;top:0;bottom:0;width:295px;background:var(--surface);
+  z-index:900;transition:.28s cubic-bezier(.4,0,.2,1);overflow-y:auto;border-right:1px solid var(--border)}
+.drw.open{left:0;box-shadow:8px 0 36px rgba(0,0,0,.6)}
+.drw-head{padding:28px 18px 20px;background:var(--grad);display:flex;align-items:center;gap:14px;position:relative}
+.drw-x{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.18);color:#fff;
+  width:28px;height:28px;border-radius:50%;font-size:1.1rem;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;border:none;line-height:1}
+.drw-av{width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.22);
+  border:2.5px solid rgba(255,255,255,.55);display:flex;align-items:center;
+  justify-content:center;font-size:1.35rem;overflow:hidden;flex-shrink:0}
+.drw-av img{width:100%;height:100%;object-fit:cover}
+.drw-name{font-size:.98rem;font-weight:800;color:#fff}
+.drw-sub{font-size:.63rem;color:rgba(255,255,255,.74);margin-top:2px}
+.drw-wallet{margin:14px 15px;padding:14px 16px;background:var(--grad);border-radius:15px;color:#fff}
+.dw-lbl{font-size:.58rem;letter-spacing:.6px;text-transform:uppercase;opacity:.82;font-weight:700;margin-bottom:3px}
+.dw-bal{font-size:1.35rem;font-weight:800;font-family:'JetBrains Mono',monospace}
+.dw-row{display:flex;justify-content:space-between;font-size:.67rem;opacity:.85;margin-top:5px}
+.drw-nav{padding:8px 0}
+.dn{display:flex;align-items:center;gap:13px;padding:13px 18px;font-size:.82rem;font-weight:600;
+  color:var(--sub);cursor:pointer;border-bottom:1px solid var(--border);transition:.15s}
+.dn:hover,.dn.cur{color:var(--green);background:rgba(0,210,141,.05)}
+.dn-ico{font-size:1rem;width:22px;text-align:center;flex-shrink:0}
+.drw-foot{padding:14px 18px;border-top:1px solid var(--border)}
+.drw-foot-lbl{font-size:.6rem;color:var(--sub);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.drw-wa{display:flex;align-items:center;gap:8px;color:#25d366;font-weight:700;font-size:.74rem;margin-bottom:12px}
+.drw-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.drw-btn{display:block;text-align:center;padding:9px;border-radius:10px;font-size:.65rem;font-weight:800;text-decoration:none}
+.drw-btn-g{background:rgba(0,210,141,.08);border:1px solid rgba(0,210,141,.2);color:var(--green)}
+.drw-btn-p{background:rgba(75,68,224,.08);border:1px solid rgba(75,68,224,.2);color:#a5b4fc}
 
-        body { background-color: #121212; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+/* ══ HEADER ══ */
+.hdr{position:sticky;top:0;z-index:400;background:var(--bg);border-bottom:1px solid var(--border);
+  padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.hdr-l{display:flex;align-items:center;gap:10px}
+.ham{display:flex;flex-direction:column;gap:5px;padding:4px;cursor:pointer}
+.ham span{display:block;height:2px;border-radius:2px;background:var(--green);transition:.28s}
+.ham span:nth-child(1){width:22px}
+.ham span:nth-child(2){width:15px}
+.ham span:nth-child(3){width:22px}
+.ham.open span:nth-child(1){transform:translateY(7px) rotate(45deg);width:22px}
+.ham.open span:nth-child(2){opacity:0;width:22px}
+.ham.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.back-btn{display:flex;align-items:center;gap:5px;color:var(--green);font-size:.78rem;font-weight:700;
+  padding:5px 10px;border-radius:9px;border:1px solid rgba(0,210,141,.25);cursor:pointer;transition:.15s}
+.back-btn:hover{background:rgba(0,210,141,.07)}
+.hdr-logo{font-size:.96rem;font-weight:800;letter-spacing:-.2px;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hdr-r{display:flex;align-items:center;gap:9px}
+.hpill{padding:5px 11px;border-radius:16px;font-size:.62rem;font-weight:700}
+.hp-str{background:rgba(0,210,141,.1);border:1px solid rgba(0,210,141,.25);color:var(--green)}
+.hp-xp{background:rgba(75,68,224,.12);border:1px solid rgba(75,68,224,.3);color:#a5b4fc}
+.hdr-av{width:32px;height:32px;border-radius:50%;background:var(--grad);display:flex;align-items:center;
+  justify-content:center;font-size:.82rem;font-weight:800;color:#fff;overflow:hidden;flex-shrink:0;cursor:pointer}
+.hdr-av img{width:100%;height:100%;object-fit:cover}
 
-        .phone-container {
-            width: 375px;
-            height: 750px;
-            background: var(--bg-gray);
-            border-radius: 40px;
-            overflow: hidden;
-            position: relative;
-            border: 8px solid #333;
-            display: flex;
-            flex-direction: column;
-        }
+/* ══ MAIN SCROLL ══ */
+.main{padding:15px 15px 80px}
 
-        header { padding: 50px 20px 20px; background: var(--card-bg); text-align: center; border-bottom: 1px solid rgba(0,0,0,0.05); }
-        header h2 { font-size: 1.1rem; color: var(--text-dark); }
+/* ══ SECTION HEADER ══ */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin:0 0 13px}
+.sec-ttl{font-size:.88rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px}
+.sec-ttl::before{content:'';width:3px;height:16px;background:var(--green);border-radius:2px;display:block}
 
-        .main-content { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 80px; }
+/* ══ QUICK SEND ROW ══ */
+.qs-row{display:flex;gap:14px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none;-ms-overflow-style:none}
+.qs-row::-webkit-scrollbar{display:none}
+.qs-item{
+  display:flex;flex-direction:column;align-items:center;gap:7px;
+  min-width:62px;cursor:pointer;
+  animation:fadeUp .4s ease both
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.qs-item:nth-child(1){animation-delay:.05s}
+.qs-item:nth-child(2){animation-delay:.1s}
+.qs-item:nth-child(3){animation-delay:.15s}
+.qs-item:nth-child(4){animation-delay:.2s}
+.qs-item:nth-child(5){animation-delay:.25s}
+.qs-av{
+  width:54px;height:54px;border-radius:50%;
+  background:var(--card);border:2px solid rgba(0,210,141,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;transition:.18s;position:relative;overflow:hidden
+}
+.qs-av::after{
+  content:'';position:absolute;inset:0;border-radius:50%;
+  background:rgba(0,210,141,.15);opacity:0;transition:.18s
+}
+.qs-item:hover .qs-av::after{opacity:1}
+.qs-item:active .qs-av{transform:scale(.92)}
+.qs-av.add{border-style:dashed;border-color:var(--border);color:var(--sub)}
+.qs-name{font-size:.62rem;font-weight:700;color:var(--sub);text-align:center;width:62px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-        /* QUICK SEND SECTION */
-        .section-title { font-size: 0.9rem; font-weight: 700; color: var(--text-dark); margin-bottom: 15px; }
-        
-        .recent-list { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
-        .recent-list::-webkit-scrollbar { display: none; }
+/* ══ TRANSFER GRID ══ */
+.tr-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.tr-card{
+  background:var(--card);padding:17px 15px;border-radius:16px;
+  border:1px solid var(--border);cursor:pointer;transition:.18s;
+  text-decoration:none;display:block;
+  animation:fadeUp .5s ease both
+}
+.tr-card:nth-child(1){animation-delay:.1s}
+.tr-card:nth-child(2){animation-delay:.15s}
+.tr-card:nth-child(3){animation-delay:.2s}
+.tr-card:nth-child(4){animation-delay:.25s}
+.tr-card:hover{border-color:rgba(0,210,141,.3);background:rgba(0,210,141,.04);transform:translateY(-2px)}
+.tr-card:active{transform:scale(.97)}
+.tr-ico{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;
+  justify-content:center;font-size:1.15rem;margin-bottom:11px}
+.tr-card b{font-size:.82rem;color:var(--text);display:block;margin-bottom:3px}
+.tr-card small{font-size:.62rem;color:var(--sub)}
 
-        .recent-item { text-align: center; min-width: 65px; }
-        .recent-avatar { 
-            width: 55px; height: 55px; border-radius: 50%; background: #eee; 
-            margin-bottom: 8px; border: 2px solid var(--opay-green);
-            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
-        }
-        .recent-name { font-size: 0.65rem; color: var(--text-dark); font-weight: 600; }
+/* ══ LIMIT BAR ══ */
+.limit-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;margin-bottom:16px}
+.limit-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.limit-lbl{font-size:.82rem;font-weight:800;color:var(--text)}
+.limit-val{font-size:.7rem;color:var(--green);font-weight:700;font-family:'JetBrains Mono',monospace}
+.limit-sub{font-size:.64rem;color:var(--sub);margin-bottom:10px}
+.limit-bar{height:7px;background:var(--border);border-radius:4px;overflow:hidden}
+.limit-fill{height:100%;background:var(--grad);border-radius:4px;width:40%;
+  box-shadow:0 0 8px rgba(0,210,141,.4)}
 
-        /* TRANSFER OPTIONS */
-        .transfer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
-        
-        .transfer-card {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 20px;
-            text-align: left;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
-            text-decoration: none;
-        }
-        .icon-box { 
-            width: 40px; height: 40px; border-radius: 12px; 
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 12px; font-size: 1.2rem;
-        }
+/* ══ RECENT TRANSACTIONS ══ */
+.tx-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--card);
+  border:1px solid var(--border);border-radius:13px;margin-bottom:8px}
+.tx-ico{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:1rem;flex-shrink:0}
+.tx-body{flex:1;min-width:0}
+.tx-name{font-size:.8rem;font-weight:700;color:var(--text)}
+.tx-date{font-size:.62rem;color:var(--sub);margin-top:2px}
+.tx-amt{font-size:.82rem;font-weight:800;font-family:'JetBrains Mono',monospace}
+.tx-out{color:var(--danger)}
+.tx-in{color:var(--green)}
 
-        .transfer-card b { font-size: 0.85rem; color: var(--text-dark); display: block; }
-        .transfer-card small { font-size: 0.65rem; color: var(--text-light); }
+/* ══ BOTTOM NAV ══ */
+.bnav{position:fixed;bottom:0;left:0;right:0;height:64px;background:var(--surface);
+  border-top:1px solid var(--border);display:flex;align-items:stretch;z-index:300;
+  padding-bottom:env(safe-area-inset-bottom,0)}
+.bn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:3px;cursor:pointer;color:var(--sub);font-size:.58rem;font-weight:700;
+  transition:.15s;text-decoration:none;background:none;border:none;padding:0}
+.bn.on,.bn:hover{color:var(--green)}
+.bn-ico{font-size:1.1rem;display:block}
 
-        /* NAV STYLES */
-        nav { display: flex; justify-content: space-around; padding: 12px 0; background: var(--nav-bg); border-top: 1px solid rgba(0,0,0,0.1); position: absolute; bottom: 0; width: 100%; }
-        .nav-link { text-decoration: none; color: var(--text-light); text-align: center; font-size: 0.6rem; flex: 1; display: flex; flex-direction: column; align-items: center; }
-        .nav-link.active { color: var(--opay-green); }
+/* ══ MODALS ══ */
+.mov{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;z-index:1000;
+  align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
+.mov.open{display:flex}
 
-        /* SEARCH BAR */
-        .search-container {
-            background: var(--input-bg);
-            border-radius: 12px;
-            padding: 10px 15px;
-            display: flex;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-        .search-input {
-            background: transparent;
-            border: none;
-            outline: none;
-            color: var(--text-dark);
-            margin-left: 10px;
-            width: 100%;
-            font-size: 0.85rem;
-        }
+/* send transfer sheet */
+.send-sheet{
+  background:var(--surface);width:100%;max-width:480px;
+  border-radius:22px 22px 0 0;padding:24px 20px 36px;
+  border-top:1px solid var(--border);
+  animation:slideUp .3s cubic-bezier(.4,0,.2,1)
+}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.sheet-drag{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 20px}
+.send-av-big{width:64px;height:64px;border-radius:50%;background:var(--card);
+  border:2.5px solid rgba(0,210,141,.4);display:flex;align-items:center;
+  justify-content:center;font-size:1.6rem;margin:0 auto 10px}
+.send-name-big{text-align:center;font-size:1rem;font-weight:800;margin-bottom:3px}
+.send-sub{text-align:center;font-size:.68rem;color:var(--sub);margin-bottom:22px}
 
-        /* QUICK SEND */
-        .section-title { font-size: 0.9rem; font-weight: 700; color: var(--text-dark); margin-bottom: 15px; }
-        .recent-list { display: flex; gap: 15px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
-        .recent-list::-webkit-scrollbar { display: none; }
-        .recent-item { text-align: center; min-width: 65px; cursor: pointer; }
-        .recent-avatar { 
-            width: 55px; height: 55px; border-radius: 50%; background: #eee; 
-            margin-bottom: 8px; border: 2px solid var(--opay-green);
-            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
-        }
-        .recent-name { font-size: 0.65rem; color: var(--text-dark); font-weight: 600; }
+.sinp-lbl{font-size:.68rem;font-weight:700;color:var(--sub);margin-bottom:5px;display:block}
+.sinp{width:100%;padding:11px 14px;border-radius:12px;border:1.5px solid var(--border);
+  background:rgba(255,255,255,.04);color:var(--text);font-size:.88rem;
+  font-family:'Inter',sans-serif;outline:none;margin-bottom:13px;transition:.2s}
+.sinp:focus{border-color:rgba(0,210,141,.5);background:rgba(0,210,141,.03)}
+.sinp::placeholder{color:var(--sub)}
+.sinp-prefix{display:flex;align-items:center;border-radius:12px;border:1.5px solid var(--border);
+  background:rgba(255,255,255,.04);margin-bottom:13px;overflow:hidden;transition:.2s}
+.sinp-prefix:focus-within{border-color:rgba(0,210,141,.5);background:rgba(0,210,141,.03)}
+.sinp-tag{padding:11px 12px;font-size:.78rem;font-weight:700;color:var(--green);
+  border-right:1px solid var(--border);white-space:nowrap;background:rgba(0,210,141,.06)}
+.sinp-inner{flex:1;padding:11px 13px;background:transparent;border:none;outline:none;
+  color:var(--text);font-size:.88rem;font-family:'JetBrains Mono',monospace;width:100%}
+.sinp-inner::placeholder{color:var(--sub);font-family:'Inter',sans-serif;font-size:.82rem}
 
-        /* TRANSFER GRID */
-        .transfer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 10px; }
-        .transfer-card {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 20px;
-            text-align: left;
-            text-decoration: none;
-        }
-        .icon-box { 
-            width: 40px; height: 40px; border-radius: 12px; 
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 12px; font-size: 1.2rem;
-        }
-        .transfer-card b { font-size: 0.85rem; color: var(--text-dark); display: block; }
-        .transfer-card small { font-size: 0.65rem; color: var(--text-light); }
+/* amount quick buttons */
+.amt-quick{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap}
+.aq-btn{padding:6px 13px;background:rgba(0,210,141,.08);border:1px solid rgba(0,210,141,.18);
+  color:var(--green);border-radius:8px;font-size:.68rem;font-weight:800;cursor:pointer;transition:.15s}
+.aq-btn:hover{background:rgba(0,210,141,.15)}
 
-        /* NAV */
-        nav { display: flex; justify-content: space-around; padding: 12px 0; background: var(--nav-bg); border-top: 1px solid rgba(0,0,0,0.1); position: absolute; bottom: 0; width: 100%; }
-        .nav-link { text-decoration: none; color: var(--text-light); text-align: center; font-size: 0.6rem; flex: 1; display: flex; flex-direction: column; align-items: center; }
-        .nav-link.active { color: var(--opay-green); }
+.btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
+.btn-confirm{padding:13px;background:var(--grad);border:none;border-radius:13px;
+  color:#fff;font-size:.82rem;font-weight:800;cursor:pointer;display:flex;
+  align-items:center;justify-content:center;gap:7px;transition:.15s}
+.btn-confirm:hover{opacity:.9}
+.btn-cancel{padding:13px;background:rgba(255,255,255,.04);border:1px solid var(--border);
+  border-radius:13px;color:var(--sub);font-size:.82rem;font-weight:800;cursor:pointer;transition:.15s}
+.btn-cancel:hover{background:rgba(255,255,255,.08);color:var(--text)}
 
-        /* MODAL STYLES */
-        #modalOverlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--modal-overlay);
-            display: none; justify-content: center; align-items: flex-end;
-            z-index: 1000;
-        }
+/* success flash */
+.success-flash{
+  position:fixed;inset:0;background:var(--bg);z-index:2000;
+  display:none;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;padding:32px
+}
+.success-flash.show{display:flex;animation:flashIn .35s ease}
+@keyframes flashIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+.sf-ring{
+  width:80px;height:80px;border-radius:50%;
+  background:rgba(0,210,141,.12);border:2px solid rgba(0,210,141,.4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:2.2rem;margin-bottom:18px;
+  animation:pulseGlow 1.6s ease-in-out infinite
+}
+@keyframes pulseGlow{
+  0%,100%{box-shadow:0 0 0 0 rgba(0,210,141,.3)}
+  50%{box-shadow:0 0 0 14px rgba(0,210,141,0)}
+}
 
-        .confirm-modal {
-            background: var(--card-bg);
-            width: 100%;
-            padding: 30px 20px;
-            border-top-left-radius: 30px;
-            border-top-right-radius: 30px;
-            text-align: center;
-            animation: slideUp 0.3s ease-out;
-        }
+/* ══ TOAST ══ */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(14px);
+  background:var(--card2);border:1px solid var(--green);color:var(--green);
+  padding:10px 20px;border-radius:20px;font-size:.74rem;font-weight:700;
+  z-index:9999;opacity:0;transition:.28s;white-space:nowrap;
+  box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-        .confirm-avatar { width: 70px; height: 70px; border-radius: 50%; background: #eee; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
-        
-        .btn-confirm { background: var(--opay-green); color: white; width: 100%; padding: 15px; border-radius: 15px; border: none; font-weight: 800; margin-top: 20px; cursor: pointer; }
-        .btn-cancel { background: transparent; color: var(--text-light); width: 100%; padding: 10px; border: none; font-size: 0.85rem; margin-top: 10px; cursor: pointer; }
-
-        /* UPDATED HEADER STYLES */
-    .sub-page-header {
-        padding: 50px 20px 20px;
-        background: var(--card-bg);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border-bottom: 1px solid rgba(0,0,0,0.05);
-    }
-
-    .back-btn {
-        width: 40px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: var(--input-bg);
-        border-radius: 50%;
-        cursor: pointer;
-        font-size: 1.2rem;
-        color: var(--text-dark);
-        border: none;
-    }
-
-    .header-title {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: var(--text-dark);
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-
-    .placeholder-right { width: 40px; } /* Keeps the title centered */
-
-    </style>
+/* pin modal */
+.pin-modal{background:var(--surface);width:100%;max-width:480px;
+  border-radius:22px 22px 0 0;padding:24px 20px 36px;
+  border-top:1px solid var(--border);animation:slideUp .3s cubic-bezier(.4,0,.2,1);
+  text-align:center}
+.pdots{display:flex;gap:13px;justify-content:center;margin:14px 0 8px}
+.pd{width:17px;height:17px;border-radius:50%;border:2px solid rgba(75,68,224,.45);background:transparent;transition:.2s}
+.pd.fill{background:var(--purple);border-color:var(--purple)}
+.ppad{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:11px}
+.pkey{padding:14px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.04);
+  font-size:1rem;font-weight:800;cursor:pointer;color:var(--text);text-align:center;
+  font-family:'JetBrains Mono',monospace;transition:.15s}
+.pkey:hover{background:rgba(0,210,141,.08);border-color:rgba(0,210,141,.2)}
+.pkey:active{transform:scale(.93)}
+.pkey.del{color:var(--danger);font-size:.8rem}
+.perr{font-size:.7rem;color:var(--danger);min-height:17px;margin-bottom:3px}
+</style>
 </head>
-<body onload="checkTheme()">
+<body>
 
-<div class="phone-container" id="appBody">
-    <header class="sub-page-header">
-    <button class="back-btn" onclick="goBack()">←</button>
-    <h2 class="header-title" id="pageTitle">Transfer</h2>
-    <div class="placeholder-right"></div>
-    </header>
-    
-    <div class="main-content">
-        <p class="section-title">Quick Send</p>
-        <div class="recent-list">
-            <div class="recent-item">
-                <div class="recent-avatar">👨🏾‍💻</div>
-                <div class="recent-name">John</div>
-            </div>
-            <div class="recent-item">
-                <div class="recent-avatar">👩🏻‍💼</div>
-                <div class="recent-name">Sarah</div>
-            </div>
-            <div class="recent-item">
-                <div class="recent-avatar">👴🏾</div>
-                <div class="recent-name">Dad</div>
-            </div>
-            <div class="recent-item">
-                <div class="recent-avatar">🎓</div>
-                <div class="recent-name">Tunde</div>
-            </div>
-            <div class="recent-item">
-                <div class="recent-avatar" style="border-style: dashed; border-color: #ccc; background: transparent;">➕</div>
-                <div class="recent-name">New</div>
-            </div>
-        </div>
+<!-- ══ PAGE LOAD BLUR OVERLAY ══ -->
+<div id="page-loader">
+  <div class="loader-lock">🔒</div>
+  <div class="loader-ring"></div>
+  <div class="loader-txt">Securing Transfer</div>
+</div>
 
-        <div class="transfer-grid">
-            <a href="#" class="transfer-card">
-                <div class="icon-box" style="background: #e8fcf6; color: #00d28d;">🏦</div>
-                <b>To Bank</b>
-                <small>Send to bank account</small>
-            </a>
-            <a href="#" class="transfer-card">
-                <div class="icon-box" style="background: #eef2ff; color: #4f46e5;">📱</div>
-                <b>To OPay</b>
-                <small>Instant & Free</small>
-            </a>
-            <a href="#" class="transfer-card">
-                <div class="icon-box" style="background: #fff7ed; color: #ea580c;">🧾</div>
-                <b>Scan QR</b>
-                <small>Pay merchants</small>
-            </a>
-            <a href="#" class="transfer-card">
-                <div class="icon-box" style="background: #fdf2f8; color: #db2777;">🔄</div>
-                <b>Self</b>
-                <small>To your own cards</small>
-            </a>
-        </div>
-        
-        <div style="margin-top: 25px; background: var(--card-bg); border-radius: 20px; padding: 20px;">
-            <p class="section-title" style="margin-bottom: 5px;">Transfer Limit</p>
-            <p style="font-size: 0.7rem; color: var(--text-light);">Daily Remaining: ₦2,450,000.00</p>
-            <div style="width: 100%; height: 6px; background: #eee; border-radius: 3px; margin-top: 10px;">
-                <div style="width: 40%; height: 100%; background: var(--opay-green); border-radius: 3px;"></div>
-            </div>
-        </div>
+<div id="toast-el" class="toast"></div>
+
+<!-- ══ SUCCESS FLASH ══ -->
+<div class="success-flash" id="sf">
+  <div class="sf-ring">✅</div>
+  <div style="font-size:1.1rem;font-weight:800;margin-bottom:6px">Transfer Sent!</div>
+  <div style="font-size:.8rem;color:var(--sub);margin-bottom:4px" id="sf-name"></div>
+  <div style="font-size:1.4rem;font-weight:800;font-family:'JetBrains Mono',monospace;color:var(--green);margin-bottom:20px" id="sf-amt"></div>
+  <div style="font-size:.68rem;color:var(--sub);margin-bottom:24px">Redirecting you to WhatsApp to complete transfer…</div>
+  <button onclick="hideSF()" style="padding:12px 28px;background:rgba(0,210,141,.1);border:1px solid rgba(0,210,141,.2);color:var(--green);border-radius:12px;font-size:.78rem;font-weight:800;cursor:pointer">Done</button>
+</div>
+
+<!-- ══ DRAWER ══ -->
+<div id="drw-ov" class="drw-ov" onclick="closeDrw()"></div>
+<div id="drw" class="drw">
+  <div class="drw-head">
+    <button class="drw-x" onclick="closeDrw()">×</button>
+    <div class="drw-av">
+      <img src="https://i.pravatar.cc/100?img=7" alt="" onerror="this.style.display='none';this.parentElement.textContent='👤'">
+    </div>
+    <div>
+      <div class="drw-name" id="d-uname">Digital</div>
+      <div class="drw-sub">📊 goAPPs · Transfer</div>
+    </div>
+  </div>
+  <div class="drw-wallet">
+    <div class="dw-lbl">Token Wallet</div>
+    <div class="dw-bal" id="d-wbal">₦1,000</div>
+    <div class="dw-row"><span>Bonus Credits</span><span>🏆 0.00gc</span></div>
+    <div class="dw-row"><span>💰 Total Token</span><span id="d-wtotal">₦1,000</span></div>
+  </div>
+  <div class="drw-nav">
+    <div class="dn" onclick="window.location.href='goclass-home.html'"><span class="dn-ico">🏧</span>Home</div>
+    <div class="dn" onclick="window.location.href='goclass-home.html'"><span class="dn-ico">📂</span>Select Class</div>
+    <div class="dn cur"><span class="dn-ico">📊</span>Transfer</div>
+    <div class="dn" onclick="window.location.href='goclass-home.html'"><span class="dn-ico">🎁</span>Rewards</div>
+    <div class="dn" onclick="window.location.href='goclass-home.html'"><span class="dn-ico">💰</span>Wallet</div>
+    <div class="dn" onclick="window.location.href='goclass-home.html'"><span class="dn-ico">⚙️</span>Settings</div>
+  </div>
+  <div class="drw-foot">
+    <div class="drw-foot-lbl">Admin Support</div>
+    <a href="https://wa.me/2348157505037" target="_blank" class="drw-wa">📲 Contact Admin on WhatsApp</a>
+    <div class="drw-btns">
+      <a href="https://wa.me/2348157505037?text=I%20want%20to%20purchase%20a%20goAPPs%20PIN" target="_blank" class="drw-btn drw-btn-g">💳 BUY PIN</a>
+      <a href="https://wa.me/2348157505037?text=Please%20verify%20my%20payment" target="_blank" class="drw-btn drw-btn-p">📄 VERIFY</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══ HEADER ══ -->
+<header class="hdr">
+  <div class="hdr-l">
+    <button class="ham" id="ham" onclick="toggleDrw()">
+      <span></span><span></span><span></span>
+    </button>
+    <button class="back-btn" onclick="history.back()">← Back</button>
+    <span class="hdr-logo">📊 Transfer</span>
+  </div>
+  <div class="hdr-r">
+    <span class="hpill hp-str" id="streak-el">🔥 1d</span>
+    <span class="hpill hp-xp">⚡ 0 XP</span>
+    <div class="hdr-av">
+      <img src="https://i.pravatar.cc/100?img=7" alt="" onerror="this.style.display='none';this.parentElement.textContent='👤'">
+    </div>
+  </div>
+</header>
+
+<!-- ══ MAIN ══ -->
+<div class="main">
+
+  <!-- Quick Send -->
+  <div class="sec-hdr"><span class="sec-ttl">📤 Quick Push</span></div>
+  <div class="qs-row">
+    <div class="qs-item" onclick="openSend('goMETRO TopUp','🚎','Enter Number here')">
+      <div class="qs-av">🚎</div>
+      <div class="qs-name">goMETRO</div>
+    </div>
+    <div class="qs-item" onclick="openSend('goMECID Topup','🚑','Enter Number here')">
+      <div class="qs-av">🚑</div>
+      <div class="qs-name">goMEDIC</div>
+    </div>
+    <div class="qs-item" onclick="openSend('goCHOPs','🥗','Enter Number here')">
+      <div class="qs-av">🥗</div>
+      <div class="qs-name">goCHOPs</div>
+    </div>
+    <div class="qs-item" onclick="openSend('goUTILITY','🎁','Enter Number here')">
+      <div class="qs-av">🎁</div>
+      <div class="qs-name">goUTILITY</div>
+    </div>
+    <div class="qs-item" onclick="openSend('New','➕','')">
+      <div class="qs-av add">➕</div>
+      <div class="qs-name">New</div>
+    </div>
+  </div>
+
+  <!-- Transfer Options -->
+  <div class="sec-hdr" style="margin-top:22px"><span class="sec-ttl">🔀 Send Token</span></div>
+  <div class="tr-grid">
+    <div class="tr-card" onclick="openSend('Bank Transfer','🏦','')">
+      <div class="tr-ico" style="background:rgba(0,210,141,.1)">🏦</div>
+      <b>To Bank</b>
+      <small>Send to goAPPs User</small>
+    </div>
+    <div class="tr-card" onclick="openSend('OPay Wallet','📱','')">
+      <div class="tr-ico" style="background:rgba(75,68,224,.1)">📱</div>
+      <b>To OPay</b>
+      <small>Instant &amp; Free</small>
+    </div>
+    <div class="tr-card" onclick="openSend('QR Payment','🧾','')">
+      <div class="tr-ico" style="background:rgba(245,158,11,.1)">🧾</div>
+      <b>Scan QR</b>
+      <small>Pay merchants</small>
+    </div>
+    <div class="tr-card" onclick="openSend('Self Transfer','🔄','')">
+      <div class="tr-ico" style="background:rgba(219,39,119,.1)">🔄</div>
+      <b>Self</b>
+      <small>To your own goCOINs</small>
+    </div>
+  </div>
+
+  <!-- Transfer Limit -->
+  <div class="limit-card">
+    <div class="limit-top">
+      <span class="limit-lbl">📈 Transfer Limit</span>
+      <span class="limit-val">BASIC</span>
+    </div>
+    <div class="limit-sub">Daily limit: gCOINs10,000 · 40% used today</div>
+    <div class="limit-bar"><div class="limit-fill"></div></div>
+  </div>
+
+  <!-- Recent Transactions -->
+  <div class="sec-hdr"><span class="sec-ttl">🕒 Recent</span></div>
+  <div class="tx-item">
+    <div class="tx-ico" style="background:rgba(255,77,77,.1)">👨🏾‍💻</div>
+    <div class="tx-body"><div class="tx-name">📤 Sent</div><div class="tx-date">Today, 10:32 AM</div></div>
+    <div class="tx-amt tx-out">-₦***.00</div>
+  </div>
+  <div class="tx-item">
+    <div class="tx-ico" style="background:rgba(0,210,141,.1)">💳</div>
+    <div class="tx-body"><div class="tx-name">📥 Top-up Received</div><div class="tx-date">Yesterday, 4:15 PM</div></div>
+    <div class="tx-amt tx-in">+₦100</div>
+  </div>
+  <div class="tx-item">
+    <div class="tx-ico" style="background:rgba(255,77,77,.1)">🎓</div>
+    <div class="tx-body"><div class="tx-name">Purchase Data</div><div class="tx-date">Mon, 8:00 AM</div></div>
+    <div class="tx-amt tx-out">2GB</div>
+  </div>
+
+</div>
+
+<!-- ══ BOTTOM NAV ══ -->
+<nav class="bnav">
+  <button class="bn" onclick="window.location.href='goclass-home.html'"><span class="bn-ico">🎁</span>Rewards</button>
+  <button class="bn" onclick="window.location.href='goclass-home.html'"><span class="bn-ico">💰</span>Wallet</button>
+  <button class="bn" onclick="window.location.href='goclass-home.html'"><span class="bn-ico">🏧</span>Home</button>
+  <button class="bn on"><span class="bn-ico">📊</span>Market</button>
+  <button class="bn" onclick="window.location.href='goclass-home.html'"><span class="bn-ico">⚙️</span>Settings</button>
+</nav>
+
+<!-- ══ SEND MODAL SHEET ══ -->
+<div id="m-send" class="mov">
+  <div class="send-sheet">
+    <div class="sheet-drag"></div>
+    <div class="send-av-big" id="send-av">👤</div>
+    <div class="send-name-big" id="send-name">Send Token</div>
+    <div class="send-sub" id="send-sub">Enter details to verify this transaction via WhatsApp</div>
+
+    <label class="sinp-lbl">📱 Receiver's WhatsApp Number</label>
+    <div class="sinp-prefix">
+      <span class="sinp-tag">🇳🇬 +234</span>
+      <input type="tel" id="recv-num" class="sinp-inner" placeholder="080XXXXXXXX"
+             maxlength="11" inputmode="numeric">
     </div>
 
-    <div id="modalOverlay">
-        <div class="confirm-modal">
-            <div class="confirm-avatar" id="modalIcon"></div>
-            <h3 style="color: var(--text-dark);" id="modalName">Recipent Name</h3>
-            <p style="color: var(--text-light); font-size: 0.8rem; margin-top: 5px;">Transferring to OPay Wallet</p>
-            
-            <div style="margin-top: 20px; font-size: 1.5rem; font-weight: 800; color: var(--text-dark);">
-                ₦ <input type="number" value="1000" style="width: 120px; border: none; background: var(--input-bg); padding: 5px; border-radius: 8px; text-align: center; font-weight: 800; color: var(--text-dark); outline: none;">
-            </div>
-
-            <button class="btn-confirm" onclick="completeTransfer()">Confirm Transfer</button>
-            <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-        </div>
+    <label class="sinp-lbl">💰 Amount to Transfer (goCOINs)</label>
+    <div class="sinp-prefix">
+      <span class="sinp-tag">📤</span>
+      <input type="number" id="recv-amt" class="sinp-inner" placeholder="Enter amount"
+             inputmode="numeric" min="1">
     </div>
 
-    <nav>
-        <a href="index.html" class="nav-link"><span>🏧</span>Home</a>
-        <a href="transfer.html" class="nav-link active"><span>👛</span>Transfer</a>
-        <a href="reward.html" class="nav-link"><span>🎁</span>Rewards</a>
-        <a href="balance.html" class="nav-link"><span>💰</span>Balance</a>
-        <a href="settings.html" class="nav-link"><span>⚙️</span>Settings</a>
-    </nav>
+    <div class="amt-quick">
+      <button class="aq-btn" onclick="setAmt(500)">₦500</button>
+      <button class="aq-btn" onclick="setAmt(1000)">₦1,000</button>
+      <button class="aq-btn" onclick="setAmt(2000)">₦2,000</button>
+      <button class="aq-btn" onclick="setAmt(5000)">₦5,000</button>
+      <button class="aq-btn" onclick="setAmt(10000)">₦10k</button>
+    </div>
+
+    <label class="sinp-lbl">📝 Note (important)</label>
+    <input type="text" id="recv-note" class="sinp" placeholder="e.g. School fees, Metro Topup, etc" maxlength="80">
+
+    <div style="font-size:.64rem;color:var(--sub);margin-bottom:14px;padding:9px 12px;background:rgba(0,210,141,.04);border:1px solid rgba(0,210,141,.1);border-radius:9px">
+      ℹ️ Clicking <b style="color:var(--green)">Verify &amp; Approve</b> will open WhatsApp with the details of this transaction details for processing.
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-cancel" onclick="closeSend()">✕ Stop Transacion</button>
+      <button class="btn-confirm" onclick="verifyAndApprove()">
+        <span>✅</span> Verify &amp; Approve
+      </button>
+    </div>
+  </div>
 </div>
 
 <script>
-        // Connection Monitoring
-    window.addEventListener('online', () => {
-        document.getElementById('offline-screen').style.display = 'none';
-        
-        // Connection Restored Toast
-        const toast = document.createElement('div');
-        toast.style = "position:fixed; bottom:100px; left:50%; transform:translateX(-50%); background:#00d28d; color:white; padding:10px 20px; border-radius:30px; font-size:0.8rem; z-index:2000; box-shadow: 0 4px 12px rgba(0,0,0,0.2);";
-        toast.innerText = "⚡ Connection Restored!";
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
-    });
-    
-    window.addEventListener('offline', () => {
-        document.getElementById('offline-screen').style.display = 'flex';
-    });
+// ── storage ──
+const S={
+  get:(k,fb)=>{try{const d=localStorage.getItem(k);return d!==null?JSON.parse(d):fb}catch{return fb}}
+};
 
-    // Initial check
-    if (!navigator.onLine) {
-        document.getElementById('offline-screen').style.display = 'flex';
-    }
+// ── init ──
+window.addEventListener('load',()=>{
+  // page loader
+  setTimeout(()=>{
+    document.getElementById('page-loader').classList.add('gone');
+  },1600);
 
-    // PWA INSTALL LOGIC
-    let deferredPrompt;
-    const installBanner = document.getElementById('install-banner');
-    const installBtn = document.getElementById('install-btn');
+  // wallet
+  const w=S.get('gc_wallet',1000);
+  const fmt='₦'+w.toLocaleString();
+  document.getElementById('d-wbal').textContent=fmt;
+  document.getElementById('d-wtotal').textContent=fmt;
+  document.getElementById('d-uname').textContent=S.get('gc_name','Digital');
 
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        installBanner.style.display = 'flex';
+  // streak
+  const streak=S.get('gc_streak',1);
+  document.getElementById('streak-el').textContent='🔥 '+streak+'d';
 
-        installBtn.addEventListener('click', () => {
-            installBanner.style.display = 'none';
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then((choiceResult) => {
-                deferredPrompt = null;
-            });
-        });
-    });
+  // online check
+  if(!navigator.onLine) showToast('📡 You appear to be offline');
+  window.addEventListener('online',()=>showToast('⚡ Connection Restored!'));
+});
 
-    // Service Worker registration
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js').catch(err => {
-                console.log('SW registration failed: ', err);
-            });
-        });
-    }
-    function checkTheme() {
-        const savedTheme = localStorage.getItem('opayTheme');
-        if (savedTheme === 'dark') {
-            document.getElementById('appBody').classList.add('dark-theme');
-        }
-    }
+// ── drawer ──
+function toggleDrw(){
+  document.getElementById('drw').classList.toggle('open');
+  document.getElementById('drw-ov').classList.toggle('open');
+  document.getElementById('ham').classList.toggle('open');
+}
+function closeDrw(){
+  document.getElementById('drw').classList.remove('open');
+  document.getElementById('drw-ov').classList.remove('open');
+  document.getElementById('ham').classList.remove('open');
+}
 
-    function openModal(name, icon) {
-        document.getElementById('modalName').innerText = name;
-        document.getElementById('modalIcon').innerText = icon;
-        document.getElementById('modalOverlay').style.display = 'flex';
-    }
+// ── send modal ──
+let currentRecipient={name:'',icon:'👤',phone:''};
 
-    function closeModal() {
-        document.getElementById('modalOverlay').style.display = 'none';
-    }
+function openSend(name, icon, phone){
+  currentRecipient={name,icon,phone};
+  document.getElementById('send-av').textContent=icon;
+  document.getElementById('send-name').textContent=name||'New Recipient';
+  document.getElementById('send-sub').textContent=
+    name&&name!=='New'?'Sending to '+name+' via WhatsApp':'Enter receiver details below';
 
-    function completeTransfer() {
-        alert("Transfer Successful!");
-        closeModal();
-    }
+  // pre-fill phone if known (strip +234 prefix for display)
+  const numField=document.getElementById('recv-num');
+  if(phone&&phone.startsWith('+234')){
+    numField.value='0'+phone.slice(4);
+  } else if(phone){
+    numField.value=phone;
+  } else {
+    numField.value='';
+  }
+  document.getElementById('recv-amt').value='';
+  document.getElementById('recv-note').value='';
+  document.getElementById('m-send').classList.add('open');
+}
 
-    function goBack() {
-        // Logic to handle different states
-        const pinOverlay = document.getElementById('pinOverlay');
-        const modalOverlay = document.getElementById('modalOverlay');
-        const successScreen = document.getElementById('successScreen');
+function closeSend(){
+  document.getElementById('m-send').classList.remove('open');
+}
 
-        if (successScreen.style.display === 'flex') {
-            // If on success screen, reset to home
-            location.reload();
-        } else if (pinOverlay.style.display === 'flex') {
-            // If in PIN entry, go back to Amount selection
-            closePin();
-            document.getElementById('modalOverlay').style.display = 'flex';
-        } else if (modalOverlay.style.display === 'flex') {
-            // If in Amount selection, go back to main Transfer list
-            closeModal();
-        } else {
-            // Otherwise, go to the actual home page
-            window.location.href = "index.html";
-        }
-    }
+// ── amount quick-fill ──
+function setAmt(v){
+  document.getElementById('recv-amt').value=v;
+}
+
+// ── verify & approve → redirect to WhatsApp ──
+function verifyAndApprove(){
+  const rawNum=document.getElementById('recv-num').value.trim();
+  const amt=document.getElementById('recv-amt').value.trim();
+  const note=document.getElementById('recv-note').value.trim();
+  const name=currentRecipient.name||'Recipient';
+
+  // validation
+  if(!rawNum||rawNum.length<10){
+    showToast('⚠️ Please enter a valid WhatsApp number');
+    document.getElementById('recv-num').style.border='1.5px solid var(--danger)';
+    return;
+  }
+  if(!amt||isNaN(amt)||Number(amt)<1){
+    showToast('⚠️ Please enter a valid amount');
+    document.getElementById('recv-amt').style.border='1.5px solid var(--danger)';
+    return;
+  }
+
+  // normalise to international format
+  let waNum=rawNum.replace(/\D/g,'');
+  if(waNum.startsWith('0')) waNum='234'+waNum.slice(1);
+  else if(!waNum.startsWith('234')) waNum='234'+waNum;
+
+  // build message
+  const formattedAmt='₦'+Number(amt).toLocaleString();
+  const msgLines=[
+    '🏦 *goAPPs Token Transfer Request*',
+    '─────────────────',
+    '👤 Recipient: '+name,
+    '📱 Number: +'+waNum,
+    '💰 Amount: '+formattedAmt,
+    note?'📝 Note: '+note:'',
+    '─────────────────',
+    '✅ I have verified and approved this transfer.',
+    'Please process. Thank you!'
+  ].filter(Boolean).join('\n');
+
+  const waURL='https://wa.me/2348157505037?text='+encodeURIComponent(msgLines);
+
+  // show success flash then open WA
+  const sf=document.getElementById('sf');
+  document.getElementById('sf-name').textContent='To: '+name+' ('+rawNum+')';
+  document.getElementById('sf-amt').textContent=formattedAmt;
+  closeSend();
+  sf.classList.add('show');
+
+  setTimeout(()=>{
+    window.open(waURL,'_blank');
+  },900);
+}
+
+function hideSF(){
+  document.getElementById('sf').classList.remove('show');
+}
+
+// ── toast ──
+function showToast(msg){
+  const t=document.getElementById('toast-el');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+// PWA
+let dp;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;});
+if('serviceWorker' in navigator)
+  window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
 </script>
-
 </body>
 </html>
