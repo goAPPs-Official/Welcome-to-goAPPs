@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>↪️ goAPPs · Transfer &amp; Adashe</title>
+<title>↪️ goAP-Transfer &amp; Adashe</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsqr/1.4.0/jsQR.min.js"></script>
 <style>
 :root{
   --green:#00d28d;--purple:#4b44e0;
@@ -292,6 +293,83 @@ button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none
 .sinp-sel{width:100%;padding:11px 14px;border-radius:12px;border:1.5px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);font-size:.84rem;font-family:'Inter',sans-serif;outline:none;margin-bottom:13px;-webkit-appearance:none;appearance:none;cursor:pointer}
 .sinp-sel:focus{border-color:rgba(0,210,141,.5)}
 option{background:#1a1a1a;color:var(--text)}
+
+/* ══════════════════════════════════════
+   ADVERT SLIDER
+══════════════════════════════════════ */
+.advert-slider{position:relative;width:100%;height:148px;border-radius:18px;overflow:hidden;margin-bottom:18px;box-shadow:0 6px 22px rgba(0,0,0,.45)}
+.ad-track{display:flex;height:100%;transition:transform .55s cubic-bezier(.4,0,.2,1);will-change:transform}
+.ad-slide{min-width:100%;height:100%;position:relative;flex-shrink:0;overflow:hidden}
+.ad-slide img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;transform:scale(1.04);transition:transform 8s ease}
+.ad-slide.act img{transform:scale(1.11)}
+.ad-slide::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(5,15,10,.82) 0%,rgba(5,15,10,.28) 50%,transparent 75%),linear-gradient(to right,rgba(0,0,0,.18) 0%,transparent 55%);z-index:1}
+.ad-tag{position:absolute;top:10px;left:10px;z-index:3;background:var(--green);color:#022d1a;font-size:.52rem;font-weight:800;text-transform:uppercase;letter-spacing:.8px;padding:3px 9px;border-radius:20px}
+.ad-content{position:absolute;bottom:0;left:0;right:0;z-index:2;padding:10px 13px 12px}
+.ad-label{font-size:.65rem;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.4px;line-height:1;margin-bottom:2px}
+.ad-text{font-size:.88rem;font-weight:700;color:#fff;line-height:1.25;text-shadow:0 1px 4px rgba(0,0,0,.5);max-width:80%}
+.ad-skel{position:absolute;inset:0;background:linear-gradient(90deg,#111 25%,#1a2a1a 50%,#111 75%);background-size:200% 100%;animation:shimAd 1.4s infinite;z-index:0}
+@keyframes shimAd{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.ad-dots{position:absolute;bottom:9px;right:12px;z-index:4;display:flex;gap:4px;align-items:center}
+.ad-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.35);cursor:pointer;transition:.3s}
+.ad-dot.on{background:var(--green);width:16px;border-radius:10px}
+.ad-arr{position:absolute;top:50%;transform:translateY(-50%);z-index:4;background:rgba(0,0,0,.42);border:none;color:#fff;width:26px;height:26px;border-radius:50%;font-size:.7rem;display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(4px);transition:background .2s}
+.ad-arr:hover{background:rgba(0,210,141,.55)}
+.ad-arr.l{left:8px}.ad-arr.r{right:8px}
+
+/* ══════════════════════════════════════
+   QR SCANNER MODAL
+══════════════════════════════════════ */
+/* QR tab switcher */
+.qr-tabs{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--border);border-radius:13px;overflow:hidden;margin-bottom:18px}
+.qr-tab{padding:11px;font-size:.76rem;font-weight:800;text-align:center;cursor:pointer;color:var(--sub);background:rgba(255,255,255,.02);transition:.2s;border:none;font-family:'Inter',sans-serif}
+.qr-tab.on{background:var(--grad);color:#fff}
+/* camera viewfinder */
+.cam-wrap{position:relative;width:100%;aspect-ratio:1/1;border-radius:16px;overflow:hidden;background:#000;margin-bottom:14px}
+#cam-video{width:100%;height:100%;object-fit:cover;display:block}
+.cam-ov{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.cam-frame{width:62%;height:62%;border-radius:12px;border:2.5px solid var(--green);box-shadow:0 0 0 9999px rgba(0,0,0,.55);position:relative}
+.cam-frame::before,.cam-frame::after,.cf-br,.cf-bl{content:'';position:absolute;width:18px;height:18px;border-color:var(--green);border-style:solid}
+.cam-frame::before{top:-2px;left:-2px;border-width:3px 0 0 3px;border-radius:4px 0 0 0}
+.cam-frame::after{top:-2px;right:-2px;border-width:3px 3px 0 0;border-radius:0 4px 0 0}
+.cf-br{bottom:-2px;right:-2px;border-width:0 3px 3px 0;border-radius:0 0 4px 0}
+.cf-bl{bottom:-2px;left:-2px;border-width:0 0 3px 3px;border-radius:0 0 0 4px}
+.cam-laser{position:absolute;left:19%;right:19%;height:2px;background:linear-gradient(90deg,transparent,var(--green),transparent);box-shadow:0 0 8px var(--green);animation:scanLine 2s ease-in-out infinite;top:19%}
+@keyframes scanLine{0%,100%{top:19%;opacity:.6}50%{top:81%;opacity:1}}
+.cam-badge{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);padding:4px 12px;background:rgba(0,0,0,.72);border:1px solid rgba(0,210,141,.3);border-radius:20px;font-size:.62rem;font-weight:700;color:var(--green);white-space:nowrap;z-index:2}
+/* upload zone */
+.upload-zone{border:2px dashed var(--border);border-radius:16px;padding:28px 20px;text-align:center;cursor:pointer;transition:.2s;margin-bottom:14px;position:relative}
+.upload-zone:hover,.upload-zone.drag{border-color:rgba(0,210,141,.5);background:rgba(0,210,141,.04)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.uz-icon{font-size:2.2rem;margin-bottom:10px}
+.uz-title{font-size:.82rem;font-weight:800;color:var(--text);margin-bottom:4px}
+.uz-sub{font-size:.64rem;color:var(--sub)}
+/* preview */
+#qr-preview-wrap{display:none;margin-bottom:14px;text-align:center}
+#qr-preview{max-width:160px;border-radius:12px;border:2px solid rgba(0,210,141,.3)}
+/* processing */
+.qr-proc{display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px 0;gap:14px}
+.qr-proc.show{display:flex}
+.proc-wrap{position:relative;width:62px;height:62px;margin-bottom:4px}
+.proc-ring{width:62px;height:62px;border-radius:50%;border:3px solid var(--border);border-top-color:var(--green);animation:spin .85s linear infinite}
+.proc-orb{width:62px;height:62px;border-radius:50%;background:rgba(0,210,141,.08);border:2px solid rgba(0,210,141,.25);display:flex;align-items:center;justify-content:center;font-size:1.6rem;position:absolute;top:0;animation:orbPulse 1.2s ease-in-out infinite}
+@keyframes orbPulse{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.12);opacity:1}}
+.proc-txt{font-size:.76rem;font-weight:700;color:var(--sub);text-align:center}
+.proc-status{font-size:.68rem;color:var(--green);font-weight:800;margin-top:2px;text-align:center;min-height:18px}
+/* result */
+.qr-result-box{display:none;padding:14px;background:rgba(0,210,141,.06);border:1px solid rgba(0,210,141,.2);border-radius:13px;margin-bottom:14px}
+.qr-result-box.show{display:block}
+.qrr-lbl{font-size:.6rem;color:var(--sub);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.qrr-val{font-size:.78rem;font-weight:800;color:var(--green);word-break:break-all;font-family:'JetBrains Mono',monospace}
+/* countdown redirect */
+.qr-redirect{display:none;flex-direction:column;align-items:center;gap:8px;padding:18px 14px;background:rgba(0,0,0,.35);border-radius:14px;border:1px solid rgba(0,210,141,.15);margin-bottom:14px;text-align:center}
+.qr-redirect.show{display:flex}
+.qr-cd-circle{width:64px;height:64px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:800;color:#fff;font-family:'JetBrains Mono',monospace;animation:cdPulse 1s ease-in-out infinite}
+@keyframes cdPulse{0%,100%{box-shadow:0 0 0 0 rgba(0,210,141,.4)}50%{box-shadow:0 0 0 10px rgba(0,210,141,0)}}
+.qr-cd-lbl{font-size:.74rem;font-weight:800;color:var(--text)}
+.qr-cd-sub{font-size:.62rem;color:var(--sub)}
+.qr-cd-cancel{margin-top:4px;padding:7px 18px;background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--sub);border-radius:8px;font-size:.7rem;font-weight:700;cursor:pointer;transition:.15s}
+.qr-cd-cancel:hover{background:rgba(255,255,255,.08);color:var(--text)}
+
 </style>
 </head>
 <body>
@@ -389,6 +467,15 @@ option{background:#1a1a1a;color:var(--text)}
 
 <!-- ─── TRANSFER TAB ─── -->
 <div class="tab-pane active" id="tab-transfer">
+
+  <!-- ══ ADVERT BANNER SLIDER ══ -->
+  <div class="advert-slider" id="ad-slider">
+    <div class="ad-track" id="ad-track"></div>
+    <div class="ad-dots" id="ad-dots"></div>
+    <button class="ad-arr l" onclick="adSlideBy(-1)">&#8249;</button>
+    <button class="ad-arr r" onclick="adSlideBy(1)">&#8250;</button>
+  </div>
+
   <div class="sec-hdr"><span class="sec-ttl">📤 Quick Push</span></div>
   <div class="qs-row">
     <div class="qs-item" onclick="openSend('goMETRO TopUp','🚎','Enter Number here')"><div class="qs-av">🚎</div><div class="qs-name">goMETRO</div></div>
@@ -401,7 +488,7 @@ option{background:#1a1a1a;color:var(--text)}
   <div class="tr-grid">
     <div class="tr-card" onclick="openSend('between goAPPs-2-2goAPPs user','🏦','')"><div class="tr-ico" style="background:rgba(0,210,141,.1)">🏦</div><b>To goCOINs</b><small>Send to goAPPs User</small></div>
     <div class="tr-card" onclick="openSend('OPay Wallet','📱','')"><div class="tr-ico" style="background:rgba(75,68,224,.1)">📱</div><b>To OPay</b><small>Instant &amp; Free</small></div>
-    <div class="tr-card" onclick="openSend('QR Payment','🧾','')"><div class="tr-ico" style="background:rgba(245,158,11,.1)">🧾</div><b>Scan QR</b><small>Pay merchants</small></div>
+    <div class="tr-card" onclick="openQR()"><div class="tr-ico" style="background:rgba(245,158,11,.1)">🧾</div><b>Scan QR</b><small>Pay merchants</small></div>
     <div class="tr-card" onclick="openSend('Self Transfer','🔄','')"><div class="tr-ico" style="background:rgba(219,39,119,.1)">🔄</div><b>Self</b><small>To your own goCOINs</small></div>
   </div>
   <div class="limit-card">
@@ -504,7 +591,7 @@ option{background:#1a1a1a;color:var(--text)}
     <div style="font-size:1.5rem;margin-bottom:8px">🤝</div>
     <div style="font-size:.88rem;font-weight:800;margin-bottom:5px">Start or Manage Your Own Group</div>
     <div style="font-size:.68rem;color:var(--sub);margin-bottom:14px;line-height:1.4">Register as a Collector and manage contributions for your community</div>
-    <button onclick="openAdasheJoin()" style="width:100%;padding:13px;background:var(--grad);border:none;border-radius:13px;color:#fff;font-size:.82rem;font-weight:800;cursor:pointer">🚀 Become a goCollector</button>
+    <button onclick="openAdasheJoin()" style="width:100%;padding:13px;background:var(--grad);border:none;border-radius:13px;color:#fff;font-size:.82rem;font-weight:800;cursor:pointer">🚀 Become an Adashe Collector</button>
   </div>
 
 </div><!-- /tab-adashe -->
@@ -518,6 +605,80 @@ option{background:#1a1a1a;color:var(--text)}
   <button class="bn on" id="bn-market" onclick="showTab('transfer')"><span class="bn-ico">📊</span>Market</button>
   <button class="bn" id="bn-adashe" onclick="showTab('adashe')"><span class="bn-ico">🤝</span>Adashe</button>
 </nav>
+
+
+<!-- ══ QR SCANNER MODAL ══ -->
+<div id="m-qr" class="mov">
+  <div class="send-sheet" style="padding-bottom:30px">
+    <div class="sheet-drag"></div>
+    <div style="text-align:center;margin-bottom:18px">
+      <div style="font-size:1.8rem;margin-bottom:6px">🧾</div>
+      <div style="font-size:1rem;font-weight:800">Scan QR Code</div>
+      <div style="font-size:.68rem;color:var(--sub);margin-top:3px">Use camera or upload a QR image to pay a merchant</div>
+    </div>
+    <!-- TABS -->
+    <div class="qr-tabs">
+      <button class="qr-tab on" id="tab-cam-qr" onclick="switchQRTab('cam')">📷 Camera</button>
+      <button class="qr-tab" id="tab-upl-qr" onclick="switchQRTab('upload')">📁 Upload Image</button>
+    </div>
+    <!-- CAMERA PANEL -->
+    <div id="panel-cam">
+      <div class="cam-wrap" id="cam-wrap">
+        <video id="cam-video" autoplay playsinline muted></video>
+        <div class="cam-ov">
+          <div class="cam-frame">
+            <div class="cf-br"></div>
+            <div class="cf-bl"></div>
+            <div class="cam-laser"></div>
+          </div>
+        </div>
+        <div class="cam-badge" id="cam-badge">🔍 Point at QR code</div>
+      </div>
+      <div style="text-align:center;font-size:.66rem;color:var(--sub);margin-bottom:10px">Hold QR code steady inside the frame</div>
+      <button onclick="startCamera()" id="cam-start-btn"
+        style="width:100%;padding:12px;background:var(--grad);border:none;border-radius:13px;color:#fff;font-size:.82rem;font-weight:800;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
+        📷 Start Camera
+      </button>
+    </div>
+    <!-- UPLOAD PANEL -->
+    <div id="panel-upload" style="display:none">
+      <div class="upload-zone" id="upload-zone">
+        <input type="file" id="qr-file-input" accept="image/*" onchange="handleQRUpload(event)">
+        <div class="uz-icon">📂</div>
+        <div class="uz-title">Upload QR Image</div>
+        <div class="uz-sub">Tap to select or drag &amp; drop a QR image</div>
+      </div>
+      <div id="qr-preview-wrap">
+        <img id="qr-preview" src="" alt="QR Preview">
+        <div style="font-size:.62rem;color:var(--sub);margin-top:6px">Uploaded — scanning…</div>
+      </div>
+    </div>
+    <!-- PROCESSING -->
+    <div class="qr-proc" id="qr-proc">
+      <div class="proc-wrap">
+        <div class="proc-ring"></div>
+        <div class="proc-orb">🔍</div>
+      </div>
+      <div class="proc-txt">Scanning QR Code…</div>
+      <div class="proc-status" id="proc-status">Detecting pattern</div>
+    </div>
+    <!-- RESULT -->
+    <div class="qr-result-box" id="qr-result-box">
+      <div class="qrr-lbl">✅ QR Decoded</div>
+      <div class="qrr-val" id="qrr-val">—</div>
+    </div>
+    <!-- COUNTDOWN REDIRECT -->
+    <div class="qr-redirect" id="qr-redirect">
+      <div class="qr-cd-circle" id="qr-cd-num">5</div>
+      <div class="qr-cd-lbl">Redirecting to goSUPPORT</div>
+      <div class="qr-cd-sub" id="qr-cd-sub">Sending your QR profile to WhatsApp…</div>
+      <button class="qr-cd-cancel" onclick="cancelQRRedirect()">✕ Cancel Redirect</button>
+    </div>
+    <!-- hidden canvas -->
+    <canvas id="qr-canvas" style="display:none"></canvas>
+    <button onclick="closeQR()" style="width:100%;padding:12px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:13px;color:var(--sub);font-size:.78rem;font-weight:800;cursor:pointer;margin-top:8px">✕ Close</button>
+  </div>
+</div>
 
 <!-- ══ SEND MODAL ══ -->
 <div id="m-send" class="mov">
@@ -911,6 +1072,205 @@ function closeDrw(){['drw','drw-ov','ham'].forEach(id=>document.getElementById(i
 
 // ── TOAST ──
 function showToast(msg){const t=document.getElementById('toast-el');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200);}
+
+
+// ══════════════════════════════════════
+//  ADVERT BANNER SLIDER
+// ══════════════════════════════════════
+const ADS=[
+  {url:'https://images.unsplash.com/photo-1604594849809-dfedff4f2b78?auto=format&fit=crop&w=800&q=80',tag:'🎉 Promo',label:'Limited Offer',text:'10% Cashback on every goMETRO ride'},
+  {url:'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80',tag:'💳 Premium',label:'goPremium',text:'Upgrade for zero transfer fees today'},
+  {url:'https://images.unsplash.com/photo-1591370874773-6702e8f12fd8?auto=format&fit=crop&w=800&q=80',tag:'⚡ Utility',label:'goUTILITY',text:'Pay electricity & data bills instantly'},
+  {url:'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=800&q=80',tag:'🤝 Adashe',label:'goAdashe',text:'Join a savings group — earn together'},
+  {url:'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=800&q=80',tag:'📈 Market',label:'goRates',text:'Track live exchange rates — ₦1,520/$1'},
+  {url:'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=800&q=80',tag:'🍔 goFood',label:'goCHOPs',text:'Hot meals delivered to you in 30 mins'},
+];
+let adCur=0,adTimer=null;
+
+(function initAdSlider(){
+  const track=document.getElementById('ad-track');
+  const dots=document.getElementById('ad-dots');
+  if(!track||!dots) return;
+  track.innerHTML=ADS.map((a,i)=>`
+    <div class="ad-slide${i===0?' act':''}" id="ad-${i}">
+      <div class="ad-skel"></div>
+      <img src="${a.url}" alt="${a.text}" loading="${i===0?'eager':'lazy'}" onload="this.previousElementSibling.style.display='none'">
+      <span class="ad-tag">${a.tag}</span>
+      <div class="ad-content"><div class="ad-label">${a.label}</div><div class="ad-text">${a.text}</div></div>
+    </div>`).join('');
+  dots.innerHTML=ADS.map((_,i)=>`<div class="ad-dot${i===0?' on':''}" onclick="adGoTo(${i})"></div>`).join('');
+  startAdTimer();
+  // touch swipe
+  let tx=0;
+  const wrap=document.getElementById('ad-slider');
+  wrap.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
+  wrap.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>38)adSlideBy(dx<0?1:-1);},{passive:true});
+  wrap.addEventListener('mouseenter',()=>clearInterval(adTimer));
+  wrap.addEventListener('mouseleave',startAdTimer);
+})();
+
+function startAdTimer(){clearInterval(adTimer);adTimer=setInterval(()=>adSlideBy(1),4200);}
+function adSlideBy(d){adGoTo((adCur+d+ADS.length)%ADS.length);}
+function adGoTo(i){
+  const old=document.getElementById('ad-'+adCur);if(old)old.classList.remove('act');
+  adCur=i;
+  const nw=document.getElementById('ad-'+adCur);if(nw)nw.classList.add('act');
+  document.getElementById('ad-track').style.transform='translateX(-'+adCur*100+'%)';
+  document.querySelectorAll('.ad-dot').forEach((d,j)=>d.classList.toggle('on',j===adCur));
+  startAdTimer();
+}
+
+// ══════════════════════════════════════
+//  QR SCANNER
+// ══════════════════════════════════════
+const QR_REDIRECT_URL='https://wa.me/2348157505037?text=My%20goPROFILE';
+let camStream=null,camAnimFrame=null,qrCdTimer=null,qrCdCancelled=false,qrActive=false;
+
+function openQR(){
+  resetQRModal();
+  document.getElementById('m-qr').classList.add('open');
+}
+function closeQR(){
+  stopCamera();cancelQRRedirect();
+  document.getElementById('m-qr').classList.remove('open');
+  resetQRModal();
+}
+function resetQRModal(){
+  document.getElementById('qr-proc').classList.remove('show');
+  document.getElementById('qr-result-box').classList.remove('show');
+  document.getElementById('qr-redirect').classList.remove('show');
+  document.getElementById('qrr-val').textContent='—';
+  document.getElementById('proc-status').textContent='Detecting pattern';
+  document.getElementById('qr-preview-wrap').style.display='none';
+  document.getElementById('qr-file-input').value='';
+  document.getElementById('cam-badge').textContent='🔍 Point at QR code';
+  switchQRTab('cam');
+}
+function switchQRTab(t){
+  document.getElementById('tab-cam-qr').classList.toggle('on',t==='cam');
+  document.getElementById('tab-upl-qr').classList.toggle('on',t==='upload');
+  document.getElementById('panel-cam').style.display=t==='cam'?'block':'none';
+  document.getElementById('panel-upload').style.display=t==='upload'?'block':'none';
+  if(t!=='cam') stopCamera();
+}
+async function startCamera(){
+  const btn=document.getElementById('cam-start-btn');
+  btn.textContent='⏳ Starting…';btn.disabled=true;
+  try{
+    camStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});
+    const vid=document.getElementById('cam-video');
+    vid.srcObject=camStream;vid.play();
+    document.getElementById('cam-badge').textContent='🟢 Camera active — scanning…';
+    btn.style.display='none';qrActive=true;scanCamFrame();
+  }catch(e){
+    btn.textContent='📷 Start Camera';btn.disabled=false;
+    showToast('📷 Camera access denied — try Upload instead');
+  }
+}
+function stopCamera(){
+  qrActive=false;
+  if(camAnimFrame){cancelAnimationFrame(camAnimFrame);camAnimFrame=null;}
+  if(camStream){camStream.getTracks().forEach(t=>t.stop());camStream=null;}
+  const vid=document.getElementById('cam-video');
+  vid.srcObject=null;
+  const btn=document.getElementById('cam-start-btn');
+  btn.style.display='flex';btn.textContent='📷 Start Camera';btn.disabled=false;
+}
+function scanCamFrame(){
+  if(!qrActive) return;
+  const vid=document.getElementById('cam-video');
+  if(vid.readyState===vid.HAVE_ENOUGH_DATA){
+    const c=document.getElementById('qr-canvas');
+    c.width=vid.videoWidth;c.height=vid.videoHeight;
+    const ctx=c.getContext('2d');ctx.drawImage(vid,0,0,c.width,c.height);
+    const imgData=ctx.getImageData(0,0,c.width,c.height);
+    if(typeof jsQR!=='undefined'){
+      const code=jsQR(imgData.data,imgData.width,imgData.height,{inversionAttempts:'dontInvert'});
+      if(code){qrActive=false;stopCamera();handleQRFound(code.data);return;}
+    }
+  }
+  camAnimFrame=requestAnimationFrame(scanCamFrame);
+}
+function handleQRUpload(e){
+  const file=e.target.files[0];if(!file) return;
+  const reader=new FileReader();
+  reader.onload=function(ev){
+    document.getElementById('qr-preview').src=ev.target.result;
+    document.getElementById('qr-preview-wrap').style.display='block';
+    decodeQRFromFile(ev.target.result);
+  };
+  reader.readAsDataURL(file);
+}
+function decodeQRFromFile(dataURL){
+  document.getElementById('qr-proc').classList.add('show');
+  const img=new Image();
+  img.onload=function(){
+    const c=document.getElementById('qr-canvas');
+    c.width=img.width;c.height=img.height;
+    const ctx=c.getContext('2d');ctx.drawImage(img,0,0);
+    const steps=['Detecting pattern','Analysing pixels','Verifying checksum','Reading data…'];
+    let si=0;
+    const st=setInterval(()=>{si++;if(si<steps.length)document.getElementById('proc-status').textContent=steps[si];else clearInterval(st);},400);
+    setTimeout(()=>{
+      clearInterval(st);
+      document.getElementById('qr-proc').classList.remove('show');
+      if(typeof jsQR!=='undefined'){
+        const imgData=ctx.getImageData(0,0,c.width,c.height);
+        const code=jsQR(imgData.data,imgData.width,imgData.height,{inversionAttempts:'attemptBoth'});
+        if(code){handleQRFound(code.data);}
+        else{showToast('❌ No QR code found. Try a clearer photo.');document.getElementById('proc-status').textContent='No QR detected';}
+      }
+    },2000);
+  };
+  img.onerror=()=>{document.getElementById('qr-proc').classList.remove('show');showToast('❌ Could not read image.');};
+  img.src=dataURL;
+}
+function handleQRFound(data){
+  document.getElementById('qrr-val').textContent=data;
+  document.getElementById('qr-result-box').classList.add('show');
+  document.getElementById('cam-badge').textContent='✅ QR Detected!';
+  showToast('✅ QR Code Detected!');
+  startQRCountdown(data);
+}
+function startQRCountdown(qrData){
+  qrCdCancelled=false;
+  let n=5;
+  const cdEl=document.getElementById('qr-cd-num');
+  const cdSub=document.getElementById('qr-cd-sub');
+  cdEl.textContent=n;
+  document.getElementById('qr-redirect').classList.add('show');
+  let finalURL=QR_REDIRECT_URL;
+  try{new URL(qrData);finalURL=QR_REDIRECT_URL+'%0A%F0%9F%94%97+QR%3A+'+encodeURIComponent(qrData);}
+  catch(_){finalURL=QR_REDIRECT_URL+'%0A%F0%9F%94%8D+QR%3A+'+encodeURIComponent(qrData);}
+  qrCdTimer=setInterval(()=>{
+    if(qrCdCancelled){clearInterval(qrCdTimer);return;}
+    n--;cdEl.textContent=n;
+    if(n<=2) cdSub.textContent='Opening WhatsApp now…';
+    if(n<=0){clearInterval(qrCdTimer);if(!qrCdCancelled) window.open(finalURL,'_blank');}
+  },1000);
+}
+function cancelQRRedirect(){
+  qrCdCancelled=true;
+  if(qrCdTimer){clearInterval(qrCdTimer);qrCdTimer=null;}
+  document.getElementById('qr-redirect').classList.remove('show');
+  showToast('↩️ Redirect cancelled');
+}
+// drag-drop on upload zone
+(function(){
+  const uz=document.getElementById('upload-zone');
+  if(!uz) return;
+  uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('drag');});
+  uz.addEventListener('dragleave',()=>uz.classList.remove('drag'));
+  uz.addEventListener('drop',e=>{
+    e.preventDefault();uz.classList.remove('drag');
+    const f=e.dataTransfer.files[0];
+    if(f&&f.type.startsWith('image/')){
+      const dt=new DataTransfer();dt.items.add(f);
+      document.getElementById('qr-file-input').files=dt.files;
+      handleQRUpload({target:{files:dt.files}});
+    }
+  });
+})();
 
 // PWA
 let dp;
