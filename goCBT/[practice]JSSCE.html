@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🎓 goCBT JSS Pro</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--og:#00d28d;--op:#4b44e0;--grad:linear-gradient(135deg,#00d28d 0%,#4b44e0 100%);--danger:#ff4d4d;--warn:#ffb800;--bg:#f8f9fa;--card:#fff;--txt:#333;--sub:#777;--bdr:#eee}
+body.dark-mode{--bg:#121212;--card:#252525;--txt:#fff;--sub:#aaa;--bdr:#333}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif;transition:background .3s,color .3s;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);min-height:100vh;overflow-x:hidden}
+.app{width:100%;max-width:600px;margin:0 auto;min-height:100vh;background:var(--bg);display:flex;flex-direction:column}
+#splash{position:fixed;inset:0;background:var(--grad);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .6s}
+.s-logo{font-size:3.5rem;margin-bottom:20px;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
+header{padding:15px 20px;background:var(--card);display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--bdr);position:sticky;top:0;z-index:100}
+.hd-left{display:flex;align-items:center;gap:15px}
+.back-btn{background:rgba(128,128,128,.1);border:none;border-radius:10px;width:35px;height:35px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--txt);font-size:1.2rem;font-weight:bold}
+.search-area{padding:10px 15px;background:var(--card);border-bottom:1px solid var(--bdr)}
+.search-input{width:100%;padding:10px 15px;border-radius:10px;border:1px solid var(--bdr);background:var(--bg);color:var(--txt);outline:none;font-size:.85rem}
+.bal-card{margin:10px 15px;padding:20px;background:var(--grad);border-radius:20px;color:#fff}
+.bal-hdr{display:flex;justify-content:space-between;align-items:flex-start}
+.ready-card{margin:15px 15px 5px;padding:15px;background:var(--card);border-radius:20px;border:1px solid var(--bdr)}
+.ready-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;color:var(--txt)}
+.prog{width:100%;height:8px;background:rgba(128,128,128,.1);border-radius:10px;overflow:hidden}
+#r-bar{height:100%;width:0%;transition:.8s;background:var(--og)}
+.scroll{flex:1;overflow-y:auto;padding:10px 15px 120px}
+.dept-hdr{font-size:.75rem;font-weight:800;color:var(--op);margin:20px 0 10px 5px;text-transform:uppercase;letter-spacing:1px}
+.topic-card{background:var(--card);border-radius:18px;padding:15px;margin-bottom:15px;box-shadow:0 4px 12px rgba(0,0,0,.05);border:1px solid var(--bdr)}
+.card-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px}
+.s-title{font-size:.95rem;font-weight:800;color:var(--txt)}
+.t-badge{font-size:.7rem;font-weight:800;color:var(--op);background:rgba(75,68,224,.1);padding:2px 8px;border-radius:5px}
+.cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.btn-cta{padding:10px;border-radius:8px;border:1px solid var(--bdr);font-size:.7rem;font-weight:700;cursor:pointer;background:rgba(128,128,128,.05);color:var(--txt);text-align:center}
+
+/* PIN MODALS */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+.modal{background:var(--card);width:92%;max-width:400px;border-radius:25px;padding:25px;color:var(--txt)}
+.m-input{width:100%;padding:14px;border-radius:12px;border:1px solid var(--bdr);margin:10px 0;background:var(--bg);color:var(--txt)}
+
+/* IFRAME MODAL */
+.modal-full{background:var(--card);width:100%;height:100%;display:none;position:fixed;inset:0;z-index:2000;flex-direction:column}
+.m-hdr{padding:15px;background:var(--card);border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center}
+iframe{flex:1;width:100%;border:none}
+.btn-finish{background:var(--og);color:#fff;border:none;padding:15px;font-weight:800;cursor:pointer}
+
+nav{position:fixed;bottom:0;left:0;width:100%;background:var(--card);display:flex;justify-content:space-around;padding:15px;border-top:1px solid var(--bdr);z-index:100}
+</style>
+</head>
+<body class="light-mode">
+
+<div id="splash">
+    <div class="s-logo">🎓</div>
+    <div style="color:#fff;font-weight:800;font-size:1.5rem;letter-spacing:2px">goCBT JSS Pro</div>
+</div>
+
+<div class="app">
+    <header>
+        <div class="hd-left">
+            <button class="back-btn" onclick="window.history.back()">‹</button>
+            <div style="font-weight:800;color:var(--op);font-size:1.1rem">🎓 JSS Academic</div>
+        </div>
+        <span onclick="toggleDark()" style="cursor:pointer;font-size:1.2rem">🌓</span>
+    </header>
+
+    <div class="search-area">
+        <input type="text" id="search" class="search-input" placeholder="Search 15 JSS subjects..." oninput="renderTopics()">
+    </div>
+
+    <div class="bal-card">
+        <div class="bal-hdr">
+            <div>
+                <small style="opacity:.9">Wallet Balance:</small>
+                <h2 id="bal-display">₦1,000</h2>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:5px">
+                <button onclick="openM('m-verify')" style="background:var(--og);color:#fff;border:none;padding:6px 12px;border-radius:8px;font-size:.65rem;font-weight:800;cursor:pointer">VERIFY PIN</button>
+                <button onclick="window.open('https://official-gocbt.github.io/pin_purchase/practice_pin_purchase.html')" style="background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.4);color:#fff;padding:6px 12px;border-radius:8px;font-size:.65rem;font-weight:800;cursor:pointer">BUY PIN</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="ready-card">
+        <div class="ready-hdr"><span style="font-weight:800;font-size:.8rem">Syllabus Progress</span></div>
+        <div class="prog"><div id="r-bar"></div></div>
+        <div style="margin-top:8px;font-size:.65rem;color:var(--sub);text-align:right" id="r-text">0/15 Subjects Done</div>
+    </div>
+
+    <div class="scroll" id="topics"></div>
+
+    <nav>
+        <a href="#" style="text-decoration:none">🏠</a>
+        <a href="#" style="color:var(--op);text-decoration:none">📚</a>
+        <a href="#" style="text-decoration:none">🔄</a>
+    </nav>
+</div>
+
+<div id="m-iframe" class="modal-full">
+    <div class="m-hdr">
+        <div><b id="m-title" style="color:var(--txt)">Subject</b><br><small id="m-type" style="color:var(--op);font-weight:700"></small></div>
+        <button onclick="closeExam()" style="background:none;border:none;font-size:1.5rem;color:var(--sub)">×</button>
+    </div>
+    <iframe id="drill-frame" src=""></iframe>
+    <button class="btn-finish" onclick="openM('m-report')">FINISH & SUBMIT SCORE</button>
+</div>
+
+<div id="m-report" class="overlay">
+    <div class="modal">
+        <h3 style="margin-bottom:15px">Submit Your Score</h3>
+        <p style="font-size:.8rem;color:var(--sub);margin-bottom:15px">Please provide your details to sync your performance with our database.</p>
+        <input type="text" id="rep-name" class="m-input" placeholder="Full Name">
+        <input type="email" id="rep-email" class="m-input" placeholder="Email Address">
+        <input type="tel" id="rep-phone" class="m-input" placeholder="Phone Number">
+        <input type="text" id="rep-score" class="m-input" placeholder="Score (e.g. 45/50)">
+        <button onclick="sendToWhatsapp()" style="width:100%;background:var(--op);color:#fff;border:none;padding:15px;border-radius:12px;font-weight:800;margin-top:10px">SUBMIT TO WHATSAPP</button>
+        <button onclick="closeM()" style="width:100%;background:none;border:none;color:var(--sub);margin-top:10px">Cancel</button>
+    </div>
+</div>
+
+<div id="m-verify" class="overlay">
+    <div class="modal">
+        <h3>Verify Study Pin</h3>
+        <input type="text" id="pin-input" class="m-input" placeholder="Enter 12-digit PIN">
+        <button onclick="verifyPin()" style="width:100%;background:var(--og);color:#fff;border:none;padding:15px;border-radius:12px;font-weight:800">ACTIVATE PIN</button>
+        <button onclick="closeM()" style="width:100%;background:none;border:none;color:var(--sub);margin-top:10px">Cancel</button>
+    </div>
+</div>
+
+<script>
+const S={
+    set:(k,v)=>localStorage.setItem(k,JSON.stringify(v)),
+    get:(k,fb)=>{const d=localStorage.getItem(k);return d?JSON.parse(d):fb}
+};
+
+let wallet = S.get('wallet', 1000);
+let completedSubjects = S.get('completed_subjects', []);
+
+const jssSubjects = [
+    {id: 1, title: "Mathematics", desc: "Algebra, Geometry & Arithmetic", url: "https://gocbt.com.ng/exams/maths"},
+    {id: 2, title: "English Studies", desc: "Grammar, Literature & Composition", url: "https://gocbt.com.ng/exams/english"},
+    {id: 3, title: "Basic Science", desc: "Living things, Energy & Matter", url: "https://gocbt.com.ng/exams/science"},
+    {id: 4, title: "Social Studies", desc: "Society, Culture & Environment", url: "https://gocbt.com.ng/exams/social"},
+    {id: 5, title: "Civic Education", desc: "Governance, Rights & Duties", url: "https://gocbt.com.ng/exams/civic"},
+    {id: 6, title: "Agricultural Science", desc: "Crop Production & Soil Science", url: "https://gocbt.com.ng/exams/agric"},
+    {id: 7, title: "Home Economics", desc: "Nutrition, Textiles & Management", url: "https://gocbt.com.ng/exams/home-ec"},
+    {id: 8, title: "Basic Technology", desc: "Tools, Materials & Drawing", url: "https://gocbt.com.ng/exams/tech"},
+    {id: 9, title: "Business Studies", desc: "Office Practice & Book-keeping", url: "https://gocbt.com.ng/exams/business"},
+    {id: 10, title: "Computer Studies", desc: "Hardware, Software & Logic", url: "https://gocbt.com.ng/exams/computer"},
+    {id: 11, title: "Christian Religious Studies", desc: "The Bible & Moral Instruction", url: "https://gocbt.com.ng/exams/crs"},
+    {id: 12, title: "Islamic Religious Studies", desc: "Quran, Hadith & Sharia", url: "https://gocbt.com.ng/exams/irs"},
+    {id: 13, title: "Physical & Health Education", desc: "Sports, Anatomy & Hygiene", url: "https://gocbt.com.ng/exams/phe"},
+    {id: 14, title: "Cultural & Creative Arts", desc: "Music, Drama & Fine Art", url: "https://gocbt.com.ng/exams/art"},
+    {id: 15, title: "Nigerian Languages", desc: "Hausa, Igbo or Yoruba Studies", url: "https://gocbt.com.ng/exams/lang"}
+];
+
+let activeExam = { id: null, title: "", isTrial: true };
+
+function updateUI() {
+    document.getElementById('bal-display').innerText = `₦${wallet.toLocaleString()}`;
+    const done = completedSubjects.length;
+    const perc = (done / 15) * 100;
+    document.getElementById('r-bar').style.width = perc + '%';
+    document.getElementById('r-text').innerText = `${done}/15 Subjects Done`;
+}
+
+function renderTopics() {
+    const container = document.getElementById('topics');
+    const search = document.getElementById('search').value.toLowerCase();
+    let html = '';
+    
+    jssSubjects.forEach(s => {
+        if (s.title.toLowerCase().includes(search)) {
+            const isDone = completedSubjects.includes(s.id);
+            html += `
+                <div class="topic-card">
+                    <div class="card-hdr">
+                        <span class="s-title">${s.title} ${isDone ? '✅' : ''}</span>
+                        <span class="t-badge">JSS 1-3</span>
+                    </div>
+                    <p style="font-size:.75rem;color:var(--sub);margin-bottom:12px">${s.desc}</p>
+                    <div class="cta-grid">
+                        <button class="btn-cta" onclick="openExam(${s.id}, true)">Drill Trial (Free)</button>
+                        <button class="btn-cta" style="border-color:var(--op);color:var(--op)" onclick="openExam(${s.id}, false)">Main Drill (₦200)</button>
+                    </div>
+                </div>`;
+        }
+    });
+    container.innerHTML = html;
+}
+
+function openExam(id, isTrial) {
+    if (!isTrial) {
+        if (wallet < 200) { alert("Insufficient Balance. Please Topup or Verify Pin."); return; }
+        wallet -= 200;
+        S.set('wallet', wallet);
+        updateUI();
+    }
+
+    const sub = jssSubjects.find(s => s.id === id);
+    activeExam = { id, title: sub.title, isTrial };
+    
+    document.getElementById('m-title').innerText = sub.title;
+    document.getElementById('m-type').innerText = isTrial ? "10 QUESTIONS TRIAL" : "50 QUESTIONS MAIN TEST";
+    document.getElementById('drill-frame').src = sub.url + (isTrial ? "?mode=trial" : "?mode=main");
+    document.getElementById('m-iframe').style.display = 'flex';
+}
+
+function closeExam() {
+    document.getElementById('m-iframe').style.display = 'none';
+    document.getElementById('drill-frame').src = '';
+}
+
+function sendToWhatsapp() {
+    const name = document.getElementById('rep-name').value;
+    const email = document.getElementById('rep-email').value;
+    const phone = document.getElementById('rep-phone').value;
+    const score = document.getElementById('rep-score').value;
+
+    if(!name || !score) { alert("Please fill Name and Score"); return; }
+
+    if (!activeExam.isTrial && !completedSubjects.includes(activeExam.id)) {
+        completedSubjects.push(activeExam.id);
+        S.set('completed_subjects', completedSubjects);
+    }
+
+    const waMsg = `*JSS SCORE REPORT*%0A------------------%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Email:* ${email}%0A*Subject:* ${activeExam.title}%0A*Mode:* ${activeExam.isTrial ? 'Trial' : 'Main TEST'}%0A*Score:* ${score}%0A------------------%0A*Status:* ${activeExam.isTrial ? 'Practice' : 'Completed ✅'}`;
+    
+    window.open(`https://wa.me/2348157505037?text=${waMsg}`);
+    closeM();
+    closeExam();
+    renderTopics();
+    updateUI();
+}
+
+function verifyPin() {
+    const pin = document.getElementById('pin-input').value;
+    if(pin.length >= 10) {
+        wallet += 2000;
+        S.set('wallet', wallet);
+        alert("Pin Verified! ₦2,000 added to wallet.");
+        closeM();
+        updateUI();
+    } else {
+        alert("Invalid Pin Format");
+    }
+}
+
+function openM(id) { document.getElementById(id).style.display = 'flex'; }
+function closeM() { document.querySelectorAll('.overlay').forEach(m => m.style.display = 'none'); }
+function toggleDark() { 
+    document.body.classList.toggle('dark-mode'); 
+    S.set('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light'); 
+}
+function resetAll() { if(confirm('Clear all progress?')){localStorage.clear();location.reload();} }
+
+window.addEventListener('load', () => {
+    if(S.get('theme')==='dark') document.body.classList.add('dark-mode');
+    setTimeout(() => {
+        document.getElementById('splash').style.opacity = '0';
+        setTimeout(() => document.getElementById('splash').style.display = 'none', 600);
+    }, 1000);
+    updateUI();
+    renderTopics();
+});
+</script>
+</body>
+</html>
