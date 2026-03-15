@@ -3,2008 +3,847 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>🎓 goCBT Academy Pro</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>🎓 goCBT | goAPPs by DigitalSolution</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
+/* ── TOKENS ── */
 :root{
-  --og:#00d28d;--op:#4b44e0;--grad:linear-gradient(135deg,#00d28d 0%,#4b44e0 100%);
-  --danger:#ff4d4d;--warn:#ffb800;--bg:#f0f2f8;--card:#fff;--txt:#1a1a2e;
-  --sub:#6b7280;--bdr:#e5e7eb;--sidebar:260px;--nav-h:70px;
-  --shadow:0 4px 24px rgba(75,68,224,.10);
+  --green:#00d28d;--purple:#4b44e0;
+  --grad:linear-gradient(135deg,#00d28d 0%,#4b44e0 100%);
+  --bg:#0f0f0f;--surface:#1a1a1a;--card:#222;--card2:#2a2a2a;
+  --border:#2e2e2e;--text:#f0f0f0;--sub:#888;--danger:#ff4d4d;
+  --glow:0 4px 24px rgba(0,210,141,.2);
+  --primary:#00d28d;--input-bg:#1e2e26;--overlay:rgba(0,0,0,0.8);
+  --switch-track:rgba(255,255,255,0.15);
 }
-body.dark-mode{
-  --bg:#0d0d1a;--card:#181830;--txt:#f0f0ff;--sub:#8888bb;--bdr:#2a2a4a;
-  --shadow:0 4px 24px rgba(0,0,0,.4);
-}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);min-height:100vh;transition:background .3s,color .3s;overflow-x:hidden}
-
-/* ── SIDEBAR ── */
-.sidebar{
-  position:fixed;top:0;left:0;width:var(--sidebar);height:100vh;
-  background:var(--card);border-right:1px solid var(--bdr);z-index:200;
-  display:flex;flex-direction:column;transform:translateX(-100%);
-  transition:transform .35s cubic-bezier(.4,0,.2,1);
-  box-shadow:4px 0 40px rgba(75,68,224,.12);
-}
-.sidebar.open{transform:translateX(0)}
-.sidebar-header{
-  padding:22px 20px 18px;background:var(--grad);color:#fff;
-  display:flex;align-items:center;gap:12px;
-}
-.sidebar-logo{font-size:1.8rem}
-.sidebar-brand{font-size:1rem;font-weight:900;letter-spacing:.5px}
-.sidebar-brand span{opacity:.8;font-size:.7rem;display:block;font-weight:500}
-.sidebar-nav{flex:1;padding:16px 12px;overflow-y:auto}
-.sidebar-section{font-size:.6rem;font-weight:800;color:var(--sub);letter-spacing:2px;text-transform:uppercase;padding:12px 8px 6px}
-.sidebar-item{
-  display:flex;align-items:center;gap:12px;padding:11px 14px;
-  border-radius:12px;margin-bottom:2px;cursor:pointer;color:var(--txt);
-  font-size:.82rem;font-weight:600;transition:all .2s;text-decoration:none;
-}
-.sidebar-item:hover,.sidebar-item.active{background:rgba(75,68,224,.1);color:var(--op)}
-.sidebar-item .si-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;background:rgba(75,68,224,.08)}
-.sidebar-item.active .si-icon{background:var(--op);filter:brightness(1.2)}
-.sidebar-footer{padding:16px 12px;border-top:1px solid var(--bdr)}
-.sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199;display:none;backdrop-filter:blur(3px)}
-.sidebar-overlay.show{display:block}
-
-/* ── MAIN WRAPPER ── */
-.app-wrap{min-height:100vh;display:flex;flex-direction:column;padding-bottom:var(--nav-h)}
-
-/* ── HEADER ── */
-header{
-  padding:0 16px;height:56px;background:var(--card);
-  display:flex;justify-content:space-between;align-items:center;
-  border-bottom:1px solid var(--bdr);position:sticky;top:0;z-index:100;
-  box-shadow:0 2px 12px rgba(75,68,224,.06);
-}
-.hd-left{display:flex;align-items:center;gap:10px}
-.menu-btn{
-  width:36px;height:36px;border-radius:10px;border:none;
-  background:rgba(75,68,224,.08);cursor:pointer;color:var(--op);
-  display:flex;align-items:center;justify-content:center;font-size:1.1rem;
-}
-.brand{font-size:.95rem;font-weight:900;color:var(--op);font-family:'Space Grotesk',sans-serif}
-.hd-right{display:flex;align-items:center;gap:8px}
-.hd-btn{
-  width:34px;height:34px;border-radius:9px;border:none;background:rgba(128,128,128,.08);
-  cursor:pointer;color:var(--txt);font-size:1rem;display:flex;align-items:center;justify-content:center;
-}
-
-/* ── BREADCRUMB ── */
-.breadcrumb{
-  padding:8px 16px;background:var(--card);border-bottom:1px solid var(--bdr);
-  display:flex;align-items:center;gap:6px;font-size:.68rem;font-weight:600;color:var(--sub);
-  overflow-x:auto;white-space:nowrap;
-}
-.bc-item{color:var(--sub);cursor:pointer}
-.bc-item.active{color:var(--op)}
-.bc-sep{opacity:.4}
-
-/* ── ADVERT SLIDER ── */
-.advert-wrap{padding:10px 16px 0;overflow:hidden}
-.advert-slider{
-  display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;
-  scrollbar-width:none;padding-bottom:4px;
-}
-.advert-slider::-webkit-scrollbar{display:none}
-.ad-card{
-  flex:0 0 calc(100% - 8px);scroll-snap-align:start;border-radius:16px;
-  padding:14px 18px;display:flex;align-items:center;gap:14px;
-  color:#fff;position:relative;overflow:hidden;min-height:72px;
-}
-.ad-card::before{
-  content:'';position:absolute;top:-20px;right:-20px;
-  width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,.1);
-}
-.ad-card::after{
-  content:'';position:absolute;bottom:-30px;right:30px;
-  width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.07);
-}
-.ad-icon{font-size:2rem;z-index:1}
-.ad-content{z-index:1;flex:1}
-.ad-content b{font-size:.85rem;display:block;font-weight:800}
-.ad-content span{font-size:.68rem;opacity:.85}
-.ad-btn{
-  z-index:1;background:rgba(255,255,255,.25);border:1px solid rgba(255,255,255,.4);
-  color:#fff;padding:5px 12px;border-radius:8px;font-size:.65rem;font-weight:800;
-  cursor:pointer;white-space:nowrap;text-decoration:none;
-}
-.ad-dots{display:flex;justify-content:center;gap:5px;margin-top:6px}
-.ad-dot{width:5px;height:5px;border-radius:50%;background:var(--bdr);transition:.3s}
-.ad-dot.active{background:var(--op);width:14px;border-radius:3px}
-
-/* ── SEARCH ── */
-.search-area{padding:10px 16px;background:var(--card);border-bottom:1px solid var(--bdr)}
-.search-input{
-  width:100%;padding:10px 14px 10px 38px;border-radius:12px;
-  border:1.5px solid var(--bdr);background:var(--bg);color:var(--txt);
-  outline:none;font-size:.83rem;font-family:inherit;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:12px center;
-  transition:border-color .2s;
-}
-.search-input:focus{border-color:var(--op)}
-
-/* ── STATS & BALANCE ── */
-.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 16px 0}
-.stat-card{
-  background:var(--card);padding:12px 14px;border-radius:14px;
-  border:1px solid var(--bdr);text-align:center;box-shadow:var(--shadow);
-}
-.stat-card small{font-size:.6rem;color:var(--sub);display:block;margin-bottom:3px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
-.stat-card span{font-size:.95rem;font-weight:800;color:var(--op)}
-.bal-card{
-  margin:10px 16px;padding:18px 20px;background:var(--grad);
-  border-radius:18px;color:#fff;position:relative;overflow:hidden;
-}
-.bal-card::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.08)}
-.bal-hdr{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:1}
-.btn-topup{
-  background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);
-  color:#fff;padding:6px 12px;border-radius:8px;font-size:.63rem;font-weight:800;cursor:pointer;
-}
-.bal-prog{width:100%;height:4px;background:rgba(255,255,255,.2);border-radius:10px;margin-top:14px;position:relative;z-index:1;overflow:hidden}
-.bal-prog div{height:100%;background:#fff;border-radius:10px;transition:width .5s}
-
-/* ── COUNTDOWN ── */
-.countdown-wrap{margin:0 16px 4px;padding:12px 16px;background:var(--card);border-radius:14px;border:1px solid var(--bdr);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between}
-.cd-label{font-size:.65rem;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px}
-.cd-timer{display:flex;gap:6px}
-.cd-unit{text-align:center}
-.cd-val{font-size:1.1rem;font-weight:900;color:var(--op);font-family:'Space Grotesk',sans-serif;background:rgba(75,68,224,.08);padding:2px 8px;border-radius:7px;min-width:36px;display:block}
-.cd-lbl{font-size:.5rem;color:var(--sub);font-weight:700;text-transform:uppercase;letter-spacing:.5px;display:block;margin-top:2px;text-align:center}
-.cd-sep{font-size:1.1rem;font-weight:900;color:var(--op);align-self:flex-start;padding-top:4px}
-
-/* ── READINESS ── */
-.ready-card{margin:10px 16px 5px;padding:14px 16px;background:var(--card);border-radius:16px;border:1px solid var(--bdr);box-shadow:var(--shadow)}
-.ready-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-#r-status{font-size:.65rem;font-weight:800;padding:3px 10px;border-radius:10px;text-transform:uppercase}
-.prog{width:100%;height:7px;background:rgba(128,128,128,.1);border-radius:10px;overflow:hidden}
-#r-bar{height:100%;width:0%;transition:.8s}
-
-/* ── SCROLL AREA ── */
-.scroll{flex:1;overflow-y:auto;padding:10px 16px 20px}
-.dept-hdr{font-size:.68rem;font-weight:800;color:var(--op);margin:20px 0 10px 2px;text-transform:uppercase;letter-spacing:1.5px;display:flex;align-items:center;gap:8px}
-.dept-hdr::after{content:'';flex:1;height:1px;background:rgba(75,68,224,.15)}
-
-/* ── TOPIC CARDS ── */
-.topic-card{
-  background:var(--card);border-radius:18px;padding:16px;margin-bottom:14px;
-  box-shadow:var(--shadow);border:1px solid var(--bdr);
-  transition:transform .2s,box-shadow .2s;
-}
-.topic-card:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(75,68,224,.15)}
-.card-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
-.s-title{font-size:.88rem;font-weight:800;color:var(--txt)}
-.t-badge{font-size:.63rem;font-weight:800;color:var(--op);background:rgba(75,68,224,.1);padding:3px 10px;border-radius:8px;white-space:nowrap}
-.t-badge.done{color:#007a52;background:rgba(0,210,141,.12)}
-.s-desc{font-size:.68rem;color:var(--sub);margin-bottom:12px;line-height:1.5}
-.btn-trial{
-  width:100%;padding:12px;border-radius:12px;border:none;
-  background:var(--op);color:#fff;font-weight:800;cursor:pointer;
-  font-size:.78rem;font-family:inherit;transition:opacity .2s;
-}
-.btn-trial:hover{opacity:.9}
-.btn-trial.done-style{background:rgba(0,210,141,.12);color:#007a52;border:1.5px solid rgba(0,210,141,.4)}
-.retry-badge{display:inline-block;font-size:.58rem;font-weight:800;padding:2px 7px;border-radius:7px;background:rgba(75,68,224,.1);color:var(--op);margin-left:6px}
-.best-badge{display:inline-block;font-size:.58rem;font-weight:800;padding:2px 7px;border-radius:7px;margin-left:4px}
-
-/* ── BOTTOM NAV ── */
-nav{
-  position:fixed;bottom:0;left:0;width:100%;height:var(--nav-h);
-  background:var(--card);border-top:1px solid var(--bdr);z-index:150;
-  display:flex;justify-content:space-around;align-items:center;padding:0 8px;
-  box-shadow:0 -4px 20px rgba(75,68,224,.08);
-}
-.nav-item{
-  display:flex;flex-direction:column;align-items:center;gap:3px;
-  padding:8px 14px;border-radius:12px;cursor:pointer;
-  text-decoration:none;color:var(--sub);transition:all .2s;flex:1;
-}
-.nav-item:hover,.nav-item.active{color:var(--op);background:rgba(75,68,224,.08)}
-.nav-icon{font-size:1.3rem}
-.nav-label{font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
-
-/* ── STICKY ACTION ── */
-.sticky-action{padding:10px 16px;background:var(--card);border-bottom:1px solid var(--bdr);display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.btn-buy{
-  background:var(--txt);color:var(--card);padding:11px;border-radius:12px;
-  font-weight:800;border:none;cursor:pointer;font-size:.72rem;text-decoration:none;
-  display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit;
-}
-.btn-verify{
-  background:transparent;color:var(--op);padding:9px;border-radius:12px;
-  font-weight:800;border:2px solid var(--op);cursor:pointer;font-size:.72rem;
-  text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px;
-}
-
-/* ── PIN DOTS ── */
-.pin-dots{display:flex;gap:12px;justify-content:center;margin:16px 0}
-.pin-dot{width:16px;height:16px;border-radius:50%;border:2px solid var(--op);background:transparent;transition:.2s}
-.pin-dot.filled{background:var(--op)}
-.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
-.pin-key{
-  padding:15px;border-radius:12px;border:1px solid var(--bdr);
-  background:rgba(128,128,128,.05);font-size:1.1rem;font-weight:800;
-  cursor:pointer;color:var(--txt);text-align:center;transition:.15s;font-family:inherit;
-}
-.pin-key:active{background:rgba(75,68,224,.1);transform:scale(.96)}
-.pin-key.del{color:var(--danger)}
-
-/* ── OVERLAY / MODAL ── */
-.overlay{
-  position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;
-  z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(8px);
-  padding:16px;
-}
-.overlay.show{display:flex}
-.modal{
-  background:var(--card);width:100%;max-width:460px;border-radius:22px;
-  padding:22px;color:var(--txt);max-height:92vh;overflow-y:auto;
-}
-.modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-.m-close{background:rgba(128,128,128,.1);border:none;width:32px;height:32px;border-radius:8px;font-size:1rem;color:var(--sub);cursor:pointer;display:flex;align-items:center;justify-content:center}
-
-/* ── IFRAME MODAL ── */
-.iframe-wrap{width:100%;height:420px;border-radius:14px;overflow:hidden;border:1px solid var(--bdr);background:var(--bg)}
-.iframe-wrap iframe{width:100%;height:100%;border:none}
-.btn-mark-complete{
-  width:100%;margin-top:12px;padding:13px;border-radius:12px;
-  background:var(--og);color:#fff;font-weight:800;border:none;cursor:pointer;
-  font-size:.85rem;font-family:inherit;transition:opacity .2s;
-}
-.btn-mark-complete:hover{opacity:.9}
-.btn-mark-complete:disabled{opacity:.5;cursor:not-allowed}
-
-/* ── DRILL / QUIZ ── */
-.q-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
-.q-badge{font-size:.63rem;font-weight:800;background:rgba(75,68,224,.1);color:var(--op);padding:4px 10px;border-radius:20px}
-.q-num{font-size:.68rem;color:var(--sub)}
-.q-prog{height:4px;background:rgba(128,128,128,.1);border-radius:10px;margin-bottom:14px;overflow:hidden}
-.q-fill{height:100%;background:var(--op);transition:width .4s}
-.q-text{font-size:.88rem;font-weight:700;color:var(--txt);margin-bottom:14px;line-height:1.6}
-.q-opts{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
-.q-opt{
-  padding:11px 14px;border-radius:12px;border:1.5px solid var(--bdr);
-  background:rgba(128,128,128,.03);color:var(--txt);font-size:.78rem;
-  font-weight:600;cursor:pointer;text-align:left;transition:all .2s;font-family:inherit;
-}
-.q-opt:hover{border-color:var(--op);background:rgba(75,68,224,.05)}
-.q-opt.correct{border-color:var(--og)!important;background:rgba(0,210,141,.1)!important;color:#007a52!important}
-.q-opt.wrong{border-color:var(--danger)!important;background:rgba(255,77,77,.1)!important;color:#c0392b!important}
-.q-opt.disabled{pointer-events:none}
-.q-fb{font-size:.75rem;font-weight:700;padding:10px 14px;border-radius:10px;margin-bottom:12px;display:none}
-.q-fb.show{display:block}
-.q-fb.ok{background:rgba(0,210,141,.1);color:#007a52;border:1px solid rgba(0,210,141,.3)}
-.q-fb.bad{background:rgba(255,77,77,.1);color:#c0392b;border:1px solid rgba(255,77,77,.3)}
-.btn-qnext{
-  background:var(--op);color:#fff;width:100%;padding:12px;
-  border-radius:12px;border:none;font-weight:800;cursor:pointer;
-  font-size:.83rem;display:block;margin-bottom:8px;font-family:inherit;
-}
-.score-big{font-size:2.6rem;font-weight:900;text-align:center;margin:8px 0 3px;font-family:'Space Grotesk',sans-serif}
-.score-lbl{font-size:.75rem;color:var(--sub);text-align:center;margin-bottom:6px}
-
-/* ── LEADERBOARD ── */
-.lb-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--bdr);font-size:.82rem}
-
-/* ── METHOD ITEMS ── */
-.method-item{
-  display:flex;align-items:center;padding:14px;background:rgba(128,128,128,.05);
-  border-radius:14px;margin-bottom:10px;cursor:pointer;border:1px solid var(--bdr);
-  transition:all .2s;
-}
-.method-item:hover{border-color:var(--op);background:rgba(75,68,224,.05)}
-.mi-icon{font-size:1.3rem;margin-right:14px}
-.mi-info b{font-size:.82rem;display:block}.mi-info span{font-size:.63rem;color:var(--sub)}
-
-/* ── INPUT ── */
-.inp{
-  width:100%;padding:11px 14px;border-radius:12px;border:1.5px solid var(--bdr);
-  background:rgba(128,128,128,.04);color:var(--txt);font-size:.85rem;
-  outline:none;margin-bottom:10px;font-family:inherit;transition:border-color .2s;
-}
-.inp:focus{border-color:var(--op)}
-.btn-main{
-  width:100%;padding:12px;border-radius:12px;background:var(--op);color:#fff;
-  font-weight:800;border:none;cursor:pointer;font-size:.82rem;font-family:inherit;
-  transition:opacity .2s;
-}
-.btn-main:hover{opacity:.9}
-
-/* ── SHAKE ── */
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-.shake{animation:shake .22s ease-in-out 0s 2}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--green);border-radius:2px}
+a{text-decoration:none;color:inherit}
+button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none}
 
 /* ── SPLASH ── */
-#splash{
-  position:fixed;inset:0;background:var(--grad);display:flex;flex-direction:column;
-  align-items:center;justify-content:center;z-index:9999;transition:opacity .6s;
+#splash{position:fixed;inset:0;background:linear-gradient(135deg,#062c1e 0%,#00d28d 100%);
+  z-index:5000;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;transition:opacity .6s ease}
+#splash.hide{opacity:0;pointer-events:none}
+.spin{width:38px;height:38px;border:3px solid rgba(255,255,255,.25);border-top-color:#fff;
+  border-radius:50%;margin:18px auto;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── OFFLINE ── */
+#offline-screen{display:none;position:fixed;inset:0;background:var(--bg);z-index:4000;
+  flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:28px}
+#offline-screen.show{display:flex}
+
+/* ── PUSH NOTIFICATION ── */
+#push-notif{
+  position:fixed;top:-80px;left:50%;transform:translateX(-50%);
+  width:calc(100% - 28px);max-width:520px;
+  background:var(--card);border:1px solid var(--green);
+  border-radius:16px;padding:12px 16px;
+  display:flex;align-items:center;gap:12px;
+  z-index:3500;box-shadow:0 8px 28px rgba(0,0,0,.55);
+  transition:top .45s cubic-bezier(.175,.885,.32,1.275)
 }
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-.s-logo{font-size:3.5rem;animation:pulse 1.6s infinite;margin-bottom:16px}
+#push-notif.show{top:12px}
+.notif-ico{width:34px;height:34px;border-radius:9px;background:var(--grad);
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem;color:#fff;flex-shrink:0}
+.notif-ttl{font-size:.72rem;font-weight:800;color:var(--green)}
+.notif-body{font-size:.63rem;color:var(--sub);margin-top:2px}
 
-/* ── LOW BALANCE WARNING ── */
-.low-bal-badge{
-  display:inline-flex;align-items:center;gap:4px;
-  font-size:.6rem;font-weight:800;color:var(--warn);background:rgba(255,184,0,.1);
-  padding:2px 8px;border-radius:8px;border:1px solid rgba(255,184,0,.3);margin-left:8px;
+/* ══════════════════════════════════════
+   SIDE MENU — goAPPs Nigeria style
+══════════════════════════════════════ */
+#menu-overlay{position:fixed;inset:0;background:var(--overlay);backdrop-filter:blur(3px);z-index:800;opacity:0;pointer-events:none;transition:.3s}
+#menu-overlay.open{opacity:1;pointer-events:auto}
+#side-menu{
+  position:fixed;left:-310px;top:0;width:310px;height:100%;
+  background:var(--surface);z-index:900;
+  display:flex;flex-direction:column;
+  padding:0 20px 20px;
+  border-right:1px solid var(--border);
+  box-sizing:border-box;overflow-y:auto;scrollbar-width:none;
+  transition:left .4s cubic-bezier(.4,0,.2,1);
 }
+#side-menu::-webkit-scrollbar{display:none}
+#side-menu.open{left:0;box-shadow:8px 0 36px rgba(0,0,0,.6)}
 
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar{width:4px;height:4px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(75,68,224,.2);border-radius:10px}
+.side-menu-top{padding:40px 0 10px;flex-shrink:0}
+.side-support-btn{width:100%;padding:10px;border-radius:10px;background:var(--grad);color:#fff;
+  border:none;font-weight:800;font-size:.8rem;cursor:pointer;margin-bottom:14px;
+  display:flex;align-items:center;justify-content:center;gap:6px}
+.profile-area{display:flex;align-items:center;gap:12px;cursor:pointer;padding:8px 0;margin-bottom:6px}
+.profile-avatar{width:48px;height:48px;border-radius:14px;overflow:hidden;flex-shrink:0;border:2px solid var(--green)}
+.profile-avatar canvas{display:block;width:100%;height:100%}
 
-/* ── PROFILE ── */
-.profile-avatar{
-  width:64px;height:64px;border-radius:50%;background:var(--grad);
-  display:flex;align-items:center;justify-content:center;font-size:1.8rem;
-  margin:0 auto 12px;
+.menu-item{display:flex;align-items:center;gap:15px;padding:12px 0;color:var(--text);
+  text-decoration:none;font-size:.85rem;border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer}
+.menu-item:hover{color:var(--green)}
+
+.switch{position:relative;display:inline-block;width:40px;height:20px}
+.switch input{opacity:0;width:0;height:0}
+.slider-sw{position:absolute;cursor:pointer;inset:0;background-color:var(--switch-track);transition:.4s;border-radius:20px}
+.slider-sw:before{position:absolute;content:"";height:14px;width:14px;left:3px;bottom:3px;background-color:white;transition:.4s;border-radius:50%}
+input:checked + .slider-sw{background-color:var(--green)}
+input:checked + .slider-sw:before{transform:translateX(20px)}
+
+/* ── HEADER ── */
+.hdr{
+  position:sticky;top:0;z-index:400;
+  background:var(--bg);border-bottom:1px solid var(--border);
+  padding:12px 16px;display:flex;align-items:center;justify-content:space-between
 }
+.hdr-l{display:flex;align-items:center;gap:10px}
+.ham{display:flex;flex-direction:column;gap:5px;padding:4px;cursor:pointer}
+.ham span{display:block;height:2px;border-radius:2px;background:var(--green);transition:.28s}
+.ham span:nth-child(1){width:22px}
+.ham span:nth-child(2){width:15px}
+.ham span:nth-child(3){width:22px}
+.ham.open span:nth-child(1){transform:translateY(7px) rotate(45deg);width:22px}
+.ham.open span:nth-child(2){opacity:0;width:22px}
+.ham.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.hdr-logo{font-size:.96rem;font-weight:800;letter-spacing:-.2px;
+  background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hdr-r{display:flex;align-items:center;gap:9px}
+.hpill{padding:5px 11px;border-radius:16px;font-size:.62rem;font-weight:700}
+.hp-str{background:rgba(0,210,141,.1);border:1px solid rgba(0,210,141,.25);color:var(--green)}
+.hp-xp{background:rgba(75,68,224,.12);border:1px solid rgba(75,68,224,.3);color:#a5b4fc}
+.hdr-av{width:32px;height:32px;border-radius:50%;background:var(--grad);display:flex;align-items:center;
+  justify-content:center;font-size:.82rem;overflow:hidden;flex-shrink:0;cursor:pointer;
+  border:2px solid rgba(0,210,141,.35)}
+.hdr-av img{width:100%;height:100%;object-fit:cover}
 
-@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:translateY(0);opacity:1}}
-.modal{animation:slideUp .3s ease}
+/* ── RSS TICKER — FASTER ── */
+.ticker-wrap{background:rgba(0,210,141,.06);border-bottom:1px solid rgba(0,210,141,.15);
+  padding:7px 0;overflow:hidden;position:relative}
+.ticker-wrap::before{content:'📢';position:absolute;left:0;top:50%;transform:translateY(-50%);
+  background:var(--green);padding:4px 10px;font-size:.7rem;z-index:2;border-radius:0 6px 6px 0}
+.ticker-track{display:flex;gap:0;animation:ticker 12s linear infinite;padding-left:100%;white-space:nowrap}
+.ticker-track:hover{animation-play-state:paused}
+.ticker-item{display:inline-flex;align-items:center;gap:8px;font-size:.68rem;font-weight:600;
+  color:var(--green);padding-right:60px;white-space:nowrap}
+.ticker-dot{width:5px;height:5px;border-radius:50%;background:var(--green);opacity:.5;flex-shrink:0}
+@keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+
+/* ── MAIN ── */
+.main{padding-bottom:76px}
+
+/* ── BALANCE CARD ── */
+.bal-card{background:var(--grad);border-radius:22px;padding:20px 20px 30px;
+  position:relative;overflow:hidden;box-shadow:var(--glow);margin-bottom:14px}
+.bal-card::after{content:'';position:absolute;bottom:-14px;left:-14px;right:-14px;
+  height:60px;background:rgba(255,255,255,.06);border-radius:50%}
+.bc-wlc{font-size:.66rem;color:rgba(255,255,255,.82);font-weight:600}
+.bc-name{font-size:1.25rem;font-weight:800;color:#fff;margin:4px 0 14px;letter-spacing:-.2px}
+.bc-row{display:flex;justify-content:space-between;font-size:.75rem;color:rgba(255,255,255,.88);margin-bottom:4px}
+.bc-total{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.bc-tlbl{font-size:.72rem;color:rgba(255,255,255,.82);font-weight:600}
+.bc-tval{font-size:1.6rem;font-weight:800;color:#fff;font-family:'JetBrains Mono',monospace}
+.bc-add{position:absolute;bottom:-19px;left:50%;transform:translateX(-50%);
+  width:42px;height:42px;background:var(--green);color:#fff;border:4px solid var(--bg);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:1.5rem;font-weight:800;cursor:pointer;z-index:2;
+  box-shadow:0 4px 14px rgba(0,210,141,.4);transition:.15s;text-decoration:none}
+.bc-add:active{transform:translateX(-50%) scale(1.1)}
+
+/* ── IMAGE BANNER SLIDER ── */
+.banner-wrap{margin:26px 0 14px;position:relative;overflow:hidden;border-radius:18px;box-shadow:var(--glow)}
+.banner-track{display:flex;transition:transform .5s cubic-bezier(.4,0,.2,1)}
+.banner-slide{min-width:100%;height:150px;border-radius:18px;position:relative;overflow:hidden;flex-shrink:0}
+.banner-slide img{width:100%;height:100%;object-fit:cover}
+.banner-slide .bs-overlay{position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(0,0,0,.55) 0%,rgba(0,0,0,.15) 100%);
+  display:flex;flex-direction:column;justify-content:flex-end;padding:14px 16px}
+.bs-tag{font-size:.55rem;font-weight:800;padding:3px 8px;border-radius:5px;
+  background:var(--green);color:#000;display:inline-block;margin-bottom:5px;width:fit-content}
+.bs-title{font-size:.9rem;font-weight:800;color:#fff;line-height:1.25}
+.bs-sub{font-size:.63rem;color:rgba(255,255,255,.8);margin-top:2px}
+.bs-color-1{background:linear-gradient(135deg,#00d28d,#4b44e0)}
+.bs-color-2{background:linear-gradient(135deg,#ff6b35,#f7931e)}
+.bs-color-3{background:linear-gradient(135deg,#4b44e0,#7c3aed)}
+.bs-color-4{background:linear-gradient(135deg,#0ea5e9,#00d28d)}
+.banner-dots{display:flex;justify-content:center;gap:6px;margin-top:9px}
+.b-dot{width:6px;height:6px;border-radius:50%;background:var(--border);transition:.3s;cursor:pointer}
+.b-dot.on{width:18px;background:var(--green);border-radius:4px}
+.banner-arrow{position:absolute;top:50%;transform:translateY(-50%);
+  width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.45);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:.75rem;
+  cursor:pointer;z-index:3;border:none;transition:.2s}
+.banner-arrow:hover{background:rgba(0,0,0,.7)}
+.banner-arrow.prev{left:10px}
+.banner-arrow.next{right:10px}
+
+/* ── INFO BANNER ── */
+.info-banner{background:var(--card);border:1px solid var(--border);border-radius:13px;
+  padding:11px 14px;display:flex;align-items:center;gap:11px;
+  margin-bottom:14px;font-size:.68rem;color:var(--sub);line-height:1.4}
+
+/* ── APPLY CARD ── */
+.apply-card{display:flex;align-items:center;gap:14px;background:var(--grad);color:#fff;
+  border-radius:16px;padding:16px 14px;margin-bottom:14px;cursor:pointer;
+  box-shadow:var(--glow);transition:.15s}
+.apply-card:active{transform:scale(.98)}
+.apply-icon{font-size:1.6rem;flex-shrink:0}
+.apply-card b{font-size:.9rem;font-weight:800;display:block}
+.apply-card small{font-size:.65rem;opacity:.82;line-height:1.3}
+.apply-arr{margin-left:auto;font-size:1.2rem;opacity:.75}
+
+/* ── SECTION HEADER ── */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin:16px 0 11px}
+.sec-ttl{font-size:.88rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px}
+.sec-ttl::before{content:'';width:3px;height:16px;background:var(--green);border-radius:2px;display:block}
+
+/* ── SERVICE GRID ── */
+.svc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.svc-item{display:flex;align-items:center;gap:11px;padding:13px 12px;
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  cursor:pointer;transition:.18s;text-decoration:none;position:relative;overflow:hidden}
+.svc-item::before{content:'';position:absolute;left:0;top:0;bottom:0;
+  width:3px;background:transparent;border-radius:3px 0 0 3px;transition:.2s}
+.svc-item:hover::before,.svc-item:active::before{background:var(--green)}
+.svc-item:hover{border-color:rgba(0,210,141,.3);background:rgba(0,210,141,.04);transform:translateY(-1px)}
+.svc-item:active{transform:scale(.96)}
+.svc-item.hi{background:var(--grad);border:none;box-shadow:0 4px 14px rgba(0,210,141,.25)}
+.svc-item.hi:hover{transform:translateY(-1px);box-shadow:0 7px 20px rgba(0,210,141,.35)}
+.svc-item.hi::before{display:none}
+.s-ico{font-size:1.2rem;flex-shrink:0}
+.s-name{font-size:.78rem;font-weight:800;display:block;color:var(--text)}
+.s-sub{font-size:.6rem;color:var(--sub)}
+.svc-item.hi .s-name,.svc-item.hi .s-sub{color:#fff}
+.svc-item.hi .s-sub{opacity:.82}
+
+/* ── PROMO STRIP ── */
+.promo-strip{display:flex;justify-content:center;margin:4px 0 16px}
+.promo-btn{display:inline-flex;align-items:center;gap:7px;
+  background:rgba(0,210,141,.08);border:1px solid rgba(0,210,141,.3);
+  border-radius:30px;padding:9px 18px;color:var(--green);
+  font-size:.72rem;font-weight:800;cursor:pointer;transition:.2s;text-decoration:none}
+.promo-btn:hover{background:rgba(0,210,141,.14);transform:translateY(-1px)}
+
+/* ══════════════════════════════
+   BOTTOM NAV — goAPPs NG style
+══════════════════════════════ */
+.bnav{
+  position:fixed;bottom:0;left:0;right:0;
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  display:flex;align-items:stretch;
+  z-index:300;
+  padding-bottom:env(safe-area-inset-bottom,0);
+  height:auto;
+  min-height:58px;
+  padding-top:0;
+}
+.bn{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:3px;
+  padding:10px 0 max(14px,env(safe-area-inset-bottom));
+  cursor:pointer;color:var(--sub);
+  font-size:.58rem;font-weight:700;transition:.15s;
+  text-decoration:none;background:none;border:none;
+  position:relative;
+}
+.bn.on,.bn:hover{color:var(--green)}
+.bn-ico{font-size:1.15rem;display:block}
+.bn.on::after{content:'';position:absolute;top:0;left:15%;right:15%;
+  height:2.5px;background:var(--grad);border-radius:0 0 4px 4px}
+
+/* ── MODALS ── */
+.mov{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;z-index:1000;
+  align-items:center;justify-content:center;backdrop-filter:blur(6px)}
+.mov.open{display:flex}
+.modal{background:var(--card);width:92%;max-width:440px;border-radius:22px;padding:22px;
+  border:1px solid var(--border);max-height:92vh;overflow-y:auto}
+.mcl{background:none;border:none;font-size:1.3rem;color:var(--sub);line-height:1;float:right;cursor:pointer}
+.pinp{width:100%;padding:10px 13px;border-radius:11px;border:1.5px solid var(--border);
+  background:rgba(255,255,255,.04);color:var(--text);font-size:.82rem;
+  font-family:'Inter',sans-serif;outline:none;margin-bottom:10px;transition:.2s}
+.pinp:focus{border-color:rgba(75,68,224,.5)}
+.pinp::placeholder{color:var(--sub)}
+.btnpri{width:100%;padding:12px;background:var(--grad);border:none;border-radius:12px;
+  color:#fff;font-size:.82rem;font-weight:800;margin-bottom:9px;cursor:pointer}
+.meth{display:flex;align-items:center;gap:12px;padding:13px;background:rgba(255,255,255,.03);
+  border-radius:13px;margin-bottom:9px;cursor:pointer;border:1px solid var(--border);transition:.2s}
+.meth:hover{border-color:rgba(0,210,141,.3);background:rgba(0,210,141,.04)}
+.meth-ico{font-size:1.1rem}
+.meth-b b{font-size:.82rem;display:block;color:var(--text)}
+.meth-b span{font-size:.63rem;color:var(--sub)}
+
+/* ── GOOGLE FORM MODAL ── */
+#m-apply .modal{max-width:600px;padding:16px}
+.form-modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.form-modal-hdr h3{font-size:.92rem;margin:0}
+#apply-iframe{width:100%;height:520px;border:none;border-radius:12px;background:#fff}
+@media(max-height:700px){#apply-iframe{height:380px}}
+
+/* ── OVERLAY MODALS (goAPPs style) ── */
+.overlay-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);
+  z-index:9999;align-items:center;justify-content:center;padding:20px;box-sizing:border-box}
+.overlay-modal.show{display:flex}
+.overlay-card{background:var(--card);padding:24px;border-radius:20px;width:100%;
+  max-width:340px;text-align:center;border:1px solid var(--border)}
+.overlay-card h3{margin:0 0 8px;color:var(--text);font-size:1rem}
+.overlay-card p{font-size:.78rem;color:var(--sub);margin:0 0 14px;line-height:1.5}
+.overlay-input{width:100%;padding:12px;margin:6px 0;border-radius:10px;
+  border:1px solid var(--border);background:var(--input-bg);
+  color:var(--text);font-size:.85rem;box-sizing:border-box;outline:none}
+.overlay-btn{width:100%;padding:13px;border-radius:12px;border:none;font-weight:800;font-size:.85rem;cursor:pointer;margin-top:8px}
+.overlay-btn.primary{background:var(--grad);color:#fff}
+.overlay-btn.secondary{background:transparent;color:var(--sub)}
+.overlay-cancel{margin-top:10px;font-size:.78rem;color:var(--sub);cursor:pointer}
+
+/* ── PROFILE ABSTRACT AVATAR ── */
+.profile-avatar canvas{width:100%;height:100%;display:block}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(14px);
+  background:var(--card2);border:1px solid var(--green);color:var(--green);
+  padding:10px 20px;border-radius:20px;font-size:.74rem;font-weight:700;
+  z-index:9999;opacity:0;transition:.28s;white-space:nowrap;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
-<body class="light-mode">
+<body>
 
 <!-- SPLASH -->
 <div id="splash">
-  <div class="s-logo">🎓</div>
-  <div style="color:#fff;font-weight:900;font-size:1.6rem;letter-spacing:2px;font-family:'Space Grotesk',sans-serif">goCBT Online</div>
-  <div style="color:rgba(255,255,255,.75);margin-top:8px;font-size:.8rem">Preparing your classroom...</div>
+  <div style="text-align:center;color:#fff">
+    <div style="font-size:2.8rem;margin-bottom:6px">🎓</div>
+    <h1 style="font-size:2rem;font-weight:800;margin:0">goCBT
+      <span style="background:rgba(255,255,255,.2);padding:2px 8px;border-radius:6px;margin-left:6px;font-size:1rem;vertical-align:middle">NG</span>
+    </h1>
+    <div class="spin"></div>
+    <p style="font-size:.7rem;letter-spacing:1px;opacity:.8">LOADING CLASS...</p>
+  </div>
 </div>
 
-<!-- SIDEBAR OVERLAY -->
-<div class="sidebar-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
+<!-- OFFLINE -->
+<div id="offline-screen">
+  <div style="font-size:3.5rem;margin-bottom:16px">📡</div>
+  <h2 style="font-size:1.1rem;margin-bottom:8px">You're Offline</h2>
+  <p style="color:var(--sub);font-size:.78rem;margin-bottom:24px;line-height:1.5;max-width:260px">Check your internet connection to continue using goAPPs.</p>
+  <button onclick="window.location.reload()" style="background:var(--grad);color:#fff;border:none;padding:13px 30px;border-radius:12px;font-size:.82rem;font-weight:800;cursor:pointer">Reload Page</button>
+</div>
 
-<!-- SIDEBAR -->
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <div class="sidebar-logo">🎓</div>
-    <div class="sidebar-brand">goCBT Academy<span>Senior Secondary Portal</span></div>
+<div id="toast-el" class="toast"></div>
+
+<!-- PUSH NOTIFICATION -->
+<div id="push-notif">
+  <div class="notif-ico">🎓</div>
+  <div>
+    <div class="notif-ttl" id="notif-ttl">goCBT</div>
+    <div class="notif-body" id="notif-body">Notification</div>
   </div>
-  <nav class="sidebar-nav">
-    <div class="sidebar-section">Main</div>
-    <div class="sidebar-item active" onclick="closeSidebar()"><span class="si-icon">📚</span>Study Hub</div>
-    <div class="sidebar-item" onclick="openLeaderboard();closeSidebar()"><span class="si-icon">🏆</span>Leaderboard</div>
-    <div class="sidebar-item" onclick="closeSidebar();openM('m-exam')"><span class="si-icon">📋</span>Exam Records</div>
+  <button onclick="closePush()" style="margin-left:auto;color:var(--sub);font-size:1.1rem;background:none;border:none;cursor:pointer">×</button>
+</div>
 
-    <div class="sidebar-section">Account</div>
-    <div class="sidebar-item" onclick="closeSidebar();openM('m-topup')"><span class="si-icon">💳</span>Top-up Tokens</div>
-    <a class="sidebar-item" href="https://official-gocbt.github.io/pin_purchase/practice_pin_purchase.html" target="_blank"><span class="si-icon">🛒</span>Buy PIN</a>
-    <a class="sidebar-item" href="https://wa.me/2348157505037?text=Hello%20Admin,%20I%20have%20made%20payment." target="_blank"><span class="si-icon">📄</span>Verify Payment</a>
-
-    <div class="sidebar-section">Settings</div>
-    <div class="sidebar-item" onclick="toggleDark();closeSidebar()"><span class="si-icon">🌓</span>Toggle Dark Mode</div>
-    <div class="sidebar-item" onclick="resetAll()"><span class="si-icon">🔄</span>Reset Progress</div>
-  </nav>
-  <div class="sidebar-footer">
-    <div style="font-size:.65rem;color:var(--sub);text-align:center">goCBT Academy Pro &copy; 2025</div>
-    <div style="font-size:.6rem;color:var(--sub);text-align:center;margin-top:2px">All rights reserved</div>
-  </div>
-</aside>
-
-<!-- MAIN APP -->
-<div class="app-wrap">
-
-  <!-- HEADER -->
-  <header>
-    <div class="hd-left">
-      <button class="menu-btn" onclick="openSidebar()">☰</button>
-      <div class="brand">🎓 goCBT Practice</div>
-    </div>
-    <div class="hd-right">
-      <button class="hd-btn" onclick="openLeaderboard()" title="Leaderboard">🏆</button>
-      <button class="hd-btn" onclick="toggleDark()" title="Toggle Theme">🌓</button>
-      <button class="hd-btn" onclick="openM('m-profile-view')" title="Profile">👤</button>
-    </div>
-  </header>
-
-  <!-- BREADCRUMB -->
-  <div class="breadcrumb">
-    <span class="bc-item" onclick="window.open('https://goapps-official.github.io/Welcome/','_blank')">🏠 Home</span>
-    <span class="bc-sep">›</span>
-    <span class="bc-item">📚 Study Hub</span>
-    <span class="bc-sep">›</span>
-    <span class="bc-item active" id="bc-current">All Subjects</span>
-  </div>
-
-  <!-- ADVERT SLIDER -->
-  <div class="advert-wrap">
-    <div class="advert-slider" id="adSlider">
-      <div class="ad-card" style="background:linear-gradient(135deg,#4b44e0,#7c3aed)">
-        <div class="ad-icon">🎯</div>
-        <div class="ad-content">
-          <b>WAEC/NECO Prep 2025</b>
-          <span>Get full access to 50 questions per subject. Start today!</span>
-        </div>
-        <a class="ad-btn" href="https://official-gocbt.github.io/pin_purchase/practice_pin_purchase.html" target="_blank">Get PIN</a>
-      </div>
-      <div class="ad-card" style="background:linear-gradient(135deg,#00d28d,#0891b2)">
-        <div class="ad-icon">📱</div>
-        <div class="ad-content">
-          <b>WhatsApp Support</b>
-          <span>Need help? Chat with our admin team 24/7</span>
-        </div>
-        <a class="ad-btn" href="https://wa.me/2348157505037" target="_blank">Chat Now</a>
-      </div>
-      <div class="ad-card" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">
-        <div class="ad-icon">🔥</div>
-        <div class="ad-content">
-          <b>Limited Time Offer!</b>
-          <span>Buy a PIN bundle and save up to 40% on tokens</span>
-        </div>
-        <a class="ad-btn" href="https://wa.me/2348157505037?text=I%20want%20a%20PIN%20bundle" target="_blank">Claim Deal</a>
-      </div>
-      <div class="ad-card" style="background:linear-gradient(135deg,#0d9488,#4b44e0)">
-        <div class="ad-icon">📊</div>
-        <div class="ad-content">
-          <b>Track Your Progress</b>
-          <span>Complete all subjects to climb the global leaderboard</span>
-        </div>
-        <button class="ad-btn" onclick="openLeaderboard()">View Rank</button>
+<!-- ══════════════════════════════
+     SIDE MENU — goAPPs NG style
+══════════════════════════════ -->
+<div id="menu-overlay" onclick="closeDrw()"></div>
+<div id="side-menu">
+  <div class="side-menu-top">
+    <!-- Support button at top -->
+    <a href="https://wa.me/2348157505037?text=Hello%20goSUPPORT" target="_blank" style="text-decoration:none">
+      <button class="side-support-btn">🤝 goSUPPORT — Get Help</button>
+    </a>
+    <!-- Profile area -->
+    <div class="profile-area" onclick="openProfileModal()">
+      <div class="profile-avatar"><canvas id="profile-canvas" width="96" height="96"></canvas></div>
+      <div>
+        <b id="user-name-profile" style="font-size:.9rem">Learner</b><br>
+        <small style="color:var(--green)">@goCBT_NG · Tap to edit</small>
       </div>
     </div>
-    <div class="ad-dots" id="adDots">
-      <div class="ad-dot active"></div>
-      <div class="ad-dot"></div>
-      <div class="ad-dot"></div>
-      <div class="ad-dot"></div>
+  </div>
+
+  <div style="flex:1;overflow-y:auto;scrollbar-width:none">
+    <small style="opacity:.6;text-transform:uppercase;font-size:.6rem;letter-spacing:1px">goCBT</small>
+    <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/[practice]class_selector.html" class="menu-item"><span>🧠</span> Practice Exam</a>
+    <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/[EnterClass]class_selector.html" class="menu-item"><span>📝</span> Enter Class</a>
+    <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/result_checker.html" class="menu-item"><span>📬</span> Result Checker</a>
+    <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/timetable.html" class="menu-item"><span>🗓️</span> Timetable</a>
+    <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/tasks.html" class="menu-item"><span>📂</span> Class Task</a>
+    <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/login.html" class="menu-item"><span>🔐</span> Facilitator Login</a>
+
+    <div style="margin-top:16px">
+      <small style="opacity:.6;text-transform:uppercase;font-size:.6rem">Settings</small>
+      <div class="menu-item" style="justify-content:space-between"><span>🌓 Light Mode</span><label class="switch"><input type="checkbox" onchange="toggleTheme(this)"><span class="slider-sw"></span></label></div>
+    </div>
+
+    <div style="margin-top:16px">
+      <small style="opacity:.6;text-transform:uppercase;font-size:.6rem">Wallet</small>
+      <div class="menu-item" onclick="openOverlay('wallet-address-modal')"><span>🔗</span> View Wallet Address</div>
+      <div class="menu-item" onclick="openMod('m-topup');closeDrw()"><span>➕</span> Top-up Tokens</div>
+    </div>
+
+    <div style="margin-top:16px">
+      <small style="opacity:.6;text-transform:uppercase;font-size:.6rem">Growth</small>
+      <div class="menu-item" onclick="inviteToGoApps()"><span>🎁</span> Invite to goAPPs</div>
+      <div class="menu-item" onclick="openBizPackageModal()"><span>🤖</span> Business Package</div>
     </div>
   </div>
 
-  <!-- STICKY ACTIONS -->
-  <div class="sticky-action">
-    <a href="https://official-gocbt.github.io/pin_purchase/practice_pin_purchase.html" target="_blank" class="btn-buy">💳 BUY PIN</a>
-    <a href="https://wa.me/2348157505037?text=Hello%20Admin,%20I%20have%20made%20payment.%20Here%20is%20my%20proof." target="_blank" class="btn-verify">📄 VERIFY</a>
+  <div style="padding-top:14px">
+    <a href="https://official-gocbt.github.io/pin_purchase/practice_pin_purchase.html"
+       style="display:block;width:100%;padding:13px;background:var(--grad);border:none;border-radius:12px;
+              color:#fff;font-size:.82rem;font-weight:800;text-align:center;text-decoration:none;
+              box-shadow:var(--glow)" onclick="soundAndHaptic('confirm')">
+      🔢 Buy Study PIN
+    </a>
   </div>
+</div>
 
-  <!-- STATS -->
-  <div class="stats-row">
-    <div class="stat-card"><small>Global Rank</small><span id="u-rank">#--</span></div>
-    <div class="stat-card"><small>Progress</small><span id="u-time">0 done</span></div>
+<!-- ══ OVERLAY MODALS ══ -->
+
+<!-- Profile Modal -->
+<div class="overlay-modal" id="profile-modal">
+  <div class="overlay-card">
+    <h3>✏️ Update Profile</h3>
+    <p>Enter your linked WhatsApp number to update your profile.</p>
+    <input class="overlay-input" type="tel" id="profile-wa" placeholder="e.g. 08012345678">
+    <button class="overlay-btn primary" onclick="submitProfile()">Submit via WhatsApp</button>
+    <p class="overlay-cancel" onclick="closeOverlay('profile-modal')">Cancel</p>
   </div>
+</div>
 
-  <!-- BALANCE -->
+<!-- Wallet Address Modal -->
+<div class="overlay-modal" id="wallet-address-modal">
+  <div class="overlay-card">
+    <h3>🔗 View Wallet Address</h3>
+    <p>Enter your WhatsApp number to receive your wallet address securely.</p>
+    <input class="overlay-input" type="tel" id="wallet-wa" placeholder="Your WhatsApp number">
+    <button class="overlay-btn primary" onclick="submitWalletAddress()">Send to WhatsApp</button>
+    <p class="overlay-cancel" onclick="closeOverlay('wallet-address-modal')">Cancel</p>
+  </div>
+</div>
+
+<!-- Business Package Modal -->
+<div class="overlay-modal" id="biz-package-modal">
+  <div class="overlay-card">
+    <h3>🤖 Business Package</h3>
+    <p>Automate your business processes by deploying AI for business. Let goAPPs handle operations while you focus on growth.</p>
+    <input class="overlay-input" type="text" id="biz-name" placeholder="Business Name">
+    <input class="overlay-input" type="email" id="biz-email" placeholder="Business Email">
+    <input class="overlay-input" type="tel" id="biz-wa" placeholder="WhatsApp Number">
+    <button class="overlay-btn primary" onclick="submitBizPackage()">Check Status</button>
+    <p class="overlay-cancel" onclick="closeOverlay('biz-package-modal')">Cancel</p>
+  </div>
+</div>
+
+<!-- ══ HEADER ══ -->
+<header class="hdr">
+  <div class="hdr-l">
+    <button class="ham" id="ham" onclick="toggleDrw()"><span></span><span></span><span></span></button>
+    <span class="hdr-logo">🎓 goCBT</span>
+  </div>
+  <div class="hdr-r">
+    <span class="hpill hp-str" id="streak-el">🔥 1d</span>
+    <span class="hpill hp-xp" id="xp-el">⚡ 0 XP</span>
+    <div class="hdr-av" onclick="location.href='https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/settings.html'">
+      <canvas id="hdr-avatar-canvas" width="64" height="64" style="width:100%;height:100%;display:block;border-radius:50%"></canvas>
+    </div>
+  </div>
+</header>
+
+<!-- ══ RSS TICKER (faster) ══ -->
+<div class="ticker-wrap">
+  <div class="ticker-track" id="ticker-track"></div>
+</div>
+
+<!-- ══ MAIN ══ -->
+<div class="main" style="padding:15px 15px 10px">
+
+  <!-- Balance Card -->
   <div class="bal-card" id="bal-card">
-    <div class="bal-hdr">
-      <div>
-        <small style="opacity:.85;font-size:.65rem;font-weight:700">PRACTICE TOKENS</small>
-        <h2 id="bal-display" style="margin-top:4px;font-family:'Space Grotesk',sans-serif;font-size:1.6rem">₦1,000</h2>
-      </div>
-      <button class="btn-topup" onclick="openM('m-topup')">➕ TOPUP PIN</button>
+    <div class="bc-wlc">Welcome to Class,</div>
+    <div class="bc-name" id="bc-name">Learner 👋</div>
+    <div class="bc-row"><span>Balance</span><span id="bc-bal">₦***.00</span></div>
+    <div class="bc-row"><span>Bonus</span><span>🏆 2.00gc</span></div>
+    <div class="bc-total">
+      <span class="bc-tlbl">💰 Total Token</span>
+      <span class="bc-tval" id="bc-total">₦1,000</span>
     </div>
-    <div class="bal-prog"><div id="use-bar"></div></div>
+    <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/balance.html" class="bc-add" onclick="soundAndHaptic('tap')">+</a>
   </div>
 
-  <!-- COUNTDOWN -->
-  <div class="countdown-wrap" id="countdown-wrap">
+  <!-- IMAGE BANNER SLIDER -->
+  <div class="banner-wrap" id="banner-wrap">
+    <button class="banner-arrow prev" onclick="bannerMove(-1);soundAndHaptic('tap')">‹</button>
+    <button class="banner-arrow next" onclick="bannerMove(1);soundAndHaptic('tap')">›</button>
+    <div class="banner-track" id="banner-track">
+      <div class="banner-slide bs-color-1">
+        <div class="bs-overlay">
+          <span class="bs-tag">🔥 NEW</span>
+          <div class="bs-title">JAMB 2026 Practice Now</div>
+          <div class="bs-sub">Over 10,000 past questions · AI-powered</div>
+        </div>
+      </div>
+      <div class="banner-slide bs-color-2">
+        <div class="bs-overlay">
+          <span class="bs-tag">📝 WAEC</span>
+          <div class="bs-title">WAEC Prep — Mock Exams Live</div>
+          <div class="bs-sub">Complete all subjects in one platform</div>
+        </div>
+      </div>
+      <div class="banner-slide bs-color-3">
+        <div class="bs-overlay">
+          <span class="bs-tag">💳 PIN</span>
+          <div class="bs-title">Get Your Study PIN Today</div>
+          <div class="bs-sub">Unlimited access for the full term</div>
+        </div>
+      </div>
+      <div class="banner-slide bs-color-4">
+        <div class="bs-overlay">
+          <span class="bs-tag">🏆 RESULT</span>
+          <div class="bs-title">Check Your CBT Results Instantly</div>
+          <div class="bs-sub">Real-time grading · Detailed breakdown</div>
+        </div>
+      </div>
+    </div>
+    <div class="banner-dots" id="banner-dots"></div>
+  </div>
+
+  <!-- Info Banner -->
+  <div class="info-banner">
+    <span style="font-size:1.4rem;flex-shrink:0">ℹ️</span>
+    <p>Enjoy millions of educational materials, exam prep resources, and live class support — all in one place.</p>
+  </div>
+
+  <!-- Apply Card — opens iframe modal -->
+  <div class="apply-card" onclick="openApplyModal()">
+    <div class="apply-icon">📋</div>
     <div>
-      <div class="cd-label">⏱ Exam Countdown</div>
-      <div style="font-size:.6rem;color:var(--sub);margin-top:2px" id="cd-subtitle">Next session timer</div>
+      <b>Apply to Study</b>
+      <small>Register for any examination and pass with flying colours.</small>
     </div>
-    <div class="cd-timer">
-      <div class="cd-unit"><span class="cd-val" id="cd-h">00</span><span class="cd-lbl">Hrs</span></div>
-      <span class="cd-sep">:</span>
-      <div class="cd-unit"><span class="cd-val" id="cd-m">00</span><span class="cd-lbl">Min</span></div>
-      <span class="cd-sep">:</span>
-      <div class="cd-unit"><span class="cd-val" id="cd-s">00</span><span class="cd-lbl">Sec</span></div>
-    </div>
+    <span class="apply-arr">›</span>
   </div>
 
-  <!-- READINESS -->
-  <div class="ready-card">
-    <div class="ready-hdr">
-      <span style="font-weight:800;font-size:.78rem">Exam Readiness</span>
-      <span id="r-status">Critical</span>
-    </div>
-    <div class="prog"><div id="r-bar"></div></div>
-    <div style="margin-top:6px;font-size:.63rem;color:var(--sub);text-align:right" id="r-text">0/0 Topics Done</div>
+  <!-- Service Grid -->
+  <div class="sec-hdr"><span class="sec-ttl">Select an Option</span></div>
+  <div class="svc-grid">
+
+    <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/[practice]class_selector.html" class="svc-item hi" onclick="soundAndHaptic('tap')">
+      <span class="s-ico">🧠</span>
+      <div><span class="s-name">Practice Exam</span><span class="s-sub">Start Test</span></div>
+    </a>
+
+    <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/[EnterClass]class_selector.html" class="svc-item" onclick="soundAndHaptic('tap')">
+      <span class="s-ico">📝</span>
+      <div><span class="s-name">Enter Class</span><span class="s-sub">Start Learning</span></div>
+    </a>
+
+    <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/result_checker.html" class="svc-item" onclick="soundAndHaptic('tap')">
+      <span class="s-ico">📬</span>
+      <div><span class="s-name">Result Checker</span><span class="s-sub">Check Now</span></div>
+    </a>
+
+    <a href="https://official-gocbt.github.io/pin_purchase/practice_pin_purchase.html" class="svc-item hi" onclick="soundAndHaptic('confirm')">
+      <span class="s-ico">🔢</span>
+      <div><span class="s-name">Purchase PIN</span><span class="s-sub">Buy NOW</span></div>
+    </a>
+
+    <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/tasks.html" class="svc-item hi" onclick="soundAndHaptic('tap')">
+      <span class="s-ico">📂</span>
+      <div><span class="s-name">Class Task</span><span class="s-sub">Submit NOW</span></div>
+    </a>
+
+    <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/timetable.html" class="svc-item" onclick="soundAndHaptic('tap')">
+      <span class="s-ico">🗓️</span>
+      <div><span class="s-name">Timetable</span><span class="s-sub">Check Schedule</span></div>
+    </a>
+
+    <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/login.html" class="svc-item hi" onclick="soundAndHaptic('tap')">
+      <span class="s-ico">🔐</span>
+      <div><span class="s-name">Facilitator</span><span class="s-sub">Admin Login</span></div>
+    </a>
+
+    <a href="https://wa.me/2348157505037?text=Hello%20goSUPPORT" class="svc-item hi" onclick="soundAndHaptic('confirm')">
+      <span class="s-ico">🤝</span>
+      <div><span class="s-name">goSUPPORT</span><span class="s-sub">Get Help</span></div>
+    </a>
+
   </div>
 
-  <!-- SEARCH -->
-  <div class="search-area">
-    <input type="text" id="search" class="search-input" placeholder="🔍  Search subjects..." oninput="renderTopics()">
+  <!-- Promo Strip -->
+  <div class="promo-strip">
+    <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/pin_purchase.html" class="promo-btn" onclick="soundAndHaptic('confirm')">
+      🔢 Get your Study PIN now! →
+    </a>
   </div>
 
-  <!-- TOPICS -->
-  <div class="scroll" id="topics"></div>
+</div><!-- /main -->
 
-</div><!-- /app-wrap -->
-
-<!-- ════════════════════════════════
-     MODALS
-════════════════════════════════ -->
-
-<!-- LEADERBOARD -->
-<div id="m-lb" class="overlay">
-  <div class="modal">
-    <div class="modal-hdr"><h3 style="color:var(--op)">🏆 Global Ranking</h3><button class="m-close" onclick="closeM()">✕</button></div>
-    <div class="lb-row"><span>🥇 Adebayo Kunle</span><b>12/12 · 91% avg</b></div>
-    <div class="lb-row"><span>🥈 Chima Precious</span><b>11/12 · 84% avg</b></div>
-    <div class="lb-row"><span>🥉 Fatima Aliyu</span><b>10/12 · 79% avg</b></div>
-    <div class="lb-row" style="border-top:2px solid var(--op);margin-top:8px;padding-top:12px;color:var(--op)">
-      <span>👤 <span id="lb-student-name">You</span></span>
-      <b id="lb-time">0 done</b>
-    </div>
-    <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bdr)">
-      <span style="font-size:.73rem;color:var(--sub)">Your Rank</span>
-      <span id="lb-rank-display" style="font-size:1.1rem;font-weight:900;color:var(--op)">#--</span>
-    </div>
-    <div id="lb-subject-scores" style="margin-top:12px;font-size:.72rem;color:var(--sub);max-height:160px;overflow-y:auto"></div>
-    <button class="btn-main" style="margin-top:16px" onclick="closeM()">Back to Studies</button>
-  </div>
-</div>
-
-<!-- TOPUP METHOD -->
-<div id="m-topup" class="overlay">
-  <div class="modal">
-    <div class="modal-hdr"><h3>Choose Top-up Method</h3><button class="m-close" onclick="closeM()">✕</button></div>
-    <div class="method-item" onclick="handleTopup('pin')">
-      <span class="mi-icon">🔑</span>
-      <div class="mi-info"><b>Enter PIN</b><span>Redeem pre-paid 5-digit PIN</span></div>
-    </div>
-    <div class="method-item" onclick="handleTopup('card')">
-      <span class="mi-icon">💳</span>
-      <div class="mi-info"><b>Via Card / WhatsApp</b><span>Purchase & verify via Admin</span></div>
-    </div>
-  </div>
-</div>
-
-<!-- TOPUP PIN ENTRY -->
-<div id="m-topup-pin" class="overlay">
-  <div class="modal" style="text-align:center">
-    <div class="modal-hdr"><h3 style="color:var(--op)">Enter Top-up PIN</h3><button class="m-close" onclick="closeM()">✕</button></div>
-    <p style="font-size:.72rem;color:var(--sub);margin-bottom:4px">Enter your 5-digit prepaid PIN to recharge tokens</p>
-    <div class="pin-dots" id="topup-dots">
-      <div class="pin-dot" id="td0"></div><div class="pin-dot" id="td1"></div>
-      <div class="pin-dot" id="td2"></div><div class="pin-dot" id="td3"></div>
-      <div class="pin-dot" id="td4"></div>
-    </div>
-    <div id="topup-pin-err" style="font-size:.72rem;color:var(--danger);min-height:16px;margin-bottom:6px"></div>
-    <div class="pin-pad">
-      <button class="pin-key" onclick="pinKey('topup',1)">1</button>
-      <button class="pin-key" onclick="pinKey('topup',2)">2</button>
-      <button class="pin-key" onclick="pinKey('topup',3)">3</button>
-      <button class="pin-key" onclick="pinKey('topup',4)">4</button>
-      <button class="pin-key" onclick="pinKey('topup',5)">5</button>
-      <button class="pin-key" onclick="pinKey('topup',6)">6</button>
-      <button class="pin-key" onclick="pinKey('topup',7)">7</button>
-      <button class="pin-key" onclick="pinKey('topup',8)">8</button>
-      <button class="pin-key" onclick="pinKey('topup',9)">9</button>
-      <button class="pin-key" onclick="pinKey('topup','clr')" style="font-size:.68rem;color:var(--sub)">CLR</button>
-      <button class="pin-key" onclick="pinKey('topup',0)">0</button>
-      <button class="pin-key del" onclick="pinKey('topup','del')">⌫</button>
-    </div>
-  </div>
-</div>
-
-<!-- STUDENT PROFILE (first-run) -->
-<div id="m-profile" class="overlay">
-  <div class="modal" style="text-align:center">
-    <div class="profile-avatar">🎓</div>
-    <h3 style="color:var(--op);margin-bottom:6px">Welcome to goCBT!</h3>
-    <p style="font-size:.73rem;color:var(--sub);margin-bottom:16px">Enter your details to track and personalise your results.</p>
-    <input type="text" id="inp-name" class="inp" placeholder="Full Name *">
-    <input type="email" id="inp-email" class="inp" placeholder="Your Email (optional)">
-    <input type="text" id="inp-class" class="inp" placeholder="Class / School (optional)">
-    <button class="btn-main" onclick="saveProfile()">✅ Save & Continue</button>
-    <p onclick="skipProfile()" style="margin-top:10px;font-size:.72rem;cursor:pointer;color:var(--sub)">Skip for now</p>
-  </div>
-</div>
-
-<!-- PROFILE VIEW -->
-<div id="m-profile-view" class="overlay">
-  <div class="modal" style="text-align:center">
-    <div class="modal-hdr"><h3 style="color:var(--op)">My Profile</h3><button class="m-close" onclick="closeM()">✕</button></div>
-    <div class="profile-avatar">🎓</div>
-    <div id="pv-name" style="font-size:1rem;font-weight:800;color:var(--txt)">—</div>
-    <div id="pv-email" style="font-size:.73rem;color:var(--sub);margin-top:3px">—</div>
-    <div id="pv-class" style="font-size:.73rem;color:var(--sub)">—</div>
-    <div style="margin:14px 0;padding:12px;background:rgba(75,68,224,.06);border-radius:12px;display:flex;justify-content:space-around">
-      <div><div style="font-weight:900;color:var(--op)" id="pv-done">0</div><div style="font-size:.6rem;color:var(--sub)">Done</div></div>
-      <div><div style="font-weight:900;color:var(--og)" id="pv-avg">0%</div><div style="font-size:.6rem;color:var(--sub)">Avg Score</div></div>
-      <div><div style="font-weight:900;color:var(--txt)" id="pv-rank">--</div><div style="font-size:.6rem;color:var(--sub)">Rank</div></div>
-    </div>
-    <button class="btn-main" onclick="closeM();openM('m-profile')">✏️ Edit Profile</button>
-    <button class="btn-main" style="background:rgba(128,128,128,.1);color:var(--txt);margin-top:8px" onclick="closeM()">Close</button>
-  </div>
-</div>
-
-<!-- DRILL PIN GATE -->
-<div id="m-Drill-pin" class="overlay">
-  <div class="modal" style="text-align:center">
-    <div class="modal-hdr"><h3 style="color:var(--op)">🔐 Trial Access PIN</h3><button class="m-close" onclick="closeM()">✕</button></div>
-    <p style="font-size:.72rem;color:var(--sub);margin-bottom:4px">Enter your 5-digit PIN to access this trial</p>
-    <div class="pin-dots" id="qpin-dots">
-      <div class="pin-dot" id="qd0"></div><div class="pin-dot" id="qd1"></div>
-      <div class="pin-dot" id="qd2"></div><div class="pin-dot" id="qd3"></div>
-      <div class="pin-dot" id="qd4"></div>
-    </div>
-    <div id="qpin-err" style="font-size:.72rem;color:var(--danger);min-height:16px;margin-bottom:6px"></div>
-    <div class="pin-pad">
-      <button class="pin-key" onclick="pinKey('Drill',1)">1</button>
-      <button class="pin-key" onclick="pinKey('Drill',2)">2</button>
-      <button class="pin-key" onclick="pinKey('Drill',3)">3</button>
-      <button class="pin-key" onclick="pinKey('Drill',4)">4</button>
-      <button class="pin-key" onclick="pinKey('Drill',5)">5</button>
-      <button class="pin-key" onclick="pinKey('Drill',6)">6</button>
-      <button class="pin-key" onclick="pinKey('Drill',7)">7</button>
-      <button class="pin-key" onclick="pinKey('Drill',8)">8</button>
-      <button class="pin-key" onclick="pinKey('Drill',9)">9</button>
-      <button class="pin-key" onclick="pinKey('Drill','clr')" style="font-size:.68rem;color:var(--sub)">CLR</button>
-      <button class="pin-key" onclick="pinKey('Drill',0)">0</button>
-      <button class="pin-key del" onclick="pinKey('Drill','del')">⌫</button>
-    </div>
-  </div>
-</div>
-
-<!-- INSUFFICIENT TOKENS -->
-<div id="m-insuf" class="overlay">
-  <div class="modal" style="text-align:center">
-    <div style="font-size:3.5rem;text-align:center;margin-bottom:12px">🪙</div>
-    <h3 id="insuf-title" style="color:var(--danger);margin-bottom:10px">Insufficient Tokens</h3>
-    <p id="insuf-msg" style="font-size:.82rem;color:var(--sub);margin-bottom:20px">You need ₦200 tokens to unlock this subject. Top up with a PIN or purchase a new one.</p>
-    <button class="btn-main" style="margin-bottom:10px" onclick="closeM();setTimeout(()=>openM('m-topup'),120)">🔑 Enter PIN / Top-up</button>
-    <a href="https://wa.me/2348157505037?text=I%20want%20to%20purchase%20a%20goCBT%20PIN" target="_blank" class="btn-main" style="display:block;text-decoration:none;background:var(--og);margin-bottom:10px">💳 Purchase PIN via WhatsApp</a>
-    <p onclick="closeM()" style="font-size:.75rem;cursor:pointer;color:var(--sub)">Maybe Later</p>
-  </div>
-</div>
-
-<!-- IFRAME TRIAL MODAL -->
-<div id="m-trial" class="overlay">
-  <div class="modal">
-    <div class="modal-hdr">
-      <div>
-        <span id="trial-badge" style="font-size:.63rem;font-weight:800;background:rgba(75,68,224,.1);color:var(--op);padding:3px 10px;border-radius:8px">Subject</span>
-        <div id="trial-title" style="font-size:.9rem;font-weight:800;color:var(--txt);margin-top:6px">Take Trial</div>
-      </div>
-      <button class="m-close" onclick="closeM()">✕</button>
-    </div>
-    <div class="iframe-wrap">
-      <iframe id="trial-iframe" src="" allowfullscreen></iframe>
-    </div>
-    <button class="btn-mark-complete" id="btn-complete" onclick="markComplete()">
-      ✅ Mark as Complete (−₦200)
-    </button>
-    <p style="font-size:.62rem;color:var(--sub);text-align:center;margin-top:8px">₦200 will be deducted once you mark this subject as complete.</p>
-  </div>
-</div>
-
-<!-- DRILL QUIZ MODAL -->
-<div id="m-Drill" class="overlay">
-  <div class="modal">
-    <div class="q-hdr">
-      <span class="q-badge" id="q-badge">Subject</span>
-      <div style="display:flex;align-items:center;gap:10px">
-        <span class="q-num" id="q-num">Q1/50</span>
-        <button class="m-close" onclick="closeM()">✕</button>
-      </div>
-    </div>
-    <div class="q-prog"><div class="q-fill" id="q-fill" style="width:2%"></div></div>
-    <div id="q-body"></div>
-  </div>
-</div>
-
-<!-- EXAM RECORD -->
-<div id="m-exam" class="overlay">
-  <div class="modal">
-    <div class="modal-hdr"><h4 style="color:var(--op)">Add Exam Record</h4><button class="m-close" onclick="closeM()">✕</button></div>
-    <div class="iframe-wrap" style="height:460px">
-      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScdS2JUmJlU9Vrbi7R4rSeVq1PHw0m4xCukRoFzPejzChxo4g/viewform?embedded=true"></iframe>
-    </div>
-  </div>
-</div>
-
-<!-- BOTTOM NAV -->
-<nav>
-  <a class="nav-item" href="https://goapps-official.github.io/Welcome/" style="text-decoration:none;color:var(--sub)">
-    <span class="nav-icon">🏠</span><span class="nav-label">Home</span>
-  </a>
-  <div class="nav-item active">
-    <span class="nav-icon">📚</span><span class="nav-label">Study</span>
-  </div>
-  <div class="nav-item" onclick="openLeaderboard()">
-    <span class="nav-icon">🏆</span><span class="nav-label">Ranks</span>
-  </div>
-  <div class="nav-item" onclick="openM('m-exam')">
-    <span class="nav-icon">📋</span><span class="nav-label">Records</span>
-  </div>
-  <div class="nav-item" onclick="openM('m-topup')">
-    <span class="nav-icon">💳</span><span class="nav-label">Tokens</span>
-  </div>
+<!-- ══ BOTTOM NAV — goAPPs NG style ══ -->
+<nav class="bnav">
+  <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/reward.html" class="bn" onclick="soundAndHaptic('tap')"><span class="bn-ico">🎁</span>Rewards</a>
+  <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/balance.html" class="bn" onclick="soundAndHaptic('tap')"><span class="bn-ico">💰</span>Wallet</a>
+  <a href="https://goapps-official.github.io/Welcome-to-goAPPs/" class="bn on" onclick="soundAndHaptic('tap')"><span class="bn-ico">🏧</span>Home</a>
+  <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/transfer.html" class="bn" onclick="soundAndHaptic('tap')"><span class="bn-ico">📊</span>Market</a>
+  <a href="https://goapps-official.github.io/Welcome-to-goAPPs/HomeApp/settings.html" class="bn" onclick="soundAndHaptic('tap')"><span class="bn-ico">⚙️</span>Settings</a>
 </nav>
 
+<!-- ══ MODAL: TOPUP ══ -->
+<div id="m-topup" class="mov">
+  <div class="modal">
+    <button class="mcl" onclick="closeMod('m-topup')">×</button>
+    <h3 style="margin-bottom:16px;font-size:.92rem">💳 Choose Top-up Method</h3>
+    <div class="meth" onclick="soundAndHaptic('confirm');closeMod('m-topup');window.open('https://official-gocbt.github.io/pin_purchase/practice_pin_purchase.html','_blank')">
+      <span class="meth-ico">🔢</span>
+      <div class="meth-b"><b>Buy Study PIN</b><span>Purchase online and redeem instantly</span></div>
+    </div>
+    <div class="meth" onclick="soundAndHaptic('confirm');closeMod('m-topup');window.open('https://wa.me/2348157505037?text=I%20want%20to%20purchase%20a%20goCBT%20PIN','_blank')">
+      <span class="meth-ico">💳</span>
+      <div class="meth-b"><b>Purchase via WhatsApp</b><span>Contact admin to buy a new PIN</span></div>
+    </div>
+    <p onclick="closeMod('m-topup')" style="text-align:center;margin-top:12px;font-size:.7rem;cursor:pointer;color:var(--sub)">Cancel</p>
+  </div>
+</div>
+
+<!-- ══ MODAL: APPLY TO STUDY (iframe) ══ -->
+<div id="m-apply" class="mov">
+  <div class="modal" style="max-width:600px;padding:16px;width:96%">
+    <div class="form-modal-hdr">
+      <h3 style="font-size:.92rem;margin:0">📋 Apply to Study</h3>
+      <button class="mcl" onclick="closeMod('m-apply');soundAndHaptic('tap')" style="float:none">×</button>
+    </div>
+    <iframe id="apply-iframe"
+      src="https://docs.google.com/forms/d/e/1FAIpQLSf8PxRtz4MWmYk4ZdS9uBSf6eh224_HjQfUQibxhqBL46I2pw/viewform?embedded=true"
+      width="100%" frameborder="0" marginheight="0" marginwidth="0"
+      style="width:100%;height:520px;border:none;border-radius:12px;background:#fff">
+      Loading form…
+    </iframe>
+    <p onclick="closeMod('m-apply')" style="text-align:center;margin-top:10px;font-size:.7rem;cursor:pointer;color:var(--sub)">Close</p>
+  </div>
+</div>
+
 <script>
-// ══════════════════════════════
-// STORAGE HELPERS
-// ══════════════════════════════
-const S={
-  set:(k,v)=>localStorage.setItem(k,JSON.stringify(v)),
-  get:(k,fb)=>{try{const d=localStorage.getItem(k);return d!==null?JSON.parse(d):fb}catch{return fb}}
-};
+const MAINTENANCE = 'https://goapps-official.github.io/Welcome-to-goAPPs/%E2%9A%92%EF%B8%8FgoAPPs-Repair%20Mode.html';
+const SUPPORT_WA  = '2348157505037';
 
-// ══════════════════════════════
-// PIN CMS
-// ══════════════════════════════
-const PIN_CMS={
-  "11111":{val:1000,used:false},"22222":{val:1000,used:false},"33333":{val:1000,used:false},
-  "44444":{val:1000,used:false},"55555":{val:1000,used:false},"12345":{val:1000,used:false},
-  "54321":{val:1000,used:false},"13579":{val:1000,used:false},"24680":{val:1000,used:false},
-  "99999":{val:2000,used:false},"88888":{val:2000,used:false},"77777":{val:2000,used:false},
-  "66666":{val:2000,used:false},"10101":{val:500,used:false},"20202":{val:500,used:false},
-  "30303":{val:500,used:false},"40404":{val:500,used:false},"50505":{val:500,used:false},
-  "11221":{val:500,used:false},"22112":{val:500,used:false},"33443":{val:500,used:false},
-  "44334":{val:500,used:false},"55665":{val:500,used:false},"66556":{val:500,used:false},
-  "77887":{val:500,used:false},"88778":{val:500,used:false},"99009":{val:1000,used:false},
-  "00990":{val:1000,used:false},"12321":{val:1000,used:false},"32123":{val:1000,used:false},
-  "45654":{val:1000,used:false},"56765":{val:1000,used:false},"67876":{val:1000,used:false},
-  "78987":{val:1000,used:false},"89098":{val:1000,used:false},"90009":{val:1000,used:false},
-  "11011":{val:500,used:false},"22022":{val:500,used:false},"33033":{val:500,used:false},
-  "44044":{val:500,used:false},"55055":{val:500,used:false},"66066":{val:500,used:false},
-  "77077":{val:500,used:false},"88088":{val:500,used:false},"99099":{val:500,used:false},
-  "10010":{val:2000,used:false},"20020":{val:2000,used:false},"30030":{val:2000,used:false},
-  "40040":{val:2000,used:false},"50050":{val:2000,used:false}
-};
-function loadPinCMS(){const s=S.get('pin_cms',null);if(s)Object.keys(s).forEach(k=>{if(PIN_CMS[k])PIN_CMS[k].used=s[k]});}
-function savePinCMS(){const o={};Object.keys(PIN_CMS).forEach(k=>{o[k]=PIN_CMS[k].used});S.set('pin_cms',o);}
-
-// ══════════════════════════════
-// STATE
-// ══════════════════════════════
-let wallet=S.get('wallet',1000);
-if(localStorage.getItem('theme')==='dark')document.body.classList.add('dark-mode');
-loadPinCMS();
-
-// ══════════════════════════════
-// SUBJECTS — ALL SSS SUBJECTS
-// ══════════════════════════════
-const subjects=[
-  {dept:"🔵 Core / Compulsory",list:[
-    {id:1,title:"Mathematics",desc:"Algebra, Calculus, Statistics & Geometry",icon:"📐"},
-    {id:2,title:"English Language",desc:"Grammar, Lexis, Oral & Written Expression",icon:"📝"},
-    {id:3,title:"Civic Education",desc:"Democracy, Citizenship & Constitutional Law",icon:"🏛️"},
-    {id:31,title:"General Studies",desc:"Basic reasoning, logic and critical thinking",icon:"🧠"},
-  ]},
-  {dept:"🔬 Sciences",list:[
-    {id:4,title:"Physics",desc:"Mechanics, Electricity, Heat & Modern Physics",icon:"⚡"},
-    {id:5,title:"Chemistry",desc:"Organic, Inorganic & Physical Chemistry",icon:"🧪"},
-    {id:6,title:"Biology",desc:"Genetics, Ecology & Human Physiology",icon:"🌿"},
-    {id:10,title:"Further Mathematics",desc:"Calculus, Matrices, Complex Numbers",icon:"∑"},
-    {id:32,title:"Agricultural Science",desc:"Crop production, Livestock & Soil science",icon:"🌾"},
-    {id:33,title:"Home Economics",desc:"Food nutrition, clothing & family resources",icon:"🏠"},
-    {id:34,title:"Technical Drawing",desc:"Plane geometry, solids & engineering drawing",icon:"📏"},
-    {id:35,title:"Food & Nutrition",desc:"Nutrients, diet planning & food hygiene",icon:"🥗"},
-    {id:36,title:"Computer Studies",desc:"Hardware, software, networking & programming",icon:"💻"},
-    {id:37,title:"Physical Education",desc:"Sports science, fitness & health education",icon:"⚽"},
-  ]},
-  {dept:"📊 Commercial",list:[
-    {id:7,title:"Economics",desc:"Microeconomics, Macroeconomics & Trade",icon:"💹"},
-    {id:11,title:"Commerce",desc:"Trade, Warehousing, Banking & Transport",icon:"🛒"},
-    {id:12,title:"Accounting",desc:"Financial Records, Balance Sheets & Ratios",icon:"📒"},
-    {id:38,title:"Business Studies",desc:"Entrepreneurship, marketing & management",icon:"💼"},
-    {id:39,title:"Office Practice",desc:"Secretarial duties, office equipment & ICT",icon:"🖨️"},
-    {id:40,title:"Store Keeping",desc:"Inventory, stock control & purchasing",icon:"📦"},
-    {id:41,title:"Insurance",desc:"Life, motor, fire & marine insurance",icon:"🛡️"},
-  ]},
-  {dept:"🎨 Arts & Humanities",list:[
-    {id:8,title:"Government",desc:"Political systems, Nationalism & International org",icon:"🏛️"},
-    {id:9,title:"Literature in English",desc:"African Prose, Drama & Poetry",icon:"📖"},
-    {id:42,title:"History",desc:"Nigerian & world history from 1800–present",icon:"🌍"},
-    {id:43,title:"Geography",desc:"Physical, human & economic geography",icon:"🗺️"},
-    {id:44,title:"Christian Religious Studies",desc:"Old & New Testament, Christian living",icon:"✝️"},
-    {id:45,title:"Islamic Studies",desc:"Quran, Hadith, Islamic jurisprudence & history",icon:"☪️"},
-    {id:46,title:"Fine Arts",desc:"Drawing, painting, sculpture & appreciation",icon:"🎨"},
-    {id:47,title:"Music",desc:"Theory, notation, African & Western music",icon:"🎵"},
-    {id:48,title:"French",desc:"Reading, writing, grammar & conversation",icon:"🇫🇷"},
-    {id:49,title:"Hausa",desc:"Language structure, literature & culture",icon:"📜"},
-    {id:50,title:"Igbo",desc:"Language structure, literature & culture",icon:"📜"},
-    {id:51,title:"Yoruba",desc:"Language structure, literature & oral tradition",icon:"📜"},
-    {id:52,title:"Visual Arts",desc:"Design, crafts, ceramics & applied arts",icon:"🖼️"},
-  ]}
-];
-
-// ══════════════════════════════
-// QUESTION BANK (subjects with full banks)
-// ══════════════════════════════
-const QB={
-1:[
- {q:"Solve 2x+5=13",o:["x=3","x=4","x=5","x=9"],a:1},
- {q:"Expand (x+3)²",o:["x²+6x+9","x²+3x+9","x²+9","x²+6x+6"],a:0},
- {q:"Find the gradient of y=4x³−2x at x=1",o:["10","14","12","8"],a:0},
- {q:"Factorize x²−9",o:["(x+3)(x−3)","(x+3)²","(x−3)²","(x+9)(x−1)"],a:0},
- {q:"HCF of 24 and 36",o:["6","8","12","18"],a:2},
- {q:"Area of circle with r=7 cm (π≈22/7)",o:["44","154","22","49"],a:1},
- {q:"Evaluate log₁₀1000",o:["2","3","4","10"],a:1},
- {q:"If sinθ=0.5, find θ (0°–90°)",o:["30°","45°","60°","90°"],a:0},
- {q:"∫3x² dx",o:["6x","x³+C","3x³+C","9x+C"],a:1},
- {q:"Evaluate ⁵P₂",o:["10","20","15","5"],a:1},
- {q:"Distance between (2,3) and (5,7)",o:["3","4","5","7"],a:2},
- {q:"Simplify (2³)²",o:["12","36","64","32"],a:2},
- {q:"Find the mean of 4,7,9,10",o:["7","7.5","8","9"],a:1},
- {q:"Volume of a cube with side 3 cm",o:["9","27","18","81"],a:1},
- {q:"Solve x²−5x+6=0",o:["x=2,3","x=1,6","x=−2,−3","x=3,4"],a:0},
- {q:"Evaluate 5!",o:["20","60","100","120"],a:3},
- {q:"Midpoint of (1,2) and (5,8)",o:["(3,5)","(4,6)","(2,5)","(3,4)"],a:0},
- {q:"Simplify 3√48",o:["12√3","9√3","6√12","4√3"],a:0},
- {q:"Binary 1011 in decimal",o:["9","10","11","13"],a:2},
- {q:"If y=e^(2x), find dy/dx",o:["e^(2x)","2e^(2x)","2xe^x","e^x"],a:1},
- {q:"Sum of interior angles of a hexagon",o:["540°","720°","900°","360°"],a:1},
- {q:"Solve |x−3|=5",o:["x=8 only","x=−2 only","x=8 or x=−2","x=2 or x=−8"],a:2},
- {q:"Reciprocal of 2/5",o:["5/2","2/5","0.4","−5/2"],a:0},
- {q:"GP: first term 2, ratio 3, 4th term?",o:["18","54","162","48"],a:1},
- {q:"Evaluate ⁸C₃",o:["56","28","336","168"],a:0},
- {q:"Gradient of line 3y=6x+9",o:["6","2","3","9"],a:1},
- {q:"tan(45°) equals",o:["0","√2","1","√3/2"],a:2},
- {q:"Convert 0.375 to fraction",o:["3/7","3/8","3/5","37/100"],a:1},
- {q:"Surface area of sphere r=3 cm",o:["36π","12π","9π","18π"],a:0},
- {q:"10th term of AP: first=2, d=3",o:["29","32","26","30"],a:0},
- {q:"Roots of 2x²+x−3=0",o:["1 and −3/2","1 and 3/2","−1 and 3/2","−1 and −3/2"],a:2},
- {q:"Evaluate log₂64",o:["4","5","6","8"],a:2},
- {q:"Solve 3(2x−1)=21",o:["x=4","x=3","x=2","x=5"],a:0},
- {q:"Area of triangle base=8, height=5",o:["20","40","13","10"],a:0},
- {q:"Simplify (x²y³)/(xy)",o:["xy²","x²y","y²","xy"],a:0},
- {q:"Differentiate y=sinx",o:["−cosx","tanx","cosx","−sinx"],a:2},
- {q:"Value of x in 2^x=32",o:["4","5","6","3"],a:1},
- {q:"Mode of: 2,3,3,4,5,5,5,6",o:["3","4","5","6"],a:2},
- {q:"Next term: 1,4,9,16,...",o:["20","25","21","24"],a:1},
- {q:"Evaluate (−3)²",o:["−9","9","6","−6"],a:1},
- {q:"Simplify √50",o:["5√2","10√5","25√2","5√10"],a:0},
- {q:"Equation of line through (0,3) slope 2",o:["y=2x−3","y=2x+3","y=3x+2","y=−2x+3"],a:1},
- {q:"cos(60°)=",o:["1","√3/2","1/2","√2/2"],a:2},
- {q:"LCM of 4 and 6",o:["12","24","8","6"],a:0},
- {q:"Probability of rolling a 4 on a fair die",o:["1/4","1/6","1/3","2/6"],a:1},
- {q:"In A=πr², solve for r",o:["r=A/π","r=√(A/π)","r=π/A","r=A²/π"],a:1},
- {q:"Evaluate 4²×4³",o:["4⁵","4⁶","16⁵","256"],a:0},
- {q:"Bearing of due West",o:["090°","180°","270°","360°"],a:2},
- {q:"Standard deviation measures",o:["central tendency","spread of data","skewness","frequency"],a:1},
- {q:"Simple interest formula",o:["P×R×T","P+R+T","P/R/T","P×R/T"],a:0}
-],
-2:[
- {q:"Synonym of 'Ambiguous'",o:["Clear","Vague","Certain","Definite"],a:1},
- {q:"Correct sentence",o:["She go daily","She goes daily","She gone daily","She going daily"],a:1},
- {q:"'Benevolent' means",o:["Cruel","Charitable","Angry","Lazy"],a:1},
- {q:"Part of speech of 'quickly'",o:["Adjective","Noun","Adverb","Verb"],a:2},
- {q:"Antonym of 'Gregarious'",o:["Sociable","Lively","Reclusive","Talkative"],a:2},
- {q:"'The sun smiled' — figure of speech",o:["Simile","Metaphor","Personification","Oxymoron"],a:2},
- {q:"'Loquacious' means",o:["Silent","Talkative","Wise","Rude"],a:1},
- {q:"Plural of 'phenomenon'",o:["phenomenons","phenomenes","phenomena","phenomenas"],a:2},
- {q:"Indirect object in 'She gave him a book'",o:["She","him","book","gave"],a:1},
- {q:"'on the mat' in 'The cat sat on the mat' is a",o:["noun phrase","verb phrase","adverbial phrase","adjectival phrase"],a:2},
- {q:"'Neither the boys nor the teacher ___ present'",o:["are","were","was","have been"],a:2},
- {q:"'Cacophony' refers to",o:["pleasant sound","harsh sound","silent sound","soft sound"],a:1},
- {q:"Which is a conjunction?",o:["quickly","beautiful","although","very"],a:2},
- {q:"Root word of 'uncomfortable'",o:["un","comfort","table","able"],a:1},
- {q:"'Shut the door!' — sentence type",o:["Declarative","Interrogative","Exclamatory","Imperative"],a:3},
- {q:"'Ephemeral' means",o:["Everlasting","Short-lived","Enormous","Spiritual"],a:1},
- {q:"Gerund in 'Swimming is good exercise'",o:["Swimming","is","good","exercise"],a:0},
- {q:"'The jury ___ divided on their verdict'",o:["was","were","is","have"],a:1},
- {q:"A word that modifies a noun",o:["adverb","conjunction","adjective","preposition"],a:2},
- {q:"'She is as brave as a lion' example of",o:["metaphor","simile","hyperbole","alliteration"],a:1},
- {q:"Error in 'Its a lovely day'",o:["no comma","its→it's","lovely→loveliest","no period"],a:1},
- {q:"'Prolix' means",o:["brief","wordy","quiet","fast"],a:1},
- {q:"Correct spelling",o:["Accomodation","Accommodation","Acommodation","Acomodation"],a:1},
- {q:"'Although he studied hard, he failed' — 'Although he studied hard' is a ___ clause",o:["main","subordinate","relative","coordinate"],a:1},
- {q:"Active voice of: 'The book was read by Sara'",o:["Sara reads the book","Sara read the book","Sara reading the book","Sara had read the book"],a:1},
- {q:"'Callous' means",o:["caring","emotional","unfeeling","cheerful"],a:2},
- {q:"Alliteration letter in 'Peter Piper picked a peck'",o:["p","i","a","e"],a:0},
- {q:"'Verbatim' means",o:["summarised","rewritten","word for word","paraphrased"],a:2},
- {q:"'She doesn't know, ___ she?'",o:["does","doesn't","is","isn't"],a:0},
- {q:"Tone refers to",o:["plot","author's attitude","character","setting"],a:1},
- {q:"'Obsequious' means",o:["defiant","servilely compliant","brave","critical"],a:1},
- {q:"'The pen is mightier than the sword' is",o:["simile","metaphor","metonymy","synecdoche"],a:1},
- {q:"Correct: 'I wish I ___ a millionaire'",o:["am","was","were","have been"],a:2},
- {q:"'Didactic' literature aims to",o:["entertain","instruct morally","confuse","amuse"],a:1},
- {q:"Homophone of 'bare'",o:["bar","beer","bear","bore"],a:2},
- {q:"'Taciturn' means",o:["outspoken","reserved/silent","humble","arrogant"],a:1},
- {q:"Correct plural of criterion",o:["criterions","criterias","criteria","criterion"],a:2},
- {q:"'She has gone' — tense",o:["simple past","past continuous","present perfect","past perfect"],a:2},
- {q:"'extremely' in 'extremely cold' — word class",o:["adjective","adverb","preposition","noun"],a:1},
- {q:"'Paradox' is a statement that",o:["is clearly false","seems contradictory but may be true","rhymes","exaggerates"],a:1},
- {q:"'He is one of the boys who ___ responsible'",o:["is","are","was","were"],a:1},
- {q:"'Hyperbole' is",o:["understatement","deliberate exaggeration","comparison","contrast"],a:1},
- {q:"The speaker ___ (infer/imply)",o:["infers","implies","both","neither"],a:1},
- {q:"Haiku syllable pattern",o:["5-7-5","7-5-7","5-5-7","7-7-5"],a:0},
- {q:"'I have ___ the report'",o:["submitted","submitten","submited","submitt"],a:0},
- {q:"Appositive in 'Kemi, my sister, is a doctor'",o:["Kemi","my sister","is","doctor"],a:1},
- {q:"'Ameliorate' means",o:["worsen","improve","predict","ignore"],a:1},
- {q:"Correct subject-verb agreement",o:["The team are winning","The team is winning","The team were winning","The team has been winning always"],a:1},
- {q:"'Elegy' is a poem that",o:["celebrates victory","laments death","praises nature","mocks rulers"],a:1},
- {q:"'Rhetoric' refers to",o:["arithmetic","the art of persuasive speech","chemistry","simple narration"],a:1}
-],
-3:[
- {q:"Head of state in constitutional monarchy",o:["PM","President","Monarch","Speaker"],a:2},
- {q:"Federalism means",o:["One central govt","Shared power between central and regional govts","Military rule","Democracy only"],a:1},
- {q:"Nigerian constitution currently in force",o:["1960","1963","1999","1979"],a:2},
- {q:"NOT a fundamental human right",o:["Right to life","Right to property","Right to vote","Right to be rich"],a:3},
- {q:"INEC stands for",o:["Independent National Electoral Commission","Internal National Election Committee","Independent National Election Council","Interim National Electoral Committee"],a:0},
- {q:"Rule of law means",o:["rulers are above the law","everyone is subject to the law","military controls law","judges make laws"],a:1},
- {q:"Separation of powers advocated by",o:["Marx","Locke","Montesquieu","Rousseau"],a:2},
- {q:"Number of geopolitical zones in Nigeria",o:["4","5","6","7"],a:2},
- {q:"Unicameral legislature has",o:["two chambers","one chamber","three chambers","no chamber"],a:1},
- {q:"Citizenship can be acquired by",o:["birth only","naturalisation only","birth, descent, or registration","marriage only"],a:2},
- {q:"'Democracy' literally means",o:["rule by the elite","rule by the people","rule by religion","rule by military"],a:1},
- {q:"Independent judiciary ensures",o:["executive dominance","impartial justice","legislative supremacy","military oversight"],a:1},
- {q:"Press freedom falls under",o:["economic rights","civil/political rights","social rights","cultural rights"],a:1},
- {q:"First female African head of state",o:["Ellen Johnson Sirleaf","Wangari Maathai","Ngozi Okonjo-Iweala","Graça Machel"],a:0},
- {q:"Checks and balances prevent",o:["taxation","abuse of power","free speech","voting"],a:1},
- {q:"Nigerian Senate seats",o:["109","360","50","120"],a:0},
- {q:"ECOWAS headquarters",o:["Accra","Lagos","Abuja","Dakar"],a:2},
- {q:"Social contract: citizens obey in exchange for",o:["taxes","protection of rights","military service","prayers"],a:1},
- {q:"Referendum refers to",o:["general election","direct vote on specific issue","by-election","local govt election"],a:1},
- {q:"Hallmark of good governance",o:["secrecy","accountability and transparency","nepotism","one-party rule"],a:1},
- {q:"Plural executive exists in",o:["UK","USA","Switzerland","France"],a:2},
- {q:"Franchise means",o:["a business licence","right to vote","a sports team","military rank"],a:1},
- {q:"Ombudsman investigates",o:["crimes","maladministration","elections","budgets"],a:1},
- {q:"Pressure groups differ from parties because they",o:["contest elections","seek to influence policy without seeking power","have no members","are illegal"],a:1},
- {q:"Nationalism involves",o:["love of foreign lands","pride and loyalty to one's nation","opposition to citizenship","emigration"],a:1},
- {q:"First Secretary-General of the UN",o:["U Thant","Dag Hammarskjöld","Trygve Lie","Kurt Waldheim"],a:2},
- {q:"Cabinet system originates from",o:["USA","France","UK","Germany"],a:2},
- {q:"Statute law is created by",o:["judges","legislature","president","custom"],a:1},
- {q:"Electoral college used in",o:["UK","Nigeria","USA","India"],a:2},
- {q:"Bicameral legislature has",o:["1","2","3","4"],a:1},
- {q:"'Sovereignty' means",o:["foreign dependence","supreme authority","military power","population size"],a:1},
- {q:"AU headquarters",o:["Nairobi","Accra","Addis Ababa","Cairo"],a:2},
- {q:"Totalitarian state allows",o:["free press","multi-party elections","opposition parties","no political pluralism"],a:3},
- {q:"'Coup d'état' means",o:["peaceful election","sudden violent seizure of government","referendum","diplomacy"],a:1},
- {q:"Bill of Rights protects",o:["government power","individual freedoms","military authority","business interests"],a:1},
- {q:"Confederalism grants most power to",o:["central govt","constituent units","judiciary","military"],a:1},
- {q:"Grundnorm concept by",o:["Locke","Kelsen","Marx","Weber"],a:1},
- {q:"Prime Minister accountable to",o:["the monarch","the judiciary","the legislature","the military"],a:2},
- {q:"Local government performs ___ functions",o:["federal","grassroots/developmental","judicial","legislative"],a:1},
- {q:"Amnesty International promotes",o:["trade","human rights","tourism","sports"],a:1},
- {q:"Theocracy is rule by",o:["military","religious authority","hereditary monarchy","the people"],a:1},
- {q:"Gerrymandering manipulates",o:["tax rates","electoral boundaries","manifestos","judicial appointments"],a:1},
- {q:"UDHR adopted in",o:["1945","1948","1950","1960"],a:1},
- {q:"Absenteeism in elections is called",o:["apathy","franchise","suffrage","ballot"],a:0},
- {q:"NATO is primarily",o:["economic bloc","military alliance","cultural union","trade agreement"],a:1},
- {q:"Judicial review allows courts to",o:["make laws","declare laws unconstitutional","arrest citizens","appoint ministers"],a:1},
- {q:"'Anarchy' means",o:["strong government","absence of government/law","military rule","monarchy"],a:1},
- {q:"Right to education is a ___ right",o:["civil","economic, social and cultural","political","military"],a:1},
- {q:"Presidential system: executive derives power from",o:["the legislature","the people directly","the monarch","the judiciary"],a:1},
- {q:"State of emergency suspends",o:["all government","constitutional rights temporarily","elections permanently","international treaties"],a:1}
-],
-4:[
- {q:"SI unit of force",o:["Watt","Joule","Newton","Pascal"],a:2},
- {q:"Newton's 3rd Law",o:["F=ma","every action has equal opposite reaction","bodies attract","energy conserved"],a:1},
- {q:"Speed of light in vacuum ≈",o:["3×10⁶ m/s","3×10⁸ m/s","3×10¹⁰ m/s","3×10⁴ m/s"],a:1},
- {q:"Sound wave type",o:["Transverse","Electromagnetic","Longitudinal","Radio"],a:2},
- {q:"Kinetic energy formula",o:["mgh","½mv²","mv","Fd"],a:1},
- {q:"Ohm's Law V=",o:["IR","I/R","R/I","P/I"],a:0},
- {q:"Unit of electrical resistance",o:["Volt","Ampere","Ohm","Watt"],a:2},
- {q:"Acceleration due to gravity ≈",o:["9.8 m/s²","10 m/s²","8.9 m/s²","9.8 m/s"],a:0},
- {q:"Power formula",o:["P=IV","P=V/I","P=I²R","both A and C"],a:3},
- {q:"Conservation of energy: energy cannot be",o:["conserved","created or destroyed","measured","converted"],a:1},
- {q:"Frequency unit",o:["Decibel","Hertz","Metre","Pascal"],a:1},
- {q:"Period T=",o:["f","1/f","f²","2f"],a:1},
- {q:"Total internal reflection requires angle ___ critical angle",o:["less than","equal to","greater than","half of"],a:2},
- {q:"Transformer steps up voltage, steps down",o:["power","frequency","current","resistance"],a:2},
- {q:"Refractive index n=",o:["speed in medium / speed in vacuum","speed in vacuum / speed in medium","wavelength/frequency","frequency/wavelength"],a:1},
- {q:"Pressure = Force /",o:["Volume","Mass","Area","Distance"],a:2},
- {q:"Boyle's Law: at constant T, P∝",o:["V","1/V","V²","√V"],a:1},
- {q:"Radioactive decay emits",o:["alpha, beta, gamma","X-ray only","visible light","UV only"],a:0},
- {q:"Specific heat capacity unit",o:["J/kg","J/(kg·K)","W/m","N/m²"],a:1},
- {q:"Work = Force ×",o:["time","mass","displacement","area"],a:2},
- {q:"Concave lens also called",o:["converging","diverging","convex","plane"],a:1},
- {q:"Primary colours of light",o:["red, yellow, blue","red, green, blue","red, orange, blue","cyan, magenta, yellow"],a:1},
- {q:"Doppler effect: change in ___ due to motion",o:["amplitude","wavelength only","observed frequency","speed"],a:2},
- {q:"Archimedes' principle: upthrust equals",o:["mass of object","weight of displaced fluid","volume of object","density of fluid"],a:1},
- {q:"Magnetic field unit",o:["Ampere","Tesla","Coulomb","Ohm"],a:1},
- {q:"Fleming's left-hand rule for",o:["generators","motors","transformers","capacitors"],a:1},
- {q:"Half-life is time for ___ nuclei to decay",o:["all","half","one","none"],a:1},
- {q:"Latent heat of fusion: melt solid at",o:["boiling point","constant temperature","0°C","100°C"],a:1},
- {q:"Velocity = displacement /",o:["force","mass","time","acceleration"],a:2},
- {q:"Charles' Law: at constant P, V∝",o:["P","T (Kelvin)","1/T","mass"],a:1},
- {q:"Coulomb's law: force between electric",o:["magnets","masses","charges","atoms"],a:2},
- {q:"Efficiency = (useful output / total input) ×",o:["10","100","1000","π"],a:1},
- {q:"Photoelectric effect proved light behaves as",o:["wave","particle","both","neither"],a:1},
- {q:"Terminal velocity: net force =",o:["maximum","zero","minimum","gravity only"],a:1},
- {q:"A fuse protects against",o:["voltage spikes","overcurrent","short circuits and overcurrent","undercurrent"],a:2},
- {q:"Resonance: applied frequency matches",o:["double","half","natural/fundamental","random"],a:2},
- {q:"Capacitance unit",o:["Henry","Farad","Weber","Tesla"],a:1},
- {q:"Moment = Force ×",o:["area","mass","perpendicular distance","velocity"],a:2},
- {q:"Light travels fastest in",o:["water","glass","vacuum","air"],a:2},
- {q:"Escape velocity from Earth ≈",o:["7 km/s","11.2 km/s","3×10⁸ m/s","9.8 m/s²"],a:1},
- {q:"Projectile at 45° gives",o:["max height","max range","min range","min time"],a:1},
- {q:"Kelvin: T(K) = T(°C) +",o:["100","173","273","373"],a:2},
- {q:"Elastic PE in spring = ½k___",o:["x","x²","x³","2x"],a:1},
- {q:"Velocity-time graph slope gives",o:["displacement","speed","acceleration","distance"],a:2},
- {q:"Newton's 2nd Law F=",o:["mv","ma","m/a","v/t"],a:1},
- {q:"Diode allows current in ___ direction",o:["both","no","one","random"],a:2},
- {q:"Electric field strength unit",o:["N/C","V/m","both N/C and V/m","Ampere"],a:2},
- {q:"Cathode rays are streams of",o:["protons","neutrons","electrons","photons"],a:2},
- {q:"NPN transistor: N stands for",o:["Negative","Neutral","Normal","None"],a:0},
- {q:"Unit of luminous intensity",o:["Lux","Lumen","Candela","Watt"],a:2}
-],
-5:[
- {q:"Chemical formula for water",o:["HO","H₂O₂","H₂O","OH"],a:2},
- {q:"Gas produced: Zn + dilute HCl",o:["O₂","CO₂","H₂","N₂"],a:2},
- {q:"Atomic number of Carbon",o:["12","6","14","8"],a:1},
- {q:"Organic compound example",o:["NaCl","H₂SO₄","CH₄","KNO₃"],a:2},
- {q:"pH<7 indicates",o:["Neutral","Alkaline","Acidic","Distilled"],a:2},
- {q:"Valency of Oxygen",o:["1","2","3","4"],a:1},
- {q:"Law of conservation of mass",o:["mass increases","mass decreases","mass is conserved","mass equals energy"],a:2},
- {q:"Electrolysis uses ___ current",o:["AC","DC","both","alternating"],a:1},
- {q:"Allotropes of Carbon",o:["diamond and graphite","graphite and coal","diamond and coal","graphite and coke"],a:0},
- {q:"Avogadro's number ≈",o:["6.02×10²³","3.14×10²³","9.8×10²³","1.6×10⁻¹⁹"],a:0},
- {q:"Periodic table arranged by increasing",o:["atomic mass","atomic number","reactivity","valency"],a:1},
- {q:"Catalyst changes ___ of reaction",o:["products","reactants","rate","equation"],a:2},
- {q:"Covalent bond formed by",o:["electron transfer","electron sharing","ionic attraction","metallic bonding"],a:1},
- {q:"Haber process produces",o:["sulfuric acid","ammonia","chlorine","nitrogen"],a:1},
- {q:"Contact process produces",o:["H₂SO₄","HCl","HNO₃","NaOH"],a:0},
- {q:"Empirical formula gives ___ ratio",o:["actual","simplest whole-number","molecular","molar"],a:1},
- {q:"Oxidation involves ___ of electrons",o:["gain","loss","sharing","transfer"],a:1},
- {q:"Noble gases group",o:["IA","IIA","VII","0 (18)"],a:3},
- {q:"Alkanes general formula",o:["CₙH₂ₙ","CₙH₂ₙ₊₂","CₙH₂ₙ₋₂","CₙHₙ"],a:1},
- {q:"Electrolyte conducts in",o:["solid state","solution or molten state","only gas","never"],a:1},
- {q:"Rusting requires",o:["oxygen only","water only","oxygen and water","heat only"],a:2},
- {q:"Formula for sulfuric acid",o:["HSO₄","H₂SO₃","H₂SO₄","H₂S"],a:2},
- {q:"Neutralisation produces",o:["acid + base","salt + water","oxide + acid","alkali + acid"],a:1},
- {q:"STP: T=273K, P=",o:["1 atm","2 atm","0.5 atm","100 kPa"],a:0},
- {q:"Molar volume at STP ≈",o:["22.4 L","24 L","11.2 L","44.8 L"],a:0},
- {q:"Electrons in neutral Na (Z=11)",o:["11","23","12","10"],a:0},
- {q:"Strongest acid among",o:["CH₃COOH","HCl","H₂CO₃","H₂SO₃"],a:1},
- {q:"Polymerisation produces",o:["monomers","polymers","ions","radicals"],a:1},
- {q:"Rate increases with temperature because",o:["particles slow","more energetic collisions","reactants decrease","products increase"],a:1},
- {q:"Isotopes: same ___ different ___",o:["mass, atomic number","atomic number, mass number","electrons, protons","neutrons, electrons"],a:1},
- {q:"Le Chatelier's principle: system shifts to",o:["increase yield always","oppose imposed change","maximise temperature","reduce pressure always"],a:1},
- {q:"Hydroxide ion formula",o:["H⁺","OH⁻","O²⁻","H₃O⁺"],a:1},
- {q:"Saponification produces",o:["ester","soap and glycerol","acid and base","alkane"],a:1},
- {q:"Halogen group number",o:["VI","VII","0","V"],a:1},
- {q:"Molecular formula of ethanol",o:["CH₃OH","C₂H₅OH","C₂H₄","C₃H₇OH"],a:1},
- {q:"Exothermic reaction ___ heat",o:["absorbs","releases","neither","oscillates"],a:1},
- {q:"Electronic config of Mg (Z=12)",o:["2,8,2","2,10","2,8,4","2,6,4"],a:0},
- {q:"Fermentation: glucose produces",o:["acetic acid+O₂","ethanol+CO₂","methane+water","propanol+N₂"],a:1},
- {q:"CaCO₃ thermal decomposition gives",o:["CaO+CO₂","Ca+CO₂","CaO₂+C","Ca(OH)₂+CO"],a:0},
- {q:"Electronegativity ___ down the group",o:["increases","stays same","decreases","oscillates"],a:2},
- {q:"Activation energy lowered by",o:["temperature","pressure","catalyst","dilution"],a:2},
- {q:"Gold (Au) symbol",o:["Go","Ag","Au","Gl"],a:2},
- {q:"Peptide bonds join",o:["nucleotides","amino acids","fatty acids","monosaccharides"],a:1},
- {q:"Buffer resists changes in",o:["temperature","concentration","pH","colour"],a:2},
- {q:"Nitrogen monoxide formula",o:["N₂O","NO₂","NO","N₂O₄"],a:2},
- {q:"Metallic bonding: electrons are",o:["shared between two","transferred","delocalised","fixed"],a:2},
- {q:"Soap head is ___ tail is ___",o:["hydrophilic, hydrophobic","hydrophobic, hydrophilic","polar, polar","nonpolar, polar"],a:0},
- {q:"Chromatography separates based on",o:["boiling point","solubility/adsorption","melting point","density"],a:1},
- {q:"Dative bond: both electrons from",o:["one atom","each atom","nucleus","proton"],a:0},
- {q:"Nitrogen gas percentage in atmosphere ≈",o:["21%","78%","1%","0.03%"],a:1}
-],
-6:[
- {q:"Powerhouse of cell",o:["Nucleus","Ribosome","Mitochondria","Vacuole"],a:2},
- {q:"Universal blood donor group",o:["A","B","AB","O"],a:3},
- {q:"DNA stands for",o:["Deoxyribose Nucleic Acid","Deoxyribonucleic Acid","Dioxyribonucleic Acid","Dinucleic Ribose Acid"],a:1},
- {q:"Photosynthesis site in cell",o:["Mitochondria","Nucleus","Chloroplast","Cell wall"],a:2},
- {q:"NOT part of digestive system",o:["Oesophagus","Pancreas","Trachea","Duodenum"],a:2},
- {q:"Mendel's law of segregation",o:["alleles blend","alleles separate in gametes","traits skip","dominant always masks"],a:1},
- {q:"Osmosis: water from ___ to ___ concentration",o:["high, low","low, high","equal, equal","high, high"],a:1},
- {q:"Starch-digesting enzyme",o:["Lipase","Protease","Amylase","Pepsin"],a:2},
- {q:"Human somatic cell chromosomes",o:["23","46","48","22"],a:1},
- {q:"Meiosis produces ___ daughter cells",o:["2","4","8","16"],a:1},
- {q:"Kingdom with unicellular prokaryotes",o:["Fungi","Protista","Monera","Animalia"],a:2},
- {q:"Blood sugar hormone",o:["Adrenaline","Insulin","Thyroxine","Oestrogen"],a:1},
- {q:"Bone is ___ tissue",o:["epithelial","connective","muscle","nervous"],a:1},
- {q:"Protein synthesis site",o:["Nucleus","Golgi","Ribosome","Vacuole"],a:2},
- {q:"Photosynthesis: 6CO₂+6H₂O→",o:["C₆H₁₂O₆+6O₂","C₆H₁₂O₆+6CO₂","6O₂+H₂O","CO₂+H₂O"],a:0},
- {q:"Transpiration through",o:["roots","stomata","phloem","bark"],a:1},
- {q:"Red blood cells lack",o:["haemoglobin","nucleus","cell membrane","iron"],a:1},
- {q:"Mitosis produces ___ identical cells",o:["4","2","8","16"],a:1},
- {q:"Active immunity involves",o:["antibody injection","producing own antibodies","blood transfusion","organ transplant"],a:1},
- {q:"Fastest signal travels via",o:["hormones","lymph","nerve impulses","blood"],a:2},
- {q:"Darwin's evolution mechanism",o:["Lamarckism","natural selection","mutation alone","genetic drift alone"],a:1},
- {q:"Alimentary canal begins at",o:["stomach","oesophagus","mouth","small intestine"],a:2},
- {q:"Xylem transports",o:["food (sugar)","water and mineral salts","hormones","oxygen"],a:1},
- {q:"Phloem transports",o:["water","mineral salts","manufactured food","oxygen"],a:2},
- {q:"Antigen stimulates",o:["enzyme activity","immune response","photosynthesis","respiration"],a:1},
- {q:"Energy lost at each trophic level as",o:["light","sound","heat","potential energy"],a:2},
- {q:"Parasitism: host is",o:["benefited","unaffected","harmed","reproduced"],a:2},
- {q:"Plant cell has ___ not in animal cell",o:["mitochondria","ribosome","cell wall and large vacuole","nucleus"],a:2},
- {q:"Genotype RR is",o:["heterozygous dominant","homozygous dominant","homozygous recessive","heterozygous recessive"],a:1},
- {q:"Ecosystem: biotic and ___ components",o:["living","abiotic","cellular","genetic"],a:1},
- {q:"White blood cells function",o:["carry O₂","fight infection","clot blood","transport CO₂"],a:1},
- {q:"Kidney functional unit",o:["Alveolus","Nephron","Villus","Neuron"],a:1},
- {q:"Germination requires water, O₂, and",o:["light","suitable temperature","soil","CO₂"],a:1},
- {q:"Carbon cycle: decomposers return carbon as",o:["O₂","CO₂","CH₄","C"],a:1},
- {q:"Vaccine stimulates immunity by",o:["killing all pathogens","introducing weakened antigens","providing antibodies","removing infected cells"],a:1},
- {q:"Discontinuous variation example",o:["height","weight","blood group","skin tone"],a:2},
- {q:"Reflex arc order",o:["receptor→motor→CNS→effector","receptor→sensory→CNS→motor→effector","CNS→receptor→motor","motor→sensory→receptor"],a:1},
- {q:"Peristalsis in",o:["lungs","alimentary canal","blood vessels","nephron"],a:1},
- {q:"Wind pollination called",o:["entomophily","zoophily","anemophily","hydrophily"],a:2},
- {q:"Gene mutation: change in",o:["chromosome number","DNA base sequence","protein directly","enzyme"],a:1},
- {q:"Food web arrows show",o:["predation","energy flow","movement","evolution"],a:1},
- {q:"Lymphocytes produce",o:["enzymes","hormones","antibodies","red cells"],a:2},
- {q:"Aerobic respiration: glucose + O₂ →",o:["CO₂+H₂O+ATP","lactic acid+ATP","ethanol+CO₂","CO₂ only"],a:0},
- {q:"Main greenhouse gas causing global warming",o:["O₂","N₂","CO₂","H₂"],a:2},
- {q:"Nucleus directs protein synthesis via",o:["respiration","DNA","osmosis","cell division"],a:1},
- {q:"Saprophytes get nutrients from",o:["photosynthesis","living hosts","dead organic matter","sunlight"],a:2},
- {q:"Hardy-Weinberg: allele frequency ___ in a stable population",o:["changes","stays constant","increases","decreases"],a:1},
- {q:"Plasmid found in",o:["human cells","plant cells","bacteria","viruses"],a:2},
- {q:"Aerobic vs anaerobic: anaerobic produces ___ energy",o:["more","less","equal","none"],a:1},
- {q:"Photosynthesis raw materials",o:["O₂ and glucose","CO₂ and H₂O","N₂ and H₂","CO₂ and O₂"],a:1}
-],
-7:[
- {q:"Elastic demand: % ΔQd > % Δ___",o:["income","price","supply","cost"],a:1},
- {q:"GDP stands for",o:["Gross Domestic Product","General Domestic Production","Gross Development Plan","General Development Product"],a:0},
- {q:"Factor of production",o:["Money","Land","Technology","Trade"],a:1},
- {q:"Inflation means",o:["fall in price level","rise in general price level","fall in money supply","rise in production"],a:1},
- {q:"Perfect competition product is",o:["differentiated","homogeneous","branded","unique"],a:1},
- {q:"Diminishing marginal utility: utility ___ as more consumed",o:["increases","stays constant","decreases","doubles"],a:2},
- {q:"Supply curve slopes",o:["downward","upward","horizontal","vertical"],a:1},
- {q:"PED = % ΔQd / % Δ___",o:["income","supply","price","cost"],a:2},
- {q:"Opportunity cost is",o:["total cost","next best alternative foregone","sunk cost","fixed cost"],a:1},
- {q:"Monopoly: one ___ in market",o:["buyer","seller","regulator","distributor"],a:1},
- {q:"Positive externality: private benefit < ___ benefit",o:["social","government","producer","consumer"],a:0},
- {q:"Recession: two consecutive quarters of negative",o:["inflation","GDP growth","employment","trade"],a:1},
- {q:"Devaluation makes exports ___ competitive",o:["less","equally","more","not"],a:2},
- {q:"Fiscal policy uses government spending and",o:["monetary supply","interest rates","taxation","exchange rates"],a:2},
- {q:"Giffen good: demand ___ when price rises",o:["falls","is unchanged","rises","becomes zero"],a:2},
- {q:"Comparative advantage: lower",o:["absolute cost","opportunity cost","fixed cost","marginal cost"],a:1},
- {q:"Monopsony has one",o:["seller","buyer","regulator","intermediary"],a:1},
- {q:"Multiplier: initial spending causes ___ income change",o:["equal","smaller","larger","negative"],a:2},
- {q:"Stagflation: inflation + ",o:["growth","deflation","stagnation/unemployment","boom"],a:2},
- {q:"Demand shifts right when income ___ (normal good)",o:["falls","stays constant","rises","becomes zero"],a:2},
- {q:"Consumer surplus: willingness to pay minus",o:["supply price","market price","cost price","producer price"],a:1},
- {q:"Oligopoly: ___ dominant firms",o:["one","many small","few","infinite"],a:2},
- {q:"Balance of payments records",o:["government budget","all international transactions","domestic trade","exchange rates"],a:1},
- {q:"Subsistence farming primarily for",o:["export","own consumption","profit","commercial sale"],a:1},
- {q:"Invisible trade includes",o:["oil exports","insurance and tourism","manufactured goods","agricultural products"],a:1},
- {q:"Central bank: issuing currency and",o:["retail banking","regulating banks","collecting taxes","lending to individuals"],a:1},
- {q:"Tariff taxes",o:["income","imports","domestic goods","exports"],a:1},
- {q:"Price floor set ___ equilibrium",o:["below","at","above","equal"],a:2},
- {q:"Economies of scale: average cost ___ as output rises",o:["rises","falls","stays same","doubles"],a:1},
- {q:"Keynesian economics: government ___ during recession",o:["cuts spending","raises taxes","increases spending","raises interest rates"],a:2},
- {q:"Mixed economy has",o:["command and traditional","market and command elements","traditional and market","barter and command"],a:1},
- {q:"Capital goods used to",o:["consume directly","produce other goods","pay wages","fund imports"],a:1},
- {q:"Public goods are non-rival and",o:["excludable","non-excludable","private","imported"],a:1},
- {q:"Deflation: ___ fall in price level",o:["temporary","persistent","seasonal","minor"],a:1},
- {q:"Currency appreciates → exports",o:["cheaper","dearer","unchanged","faster"],a:1},
- {q:"Free trade area removes ___ between members",o:["language barriers","tariffs and quotas","cultural barriers","political borders"],a:1},
- {q:"HDI measures",o:["GDP only","income, education, life expectancy","trade balance","inflation"],a:1},
- {q:"Market equilibrium: Qs = Qd at ___ price",o:["maximum","minimum","equilibrium","floor"],a:2},
- {q:"Transfer payments include",o:["wages","pensions and unemployment benefits","corporate profits","investments"],a:1},
- {q:"Demand-pull inflation: excess",o:["supply","government spending","aggregate demand","imports"],a:2},
- {q:"Structural unemployment: workers lack",o:["willingness","skills","location","transport"],a:1},
- {q:"Price discrimination: multiple markets with different",o:["incomes","elasticities","taxes","currencies"],a:1},
- {q:"GNP = GDP +",o:["net exports","net factor income from abroad","government spending","tax revenue"],a:1},
- {q:"Barter: double coincidence of",o:["money","wants","goods","prices"],a:1},
- {q:"Zero PED: demand curve is",o:["upward","downward","horizontal","vertical"],a:3},
- {q:"Human capital refers to",o:["factory machinery","skills and education of workers","land","money"],a:1},
- {q:"Privatisation: ownership moves from ___ to private",o:["foreign","public/government","individual","NGO"],a:1},
- {q:"Trade cycle: boom → recession → ___ → recovery",o:["inflation","depression","stagflation","surplus"],a:1},
- {q:"Cost-push inflation caused by",o:["excess demand","rising production costs","government printing money","falling unemployment"],a:1},
- {q:"Equilibrium interest rate set by supply and demand for",o:["goods","foreign exchange","loanable funds","labour"],a:2}
-],
-8:[
- {q:"Separation of powers: Montesquieu's idea",o:["Marx","Locke","Montesquieu","Rousseau"],a:2},
- {q:"Nationalism: belonging to a",o:["foreign land","nation","corporation","religion"],a:1},
- {q:"UN established in",o:["1939","1945","1950","1960"],a:1},
- {q:"Law-making arm",o:["Executive","Judiciary","Legislature","Cabinet"],a:2},
- {q:"Hobbes: state of nature is",o:["peaceful","solitary, poor, nasty, brutish, short","utopian","rational"],a:1},
- {q:"Fascism associated with",o:["liberal democracy","extreme nationalism and authoritarianism","communism","federalism"],a:1},
- {q:"Indirect democracy works through",o:["referenda","elected representatives","town halls","military"],a:1},
- {q:"Veto: authority to",o:["pass laws","block legislation","dissolve parliament","call elections"],a:1},
- {q:"Proportional representation: seats proportional to",o:["geographic area","population","votes received","wealth"],a:2},
- {q:"Federal constitution divides power between",o:["executive and judiciary","central and regional govts","military and civilian","president and PM"],a:1},
- {q:"Coup d'état is",o:["peaceful transfer","sudden seizure of government","election result","amendment"],a:1},
- {q:"Rousseau: sovereign power lies with",o:["the king","the church","the general will","the army"],a:2},
- {q:"Judicial independence: judges decide without",o:["legal training","political pressure","experience","court rooms"],a:1},
- {q:"Standing committee: detailed scrutiny of",o:["ceremonies","bills","judicial review","executive orders"],a:1},
- {q:"Internal sovereignty: supreme power",o:["in foreign relations","within the state","militarily","economically"],a:1},
- {q:"ECOWAS founding year",o:["1963","1975","1980","1990"],a:1},
- {q:"Liberal democracy values",o:["state ownership","individual freedoms and civil liberties","military rule","one-party system"],a:1},
- {q:"By-election held when",o:["general election ends","a seat becomes vacant","presidential vote","census occurs"],a:1},
- {q:"Hung parliament: no party has",o:["elected members","absolute majority","manifesto","leader"],a:1},
- {q:"Ombudsman investigates",o:["criminal cases","maladministration","budget fraud","elections"],a:1},
- {q:"Electoral college elects US",o:["Congress","President","Supreme Court","Senate"],a:1},
- {q:"Totalitarianism: ___ political pluralism",o:["maximum","moderate","some","no"],a:3},
- {q:"African decolonisation peaked in",o:["1940s","1950s","1960s","1970s"],a:2},
- {q:"Pan-Africanism promotes",o:["European integration","unity of African peoples","Cold War neutrality","military governance"],a:1},
- {q:"Civil society: voluntary ___ bodies",o:["government","non-state","military","party"],a:1},
- {q:"Constitutional monarchy: monarch limited by",o:["divine right","constitution","military","parliament only"],a:1},
- {q:"Floor crossing: legislator changes party — also called",o:["coalition","defection","lobbying","filibuster"],a:1},
- {q:"Legitimacy comes from",o:["military strength","consent of the governed","foreign recognition","economic wealth"],a:1},
- {q:"Federalism first practised in modern form in",o:["UK","France","USA","Russia"],a:2},
- {q:"Westminster model originated in",o:["USA","UK","France","Germany"],a:1},
- {q:"Pressure group: seeks to ___ policy",o:["oppose","influence","ignore","formulate"],a:1},
- {q:"Bill of Rights: first 10 amendments to ___ constitution",o:["UK","French","US","Nigerian"],a:2},
- {q:"OPEC coordinates",o:["food aid","oil production and pricing","arms sales","trade tariffs"],a:1},
- {q:"Apartheid: system of",o:["tribal governance","racial segregation","economic isolation","religious rule"],a:1},
- {q:"Bureaucracy characterised by",o:["informal governance","hierarchical organisation and rules","military command","single leader"],a:1},
- {q:"First PM of Nigeria at independence",o:["Nnamdi Azikiwe","Obafemi Awolowo","Tafawa Balewa","Yakubu Gowon"],a:2},
- {q:"Rule of law: Dicey's concept",o:["Montesquieu","Dicey","Rousseau","Mill"],a:1},
- {q:"Commonwealth mainly ex-___territories",o:["South American","British","EU","OPEC"],a:1},
- {q:"Nigerian Senate called upper house of",o:["House of Reps","Senate","National Assembly","Council of State"],a:1},
- {q:"Devolution transfers power ___ to regional govt",o:["temporarily","permanently","partially","completely"],a:2},
- {q:"UN Security Council veto: ___ permanent members",o:["3","5","7","10"],a:1},
- {q:"Conscription: ___ military service",o:["voluntary","compulsory","contract","honorary"],a:1},
- {q:"Recall of official initiated by",o:["president","court","electorate","army"],a:2},
- {q:"Social contract: Hobbes favoured a",o:["democracy","strong sovereign (Leviathan)","theocracy","parliament"],a:1},
- {q:"Genocide Convention adopted by UN in",o:["1945","1948","1960","1975"],a:1},
- {q:"Bicameralism: upper house in UK called",o:["House of Commons","House of Lords","Senate","Bundestag"],a:1},
- {q:"Political ideology of Marxism: means of production owned by",o:["private individuals","the state/workers","corporations","foreign investors"],a:1},
- {q:"Recall referendum: citizens vote to",o:["elect a new leader","remove an elected official","ratify a treaty","change the constitution"],a:1},
- {q:"Cabinet collective responsibility means",o:["each minister acts alone","cabinet members support decisions publicly","ministers can oppose publicly","PM decides alone"],a:1},
- {q:"ICJ settles disputes between",o:["individuals","corporations","states","NGOs"],a:2}
-],
-9:[
- {q:"'The wind whispered' — device",o:["Metaphor","Simile","Personification","Alliteration"],a:2},
- {q:"Soliloquy: character speaks private thoughts",o:["to audience directly","aloud alone on stage","to another character","in verse only"],a:1},
- {q:"Chinua Achebe novel",o:["Purple Hibiscus","Things Fall Apart","Season of Migration","Weep Not Child"],a:1},
- {q:"Protagonist is",o:["villain","main character","narrator","minor character"],a:1},
- {q:"Ballad is a ___ poem",o:["long epic","short lyric","narrative sung","satirical"],a:2},
- {q:"'Bitter-sweet' example of",o:["metaphor","oxymoron","simile","paradox"],a:1},
- {q:"Tragic flaw (hamartia) causes",o:["comedy","hero's downfall","resolution","climax"],a:1},
- {q:"Flat character lacks",o:["dialogue","complexity/development","a name","motivation"],a:1},
- {q:"Epistolary novel told through",o:["diary entries","letters","newspaper articles","photographs"],a:1},
- {q:"Soyinka's 'Death and the King's Horseman' deals with",o:["colonial education","ritual suicide and colonial interference","war","romance"],a:1},
- {q:"Stream of consciousness presents",o:["narrator's summary","character's inner thoughts","third person view","dialogue only"],a:1},
- {q:"Enjambment: sentence continues past",o:["full stop","line break","stanza","couplet"],a:1},
- {q:"'As brave as a lion' is",o:["metaphor","simile","hyperbole","personification"],a:1},
- {q:"Author's attitude called",o:["plot","tone","setting","theme"],a:1},
- {q:"Dramatic irony: audience knows what ___ does not",o:["author","character","narrator","playwright"],a:1},
- {q:"Arrow of God protagonist",o:["Okonkwo","Ezeulu","Odili","Dike"],a:1},
- {q:"Tragedy ends in",o:["happiness","marriage","catastrophe/death","comedy"],a:2},
- {q:"Comedy primarily aims to",o:["instruct","amuse","sadden","terrify"],a:1},
- {q:"Okonkwo's fatal flaw",o:["cowardice","excessive pride and fear of failure","laziness","dishonesty"],a:1},
- {q:"Sonnet has ___ lines",o:["10","12","14","16"],a:2},
- {q:"Flashback presents",o:["future events","past events","dreams","allegory"],a:1},
- {q:"Round character is",o:["unrealistic","complex and develops","always villain","always narrator"],a:1},
- {q:"Elegy mourns",o:["victory","the dead","nature","love"],a:1},
- {q:"Satire uses humour to",o:["celebrate society","criticise society","describe nature","narrate history"],a:1},
- {q:"Foreshadowing hints at",o:["past events","future events","the theme","the setting"],a:1},
- {q:"Oral tradition: passed through",o:["books","spoken word, performance, memory","radio","newspapers"],a:1},
- {q:"Denouement is the",o:["opening","climax","resolution/untangling","turning point"],a:2},
- {q:"Third-person omniscient narrator",o:["is a character","knows all thoughts","only describes action","uses first person"],a:1},
- {q:"'Purple Hibiscus' author",o:["Chinua Achebe","Buchi Emecheta","Chimamanda Ngozi Adichie","Wole Soyinka"],a:2},
- {q:"Allegory: characters represent",o:["historical facts","abstract ideas","real people","scientific concepts"],a:1},
- {q:"Caesura is a ___ within a line",o:["rhyme scheme","pause","end rhyme","verse break"],a:1},
- {q:"Ngugi wa Thiong'o wrote",o:["Season of Migration","A Grain of Wheat","The Famished Road","Purple Hibiscus"],a:1},
- {q:"Catharsis: emotional ___ in audience",o:["suppression","purging/release","excitement","confusion"],a:1},
- {q:"Setting includes",o:["plot only","time and place","character only","dialogue only"],a:1},
- {q:"Meter: pattern of",o:["rhymes","stressed/unstressed syllables","stanzas","imagery"],a:1},
- {q:"'Weep Not Child' author",o:["Achebe","Ngugi wa Thiong'o","Soyinka","Okot p'Bitek"],a:1},
- {q:"Aside: spoken by character to",o:["another character","audience secretly","everyone on stage","playwright"],a:1},
- {q:"Onomatopoeia: word that",o:["rhymes","sounds like what it describes","is an antonym","is a metaphor"],a:1},
- {q:"'Season of Migration to the North' author",o:["Achebe","Soyinka","Tayeb Salih","Bâ"],a:2},
- {q:"'So Long a Letter' written by",o:["Achebe","Adichie","Mariama Bâ","Buchi Emecheta"],a:2},
- {q:"Free verse lacks",o:["imagery","regular metre and rhyme","themes","stanzas"],a:1},
- {q:"Climax: point of ___ tension",o:["lowest","highest","equal","zero"],a:1},
- {q:"Pathetic fallacy: nature reflects",o:["scientific facts","a character's emotions","the plot","another character"],a:1},
- {q:"Irony of situation: outcome is ___ expected",o:["exactly as","completely different from","similar to","random to"],a:1},
- {q:"Novel vs novella: novella is",o:["longer","shorter","same length","a play"],a:1},
- {q:"Deus ex machina: improbable ___ to resolve plot",o:["character","twist","device/intervention","setting"],a:2},
- {q:"Theme: ___ message of a work",o:["surface","central/underlying","hidden only","accidental"],a:1},
- {q:"'Ambiguity': ___ possible interpretations",o:["one clear","multiple","no","only literal"],a:1},
- {q:"Dramatic monologue: speaker addresses",o:["a crowd","a silent listener","the gods","themselves"],a:1},
- {q:"Hamartia is a character's",o:["strength","fatal flaw","motivation","setting"],a:1}
-],
-10:[
- {q:"sin(90°)=",o:["0","0.5","1","√2/2"],a:2},
- {q:"Roots of x²−5x+6=0",o:["2 and 3","1 and 6","−2 and −3","3 and 4"],a:0},
- {q:"lim(x→2) (x²−4)/(x−2)",o:["0","2","4","Undefined"],a:2},
- {q:"Sum of AP: a=3, d=2, n=10",o:["120","129","210","130"],a:0},
- {q:"∫2x dx",o:["2","x²","x²+C","2x²+C"],a:2},
- {q:"tan(30°)=",o:["1/√3","√3","1","1/2"],a:0},
- {q:"cos²θ+sin²θ=",o:["0","2","1","−1"],a:2},
- {q:"⁶C₄=",o:["15","30","20","12"],a:0},
- {q:"Roots of 3x²−7x+2=0",o:["1/3 and 2","1/3 and −2","−1/3 and 2","2 and 3"],a:0},
- {q:"Product of roots of ax²+bx+c=0",o:["−b/a","b/a","c/a","−c/a"],a:2},
- {q:"∫sin(x)dx=",o:["cos(x)+C","−cos(x)+C","sin(x)+C","−sin(x)+C"],a:1},
- {q:"GP a=2, r=3, S₄=",o:["80","60","84","40"],a:0},
- {q:"d/dx cos(3x)=",o:["−sin(3x)","−3sin(3x)","3cos(3x)","sin(3x)"],a:1},
- {q:"Det [[2,3],[1,4]]=",o:["5","8","11","14"],a:0},
- {q:"Evaluate i² (complex numbers)=",o:["1","−1","i","0"],a:1},
- {q:"Modulus of a+bi=",o:["a+b","a−b","√(a²+b²)","a²+b²"],a:2},
- {q:"Perpendicular lines: m₁×m₂=",o:["0","1","−1","∞"],a:2},
- {q:"f''(x)>0 means",o:["maximum","minimum","inflection","saddle"],a:1},
- {q:"d/dx(eˣ)=",o:["1/eˣ","xeˣ","eˣ","xe^(x−1)"],a:2},
- {q:"P(A∪B)=P(A)+P(B) if",o:["independent","mutually exclusive","complementary","exhaustive"],a:1},
- {q:"Normal distribution symmetric about",o:["mode","median","mean","range"],a:2},
- {q:"ln(e³)=",o:["e³","3e","3","1/3"],a:2},
- {q:"Variance = E(X²) − [E(X)]²",o:["standard deviation","variance","covariance","range"],a:1},
- {q:"d/dx(xⁿ)=",o:["nxⁿ","nxⁿ⁻¹","(n−1)xⁿ","nxⁿ⁺¹"],a:1},
- {q:"S∞ of GP requires",o:["|r|<1","|r|>1","r=1","r=0"],a:0},
- {q:"∫₀¹ x² dx=",o:["1/2","1/3","1/4","1"],a:1},
- {q:"De Moivre: (cosθ+isinθ)ⁿ=",o:["cosnθ+isinnθ","cos(nθ+i)","ncos θ","cos(nθ)"],a:0},
- {q:"[[a,b],[c,d]] inverse = (1/det)×",o:["[[a,b],[c,d]]","[[d,−b],[−c,a]]","[[−d,b],[c,−a]]","[[b,a],[d,c]]"],a:1},
- {q:"∫u dv = uv −",o:["∫v du","∫uv","∫du","u∫v"],a:0},
- {q:"Even function: f(−x)=",o:["−f(x)","f(x)","0","1"],a:1},
- {q:"Maclaurin for eˣ: 1+x+",o:["x²/2+x³/6+...","x²+x³+...","2x+3x²+...","x/2+x²/3+..."],a:0},
- {q:"Pearson's r=1 means",o:["no correlation","weak negative","perfect positive","perfect negative"],a:2},
- {q:"∫f(x)dx over all x=",o:["0","∞","1","f(x)"],a:2},
- {q:"5 distinct books arrangements=",o:["25","60","120","24"],a:2},
- {q:"Cube roots of unity lie on circle radius",o:["3","0","1","1/3"],a:2},
- {q:"Circle equation centre (a,b) radius r",o:["r","r²","2r","r³"],a:1},
- {q:"dP/dt=kP solution",o:["P=ke^t","P=P₀e^(kt)","P=P₀+kt","P=kt²"],a:1},
- {q:"sin(A+B)=sinAcosB+",o:["sinAsinB","cosAsinB","cosAcosB","sinBcosA"],a:1},
- {q:"Eigenvalue: Av=",o:["λv","v/λ","v+λ","0"],a:0},
- {q:"Standard normal: mean=0, SD=",o:["0","1","2","∞"],a:1},
- {q:"∫₀π sinx dx=",o:["0","1","2","π"],a:2},
- {q:"Gradient of scalar field is a",o:["scalar","vector","matrix","constant"],a:1},
- {q:"Hyperbolic function sinh(x)=",o:["(eˣ+e⁻ˣ)/2","(eˣ−e⁻ˣ)/2","e^(2x)","1/cosh(x)"],a:1},
- {q:"Argand diagram plots",o:["statistics","complex numbers","sequences","vectors"],a:1},
- {q:"Normal distribution area within ±1 SD ≈",o:["50%","68%","95%","99.7%"],a:1},
- {q:"By parts: choose u as",o:["trig function","algebraic or logarithmic","exponential","constant"],a:1},
- {q:"Midpoint rule approximates",o:["derivative","definite integral","limit","sum"],a:1},
- {q:"Partial fractions of (2x+1)/[(x+1)(x−1)]",o:["A/(x+1)+B/(x−1)","A/(x+1)+B","AB/(x²−1)","A+B/(x−1)"],a:0},
- {q:"n! / r!(n−r)! =",o:["permutations","combinations","probability","sequences"],a:1},
- {q:"Arithmetic mean of first n natural numbers",o:["n/2","(n+1)/2","n","2n"],a:1}
-],
-11:[
- {q:"Bill of Lading used in",o:["Banking","Insurance","Sea transport","Air transport"],a:2},
- {q:"Warehousing bridges gap between",o:["production and consumption","import and export","buyer and seller","supply and demand"],a:0},
- {q:"Entrepôt: goods are",o:["manufactured","imported and re-exported","taxed","grown"],a:1},
- {q:"Invoice requests",o:["receipt","payment","waybill","purchase order"],a:1},
- {q:"Retail trade sells to",o:["manufacturer","wholesaler","final consumer","government"],a:2},
- {q:"Wholesaler: breaking bulk means",o:["manufacturing","dividing large quantities","final retail","exporting"],a:1},
- {q:"Letter of credit used in",o:["domestic trade","international trade","retail trade","barter"],a:1},
- {q:"Advertising aims to",o:["increase costs","promote sales and inform","reduce supply","increase tariffs"],a:1},
- {q:"Auction: sold to",o:["lowest bidder","first buyer","highest bidder","government"],a:2},
- {q:"Cheque: order to bank to",o:["invest","pay","lend","receive"],a:1},
- {q:"Forwarding agent handles",o:["retail sales","shipping documentation and customs","manufacturing","banking"],a:1},
- {q:"Hire purchase: buyer pays",o:["full upfront","instalments with immediate possession","nothing upfront","at end only"],a:1},
- {q:"Credit note issued when",o:["goods sold","goods returned or overcharged","payment received","tax paid"],a:1},
- {q:"E-commerce: trade via",o:["email","internet/electronic platforms","telephone","fax"],a:1},
- {q:"Indemnity: restore insured to",o:["double compensation","pre-loss position","profit from loss","excess payout"],a:1},
- {q:"Debit note when buyer is",o:["overcharged","undercharged","returning goods","paying cash"],a:1},
- {q:"Visible trade: ___ goods",o:["service","tangible/physical","insurance","tourism"],a:1},
- {q:"Proforma invoice sent",o:["after delivery","before delivery as cost estimate","after payment","as receipt"],a:1},
- {q:"Bill of exchange drawn by",o:["debtor","creditor/seller","bank","government"],a:1},
- {q:"Containerisation advantage",o:["slower delivery","reduced handling costs","higher freight","labour intensive"],a:1},
- {q:"Economic integration highest form",o:["free trade area","customs union","common market","economic/monetary union"],a:3},
- {q:"WTO replaced",o:["IMF","GATT","World Bank","UNCTAD"],a:1},
- {q:"Cash and carry: buyer pays ___ and carries",o:["later","cash immediately","by cheque","on credit"],a:1},
- {q:"Product life cycle: introduction, growth, maturity, ___",o:["expansion","decline","plateau","revival"],a:1},
- {q:"Cartel: firms fix ___ and control output",o:["quality","prices","wages","imports"],a:1},
- {q:"Subrogation: insurer takes over ___ after claim",o:["property","legal rights against third party","all assets","business"],a:1},
- {q:"Bonded warehouse: goods until",o:["destroyed","customs duty paid","sold at auction","repackaged"],a:1},
- {q:"Cold storage for",o:["all goods","perishable goods","electronics","textiles"],a:1},
- {q:"Spot market: ___ delivery",o:["future","delayed","immediate","annual"],a:2},
- {q:"Futures contract: agree to buy/sell at ___ date",o:["past","present","future","random"],a:2},
- {q:"Consumer co-operative owned by",o:["producers","government","consumers","investors"],a:2},
- {q:"Dumping: selling abroad at ___ than home price",o:["higher","same","lower","random"],a:2},
- {q:"Terms of trade = export price index / import price index × ",o:["10","100","1000","1"],a:1},
- {q:"Horizontal integration: merge with firms at ___ level",o:["different","same production","retail","supply"],a:1},
- {q:"Vertical integration: merge at ___ levels",o:["same","different/successive","retail only","import"],a:1},
- {q:"Stock Exchange: market for",o:["agricultural produce","securities","foreign currency","commodities"],a:1},
- {q:"Manifest lists",o:["cargo on ship/plane","customs duties","insurance terms","prices"],a:0},
- {q:"Certificate of origin confirms",o:["product quality","country of production","insurance status","weight"],a:1},
- {q:"Export subsidy: government ___ exporters",o:["taxes","pays/supports","punishes","ignores"],a:1},
- {q:"Chamber of commerce promotes",o:["government policy","trade and business interests","military exports","agriculture only"],a:1},
- {q:"Mercantilism: ___ more than import",o:["import","export","borrow","invest"],a:1},
- {q:"Trade discount given by",o:["government","seller to buyer in same trade","insurer","bank"],a:1},
- {q:"Demand draft is payable",o:["on demand","at future date","never","annually"],a:0},
- {q:"Fidelity guarantee covers",o:["fire loss","employee dishonesty","car accidents","life"],a:1},
- {q:"Market overt: open legal market where ___ can transfer",o:["ownership/title","tax liability","insurance","import duty"],a:0},
- {q:"Consignment note accompanies goods by",o:["sea","air","road/rail","all modes"],a:2},
- {q:"Middleman links ___ to consumer",o:["bank","producer","government","insurer"],a:1},
- {q:"Insurable interest means",o:["paying premium","having financial stake in insured item","owning a car","being healthy"],a:1},
- {q:"Utmost good faith in insurance means",o:["paying claims quickly","full disclosure of all material facts","low premiums","standard policies"],a:1},
- {q:"Re-insurance: insurer transfers part of risk to",o:["client","another insurer","government","bank"],a:1}
-],
-12:[
- {q:"Accounting equation",o:["Assets=Liab+Capital","Assets=Liab−Capital","Capital=Assets+Liab","Liab=Assets+Capital"],a:0},
- {q:"Balance sheet shows at a",o:["period","point in time","year only","monthly"],a:1},
- {q:"Depreciation: ___ in asset value",o:["increase","reduction over time","interest on loan","profit"],a:1},
- {q:"Double-entry: every transaction in ___ accounts",o:["one","two","three","four"],a:1},
- {q:"Trial balance checks",o:["all purchases","arithmetic accuracy","profit","taxes"],a:1},
- {q:"Gross profit = Sales − ",o:["expenses","cost of goods sold","tax","depreciation"],a:1},
- {q:"Net profit = Gross profit − ",o:["sales","cost of goods sold","operating expenses","tax only"],a:2},
- {q:"Current ratio = Current assets / ",o:["total assets","current liabilities","equity","sales"],a:1},
- {q:"Debit increases ___ accounts",o:["liability and equity","asset and expense","revenue","only cash"],a:1},
- {q:"Accrual: revenue recognised when",o:["cash received","earned regardless of cash","expenses paid","reported"],a:1},
- {q:"Carriage inwards added to",o:["gross profit","cost of purchases","net profit","admin expenses"],a:1},
- {q:"Bad debt: uncollectable",o:["discount","receivable","bank charge","deposit"],a:1},
- {q:"Provision for bad debts reduces",o:["expenses","net debtors","sales","purchases"],a:1},
- {q:"Bank reconciliation compares cash book with",o:["creditor","bank statement","debtor","ledger"],a:1},
- {q:"FIFO: first in first",o:["purchased","sold/used","stored","returned"],a:1},
- {q:"LIFO: last in first",o:["stored","returned","sold/used","purchased"],a:2},
- {q:"Goodwill is ___ asset",o:["tangible","current","intangible","liquid"],a:2},
- {q:"Fixed cost does NOT change with",o:["time","output/activity","inflation","currency"],a:1},
- {q:"Break-even: total revenue = ",o:["gross profit","total cost","variable cost","fixed cost"],a:1},
- {q:"Liquidity: ability to meet ___ obligations",o:["long-term","short-term","equity","profit"],a:1},
- {q:"Share premium: shares issued above",o:["market value","par/nominal value","book value","cost value"],a:1},
- {q:"Realisation: profit recognised when",o:["cash received","goods produced","sale completed","announced"],a:2},
- {q:"Consistency: same methods used",o:["once only","period to period","when convenient","randomly"],a:1},
- {q:"Capital expenditure: spending on",o:["wages","long-term assets","advertising","utilities"],a:1},
- {q:"Revenue expenditure: ___ costs",o:["capital","long-term","operating/recurring","investment"],a:2},
- {q:"Straight-line depreciation: same each",o:["year","unit","month","quarter"],a:0},
- {q:"Reducing balance: % on ___ book value",o:["original","reducing/net","current market","average"],a:1},
- {q:"Prepaid expense in balance sheet as",o:["liability","income","current asset","equity"],a:2},
- {q:"Accrued expense: current",o:["asset","prepayment","liability","equity"],a:2},
- {q:"Debenture is a",o:["share","long-term loan/bond","current liability","equity"],a:1},
- {q:"EPS = Net profit / ",o:["total assets","number of shares","total liabilities","equity"],a:1},
- {q:"Ledger: collection of",o:["invoices","accounts","bank statements","receipts"],a:1},
- {q:"Journal: book of ___ entry",o:["final","original/prime","ledger","balance sheet"],a:1},
- {q:"Suspense account: hold errors",o:["permanently","temporarily","for audit","for tax"],a:1},
- {q:"Partnership profit shared per",o:["equal split","partnership agreement","government rules","turnover ratio"],a:1},
- {q:"Drawings reduce",o:["liabilities","capital/owner's equity","assets only","expenses"],a:1},
- {q:"Working capital = Current assets − ",o:["fixed assets","current liabilities","total liabilities","equity"],a:1},
- {q:"Gearing: proportion of ___ to equity",o:["assets","debt","revenue","profit"],a:1},
- {q:"Prime cost = direct materials + direct labour + ",o:["overhead","direct expenses","indirect expenses","selling costs"],a:1},
- {q:"Imprest petty cash: fixed ___ topped up",o:["variable","float","decreasing","random"],a:1},
- {q:"Non-current liabilities due after ___ year(s)",o:["6 months","1","2","5"],a:1},
- {q:"Debenture interest paid ___ profit",o:["after","from","before","in place of"],a:2},
- {q:"Dividend paid to",o:["debenture holders","shareholders","creditors","employees"],a:1},
- {q:"Materiality: only ___ items need strict treatment",o:["trivial","material/significant","all","random"],a:1},
- {q:"Going concern: business will continue",o:["1 year","indefinitely","until sold","5 years"],a:1},
- {q:"Prudence: losses recognised ___, gains ___",o:["late, early","early, when certain","never, always","when paid, when paid"],a:1},
- {q:"ROCE = Net profit / ___ × 100",o:["total liabilities","capital employed","gross profit","sales"],a:1},
- {q:"Control account reconciles",o:["bank and cash","debtors/creditors ledger totals","assets and liabilities","revenue and expenses"],a:1},
- {q:"Overhead absorption = Overheads / ",o:["sales","units produced","labour/machine hours","profit"],a:2},
- {q:"Margin of safety = Actual sales − ___ sales",o:["minimum","break-even","maximum","budgeted"],a:1}
-]};
-
-// Generic 20-question banks for subjects without full QB
-function getGenericQuestions(title,icon){
-  const q=[
-    {q:`${title} is studied in Senior Secondary School`,o:["False","True","Maybe","Never"],a:1},
-    {q:`Which exam body sets ${title} questions in Nigeria?`,o:["JAMB only","WAEC and NECO","NABTEB only","Cambridge only"],a:1},
-    {q:`${title} requires consistent ___`,o:["avoidance","study and practice","memorisation only","copying"],a:1},
-    {q:`Past questions help in ${title} because they`,o:["show exact future questions","reveal exam patterns and key areas","replace textbooks","guarantee 100%"],a:1},
-    {q:`The best way to pass ${title} is to`,o:["cram the night before","study consistently and practice past questions","copy from friends","avoid difficult topics"],a:1},
-    {q:`${title} builds ___ skills`,o:["zero","critical thinking and analytical","only memory","physical"],a:1},
-    {q:`Time management in ${title} exams means`,o:["answering questions randomly","allocating time per question wisely","answering only easy ones","leaving hard ones blank"],a:1},
-    {q:`Revision in ${title} should be`,o:["done once","regular and systematic","done only before exam","avoided"],a:1},
-    {q:`Reading the question carefully in ${title} helps to`,o:["waste time","understand exactly what is asked","confuse you","slow you down"],a:1},
-    {q:`In ${title}, marking schemes reward`,o:["length of answer","accuracy and correctness","handwriting","speed only"],a:1},
-    {q:`Diagrams in ${title} answers should be`,o:["avoided","neat, labelled and relevant","colourful only","copied from textbook"],a:1},
-    {q:`Group study for ${title} is effective when`,o:["members distract each other","everyone is prepared and focused","it replaces individual study","it lasts all night"],a:1},
-    {q:`A student scoring below 50% in ${title} should`,o:["give up","seek help and revise weak areas","only read notes","blame the teacher"],a:1},
-    {q:`The syllabus for ${title} is set by`,o:["individual schools","examination bodies like WAEC/NECO","students","parents"],a:1},
-    {q:`${title} examination lasts approximately`,o:["30 minutes","1.5 to 3 hours","all day","5 minutes"],a:1},
-    {q:`Cheating in ${title} exams can lead to`,o:["better grades","cancellation of results","rewards","praise"],a:1},
-    {q:`${title} keywords in questions like 'explain' require`,o:["one word answer","detailed description","a diagram only","a list"],a:1},
-    {q:`${title} multiple-choice questions have ___ options typically`,o:["2","3","4","5"],a:2},
-    {q:`Success in ${title} requires`,o:["talent alone","hard work, smart study and practice","luck alone","expensive textbooks"],a:1},
-    {q:`The pass mark in ${title} WAEC is typically`,o:["70%","30%","40%","50%"],a:2}
-  ];
-  return q;
-}
-
-// ══════════════════════════════
-// COUNTDOWN TIMER (24h evergreen)
-// ══════════════════════════════
-function initCountdown(){
-  const key='cd_target';
-  let target=S.get(key,null);
-  const now=Date.now();
-  if(!target||target<=now){
-    target=now+(24*60*60*1000);
-    S.set(key,target);
-  }
-  function tick(){
-    const rem=Math.max(0,target-Date.now());
-    if(rem===0){
-      // Reset for next 24h cycle
-      const nt=Date.now()+(24*60*60*1000);
-      S.set(key,nt);
-      target=nt;
-    }
-    const h=Math.floor(rem/3600000);
-    const m=Math.floor((rem%3600000)/60000);
-    const s=Math.floor((rem%60000)/1000);
-    document.getElementById('cd-h').innerText=String(h).padStart(2,'0');
-    document.getElementById('cd-m').innerText=String(m).padStart(2,'0');
-    document.getElementById('cd-s').innerText=String(s).padStart(2,'0');
-    // Color urgency
-    const cdH=document.getElementById('cd-h');
-    const cdM=document.getElementById('cd-m');
-    const cdS=document.getElementById('cd-s');
-    const color=h<2?'var(--danger)':h<6?'var(--warn)':'var(--op)';
-    [cdH,cdM,cdS].forEach(el=>el.style.color=color);
-  }
-  tick();
-  setInterval(tick,1000);
-}
-
-// ══════════════════════════════
-// ADVERT SLIDER AUTO-SCROLL
-// ══════════════════════════════
-function initAdSlider(){
-  const slider=document.getElementById('adSlider');
-  const dots=document.querySelectorAll('.ad-dot');
-  let cur=0;
-  const total=dots.length;
-  function go(idx){
-    cur=idx;
-    slider.scrollTo({left:slider.scrollWidth/total*cur,behavior:'smooth'});
-    dots.forEach((d,i)=>d.classList.toggle('active',i===cur));
-  }
-  setInterval(()=>go((cur+1)%total),4000);
-  slider.addEventListener('scroll',()=>{
-    const idx=Math.round(slider.scrollLeft/(slider.scrollWidth/total));
-    dots.forEach((d,i)=>d.classList.toggle('active',i===idx));
-    cur=idx;
-  });
-}
-
-// ══════════════════════════════
-// SIDEBAR
-// ══════════════════════════════
-function openSidebar(){
-  document.getElementById('sidebar').classList.add('open');
-  document.getElementById('sb-overlay').classList.add('show');
-}
-function closeSidebar(){
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('sb-overlay').classList.remove('show');
-}
-
-// ══════════════════════════════
-// PIN STATE
-// ══════════════════════════════
-const pinState={topup:'',Drill:''};
-let pendingDrillId=null;
-let pendingTrialId=null;
-
-function pinKey(ctx,val){
-  if(val==='clr')pinState[ctx]='';
-  else if(val==='del')pinState[ctx]=pinState[ctx].slice(0,-1);
-  else if(pinState[ctx].length<5)pinState[ctx]+=String(val);
-  updatePinDots(ctx);
-  if(pinState[ctx].length===5){
-    if(ctx==='topup')processTopupPin();
-    else processDrillPin();
-  }
-}
-function updatePinDots(ctx){
-  const pfx=ctx==='topup'?'td':'qd';
-  for(let i=0;i<5;i++){
-    const d=document.getElementById(pfx+i);
-    if(d)d.className='pin-dot'+(i<pinState[ctx].length?' filled':'');
-  }
-}
-function processTopupPin(){
-  const pin=pinState.topup;
-  const err=document.getElementById('topup-pin-err');
-  if(PIN_CMS[pin]){
-    if(PIN_CMS[pin].used){err.innerText='❌ PIN already used.';pinState.topup='';updatePinDots('topup');return;}
-    const val=PIN_CMS[pin].val;
-    PIN_CMS[pin].used=true;savePinCMS();
-    wallet+=val;S.set('wallet',wallet);updateWalletUI();
-    closeM();
-    setTimeout(()=>alert(`✅ ₦${val.toLocaleString()} tokens added!`),200);
-    pinState.topup='';updatePinDots('topup');
-  }else{
-    err.innerText='❌ Invalid PIN. Contact Admin.';
-    pinState.topup='';updatePinDots('topup');
-  }
-}
-function processDrillPin(){
-  const pin=pinState.Drill;
-  const err=document.getElementById('qpin-err');
-  if(PIN_CMS[pin]){
-    closeM();
-    pinState.Drill='';updatePinDots('Drill');
-    document.getElementById('qpin-err').innerText='';
-    setTimeout(()=>{
-      if(pendingTrialId!==null)launchTrial(pendingTrialId);
-      else launchDrill(pendingDrillId);
-    },150);
-  }else{
-    err.innerText='❌ Incorrect PIN. Try again.';
-    pinState.Drill='';updatePinDots('Drill');
-  }
-}
-
-// ══════════════════════════════
-// TRIAL IFRAME MODAL
-// ══════════════════════════════
-function launchTrial(id){
-  const subj=subjects.flatMap(c=>c.list).find(x=>x.id===id);
-  if(!subj)return;
-  pendingTrialId=id;
-  const isDone=S.get('done_'+id,false);
-  document.getElementById('trial-badge').innerText=(subj.icon||'📝')+' '+subj.title;
-  document.getElementById('trial-title').innerText='Take Trial – '+subj.title;
-  // Use Google Forms iframe as practice content
-  document.getElementById('trial-iframe').src='https://docs.google.com/forms/d/e/1FAIpQLScdS2JUmJlU9Vrbi7R4rSeVq1PHw0m4xCukRoFzPejzChxo4g/viewform?embedded=true';
-  const btn=document.getElementById('btn-complete');
-  if(isDone){
-    btn.innerHTML='✅ Already Completed';
-    btn.disabled=true;
-    btn.style.background='rgba(0,210,141,.2)';
-    btn.style.color='#007a52';
-  }else{
-    btn.innerHTML='✅ Mark as Complete (−₦200)';
-    btn.disabled=false;
-    btn.style.background='var(--og)';
-    btn.style.color='#fff';
-  }
-  openM('m-trial');
-  // Update breadcrumb
-  document.getElementById('bc-current').innerText=subj.title+' Trial';
-}
-
-function markComplete(){
-  const id=pendingTrialId;
-  if(id===null)return;
-  const isDone=S.get('done_'+id,false);
-  if(isDone){closeM();return;}
-  if(wallet<200){
-    closeM();
-    setTimeout(()=>{
-      document.getElementById('insuf-title').innerText='Insufficient Tokens';
-      document.getElementById('insuf-msg').innerText='You need ₦200 to mark this subject complete. Top up your tokens.';
-      openM('m-insuf');
-    },150);
-    return;
-  }
-  wallet-=200;S.set('wallet',wallet);
-  S.set('done_'+id,true);
-  updateWalletUI();renderTopics();updateRanking();
-  const btn=document.getElementById('btn-complete');
-  btn.innerHTML='✅ Marked Complete! ₦200 deducted';
-  btn.disabled=true;
-  btn.style.background='rgba(0,210,141,.2)';
-  btn.style.color='#007a52';
-  setTimeout(()=>closeM(),1800);
-}
-
-// ══════════════════════════════
-// DRILL / QUIZ ENGINE
-// ══════════════════════════════
-let QS={id:null,idx:0,score:0,answered:false,shuffled:[]};
-
-function openDrillGate(id,isTrial=false){
-  pendingDrillId=isTrial?null:id;
-  pendingTrialId=isTrial?id:null;
-  if(!S.get('profile_set',false)){
-    document.getElementById('inp-name').value=S.get('student_name','');
-    document.getElementById('inp-email').value=S.get('student_email','');
-    document.getElementById('inp-class').value=S.get('student_class','');
-    openM('m-profile');
-    return;
-  }
-  pinState.Drill='';updatePinDots('Drill');
-  document.getElementById('qpin-err').innerText='';
-  openM('m-Drill-pin');
-}
-
-function handleTrialClick(id){
-  const isDone=S.get('done_'+id,false);
-  if(!isDone&&wallet<200){
-    document.getElementById('bal-card').classList.add('shake');
-    setTimeout(()=>document.getElementById('bal-card').classList.remove('shake'),500);
-    document.getElementById('insuf-title').innerText='Insufficient Tokens';
-    document.getElementById('insuf-msg').innerText='You need ₦200 to unlock this subject trial. Top up with a PIN or purchase one.';
-    openM('m-insuf');
-    return;
-  }
-  // Check if QB exists for inline drill
-  const bank=QB[id];
-  if(bank){
-    // Has questions — open drill
-    openDrillGate(id,false);
-    pendingTrialId=null;
-    pendingDrillId=id;
-  }else{
-    // No QB — open iframe trial modal
-    openDrillGate(id,true);
-  }
-}
-
-function launchDrill(id){
-  let bank=QB[id];
-  if(!bank){
-    // Fallback to trial modal
-    launchTrial(id);return;
-  }
-  const shuffled=[...bank].sort(()=>Math.random()-.5);
-  QS={id,idx:0,score:0,answered:false,shuffled};
-  const s=subjects.flatMap(c=>c.list).find(x=>x.id===id);
-  document.getElementById('q-badge').innerText=(s?s.icon:'📝')+' '+(s?s.title:'Subject')+' Trial';
-  document.getElementById('bc-current').innerText=(s?s.title:'')+' Trial';
-  renderQ();
-  openM('m-Drill');
-}
-
-function renderQ(){
-  const total=QS.shuffled.length;
-  const q=QS.shuffled[QS.idx];
-  document.getElementById('q-num').innerText=`Q${QS.idx+1}/${total}`;
-  document.getElementById('q-fill').style.width=((QS.idx+1)/total*100)+'%';
-  const opts=q.o.map((op,i)=>
-    `<button class="q-opt" onclick="pickAns(${i})">${String.fromCharCode(65+i)}. ${op}</button>`
-  ).join('');
-  document.getElementById('q-body').innerHTML=`
-    <p class="q-text">${q.q}</p>
-    <div class="q-opts">${opts}</div>
-    <div class="q-fb" id="q-fb"></div>
-    <button class="btn-qnext" id="q-next" onclick="nextQ()" style="display:none">
-      ${QS.idx<total-1?'Next Question →':'See Result 🏁'}
-    </button>`;
-  QS.answered=false;
-}
-
-function pickAns(i){
-  if(QS.answered)return;
-  QS.answered=true;
-  const q=QS.shuffled[QS.idx];
-  const opts=document.querySelectorAll('.q-opt');
-  const fb=document.getElementById('q-fb');
-  opts.forEach(b=>b.classList.add('disabled'));
-  if(i===q.a){QS.score++;opts[i].classList.add('correct');fb.className='q-fb show ok';fb.innerHTML='✅ Correct!';}
-  else{opts[i].classList.add('wrong');opts[q.a].classList.add('correct');fb.className='q-fb show bad';fb.innerHTML=`❌ Wrong. Correct: <b>${String.fromCharCode(65+q.a)}. ${q.o[q.a]}</b>`;}
-  document.getElementById('q-next').style.display='block';
-}
-
-function nextQ(){
-  if(QS.idx<QS.shuffled.length-1){QS.idx++;renderQ();}
-  else showScore();
-}
-
-function showScore(){
-  const total=QS.shuffled.length,score=QS.score,pct=Math.round(score/total*100);
-  const subj=subjects.flatMap(c=>c.list).find(x=>x.id===QS.id);
-  const subjName=subj?subj.title:'Subject';
-  const retryKey='retries_'+QS.id;
-  let retries=S.get(retryKey,0)+1;
-  S.set(retryKey,retries);
-  let completedNow=false;
-  if(!S.get('done_'+QS.id,false)){
-    if(wallet>=200){wallet-=200;S.set('wallet',wallet);}
-    S.set('done_'+QS.id,true);
-    const prev=S.get('best_'+QS.id,0);
-    if(pct>prev)S.set('best_'+QS.id,pct);
-    completedNow=true;
-    renderTopics();
-  }else{
-    const prev=S.get('best_'+QS.id,0);
-    if(pct>prev)S.set('best_'+QS.id,pct);
-  }
-  updateRanking();
-  const clr=pct>=80?'var(--og)':pct>=60?'var(--warn)':'var(--danger)';
-  const msg=pct>=80?'🎉 Excellent! Exam ready!':pct>=60?'👍 Good! Keep revising.':'📚 More study needed.';
-  const doneMsg=completedNow
-    ?`<div style="margin:8px 0;padding:10px;border-radius:10px;background:rgba(0,210,141,.1);color:#007a52;font-size:.75rem;font-weight:700;text-align:left">✅ <b>${subjName}</b> marked Complete! ₦200 deducted.</div>`
-    :`<div style="margin:8px 0;padding:10px;border-radius:10px;background:rgba(75,68,224,.08);color:var(--op);font-size:.73rem;font-weight:700;text-align:left">📌 Already completed. Score updated.</div>`;
-  document.getElementById('q-num').innerText='Result';
-  document.getElementById('q-fill').style.width='100%';
-  document.getElementById('q-body').innerHTML=`
-    <div style="text-align:center;padding:6px 0">
-      <div style="font-size:.7rem;color:var(--sub);margin-bottom:4px">${subjName}</div>
-      <div class="score-big" style="color:${clr}">${score}/${total}</div>
-      <div class="score-lbl">${pct}% · Attempt #${retries}</div>
-      <div style="width:100%;height:6px;background:rgba(128,128,128,.1);border-radius:10px;overflow:hidden;margin:10px 0">
-        <div style="width:${pct}%;height:100%;background:${clr};transition:width .8s;border-radius:10px"></div>
-      </div>
-      ${doneMsg}
-      <div style="font-weight:800;font-size:.88rem;margin-bottom:14px;color:var(--txt)">${msg}</div>
-      <button class="btn-qnext" onclick="closeM();setTimeout(()=>handleTrialClick(${QS.id}),150)">🔄 Retry Trial</button>
-      <button class="btn-qnext" onclick="closeM();document.getElementById('bc-current').innerText='All Subjects'" style="background:rgba(128,128,128,.1);color:var(--txt);margin-top:6px">✔ Done</button>
-    </div>`;
-  updateWalletUI();
-}
-
-// ══════════════════════════════
-// WALLET UI
-// ══════════════════════════════
-function updateWalletUI(){
-  const el=document.getElementById('bal-display');
-  if(el)el.innerText=`₦${wallet.toLocaleString()}`;
-  const bar=document.getElementById('use-bar');
-  if(bar)bar.style.width=Math.min(wallet/2000*100,100)+'%';
-  S.set('wallet',wallet);
-  // Low balance warning
-  const balCard=document.getElementById('bal-card');
-  if(wallet<400&&balCard){
-    balCard.style.outline='2px solid rgba(255,77,77,.5)';
-  }else if(balCard){
-    balCard.style.outline='none';
-  }
-}
-
-// ══════════════════════════════
-// RENDER TOPICS
-// ══════════════════════════════
-function renderTopics(){
-  const q=document.getElementById('search').value.toLowerCase();
-  const c=document.getElementById('topics');
-  c.innerHTML='';
-  subjects.forEach(cat=>{
-    const filtered=cat.list.filter(s=>s.title.toLowerCase().includes(q)||s.desc.toLowerCase().includes(q));
-    if(!filtered.length)return;
-    c.innerHTML+=`<div class="dept-hdr">${cat.dept}</div>`;
-    filtered.forEach(s=>{
-      const isDone=S.get('done_'+s.id,false);
-      const retries=S.get('retries_'+s.id,0);
-      const best=S.get('best_'+s.id,null);
-      const retryBadge=retries>0?`<span class="retry-badge">${retries}✕</span>`:'';
-      const bestClr=best!=null?(best>=80?'rgba(0,210,141,.15)':best>=60?'rgba(255,184,0,.15)':'rgba(255,77,77,.15)'):'';
-      const bestTxt=best!=null?(best>=80?'#007a52':best>=60?'#a07800':'#c0392b'):'';
-      const bestBadge=best!=null?`<span class="best-badge" style="background:${bestClr};color:${bestTxt}">${best}%</span>`:'';
-      c.innerHTML+=`
-        <div class="topic-card">
-          <div class="card-hdr">
-            <div class="s-title">${s.icon||'📚'} ${s.title}${retryBadge}${bestBadge}</div>
-            <div class="t-badge${isDone?' done':''}">${isDone?'✅ Done':'📖 Pending'}</div>
-          </div>
-          <div class="s-desc">${s.desc}</div>
-          <button class="btn-trial${isDone?' done-style':''}" onclick="handleTrialClick(${s.id})">
-            ${isDone?'🔄 Retake Trial':'🚀 Take Trial (−₦200 on complete)'}
-          </button>
-        </div>`;
+// ── SOUND + HAPTIC ──
+function playChime(type='confirm'){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const configs={
+      confirm:[[523.25,0],[659.25,.12],[783.99,.24]],
+      success:[[783.99,0],[987.77,.15]],
+      error:[[349.23,0],[277.18,.12]],
+      notify:[[880,0,.18],[659.25,.22,.24]],
+      tap:[[1046.5,0,.18]]
+    };
+    const notes=configs[type]||configs.tap;
+    notes.forEach(([freq,delay,dur=.42])=>{
+      const osc=ctx.createOscillator();
+      const gn=ctx.createGain();
+      osc.connect(gn);gn.connect(ctx.destination);
+      osc.type='sine';
+      osc.frequency.setValueAtTime(freq,ctx.currentTime+delay);
+      gn.gain.setValueAtTime(0,ctx.currentTime+delay);
+      gn.gain.linearRampToValueAtTime(.2,ctx.currentTime+delay+.02);
+      gn.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+delay+dur);
+      osc.start(ctx.currentTime+delay);
+      osc.stop(ctx.currentTime+delay+dur+.02);
     });
-  });
-  updateReadiness();
-  updateStats();
+  }catch(e){}
 }
+function triggerHaptic(pattern=[50,30,50]){if(navigator.vibrate)navigator.vibrate(pattern);}
+function soundAndHaptic(type='confirm'){playChime(type);triggerHaptic();}
 
-// ══════════════════════════════
-// READINESS
-// ══════════════════════════════
-function updateReadiness(){
-  let total=0,done=0;
-  subjects.forEach(c=>c.list.forEach(s=>{total++;if(S.get('done_'+s.id,false))done++;}));
-  const pct=total?Math.round(done/total*100):0;
-  document.getElementById('r-bar').style.width=pct+'%';
-  document.getElementById('r-text').innerText=`${done} / ${total} Topics Completed`;
-  const st=document.getElementById('r-status');
-  if(pct<=25){st.innerText='Critical';st.style.cssText='font-size:.63rem;font-weight:800;padding:3px 10px;border-radius:10px;background:#ffebeb;color:#ff4d4d'}
-  else if(pct<=75){st.innerText='Improving';st.style.cssText='font-size:.63rem;font-weight:800;padding:3px 10px;border-radius:10px;background:#fff9eb;color:#ffb800'}
-  else{st.innerText='Exam Ready';st.style.cssText='font-size:.63rem;font-weight:800;padding:3px 10px;border-radius:10px;background:#ebfffa;color:#00d28d'}
-  document.getElementById('r-bar').style.background=pct<=25?'#ff4d4d':pct<=75?'#ffb800':'#00d28d';
-}
+// ── HELPERS ──
+const el=id=>document.getElementById(id);
+function openMod(id){el(id).classList.add('open');soundAndHaptic('tap');}
+function closeMod(id){el(id).classList.remove('open');}
+function openOverlay(id){el(id).classList.add('show');soundAndHaptic('tap');}
+function closeOverlay(id){el(id).classList.remove('show');}
+function showToast(msg){const t=el('toast-el');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3200);}
+function goWhatsApp(num,msg){window.open(`https://wa.me/${num}?text=${encodeURIComponent(msg)}`,'_blank');}
 
-// ══════════════════════════════
-// STATS
-// ══════════════════════════════
-function updateStats(){
-  const allSubj=subjects.flatMap(c=>c.list);
-  let doneCount=0,scoreSum=0,scoredCount=0;
-  allSubj.forEach(s=>{
-    if(S.get('done_'+s.id,false)){
-      doneCount++;
-      const best=S.get('best_'+s.id,null);
-      if(best!=null){scoreSum+=best;scoredCount++;}
-    }
-  });
-  const avg=scoredCount>0?Math.round(scoreSum/scoredCount):0;
-  document.getElementById('u-time').innerText=doneCount>0?`${doneCount} done · ${avg}% avg`:'0 done';
-  const rank=S.get('user_rank','--');
-  const el=document.getElementById('u-rank');
-  if(el)el.innerText=rank==='--'?'#--':'#'+rank;
-  // profile view
-  const pvD=document.getElementById('pv-done');
-  const pvA=document.getElementById('pv-avg');
-  const pvR=document.getElementById('pv-rank');
-  if(pvD)pvD.innerText=doneCount;
-  if(pvA)pvA.innerText=avg+'%';
-  if(pvR)pvR.innerText=rank==='--'?'#--':'#'+rank;
-}
-
-// ══════════════════════════════
-// RANKING
-// ══════════════════════════════
-function updateRanking(){
-  const allSubj=subjects.flatMap(c=>c.list);
-  let doneCount=0,scoreSum=0,scoredCount=0;
-  allSubj.forEach(s=>{
-    if(S.get('done_'+s.id,false)){doneCount++;const b=S.get('best_'+s.id,null);if(b!=null){scoreSum+=b;scoredCount++;}}
-  });
-  const avg=scoredCount>0?Math.round(scoreSum/scoredCount):0;
-  const pct=allSubj.length?Math.round(doneCount/allSubj.length*100):0;
-  let rank='--';
-  if(doneCount>0){
-    if(pct===100&&avg>=80)rank=1;
-    else if(pct>=80&&avg>=75)rank=2;
-    else if(pct>=60&&avg>=60)rank=3;
-    else if(pct>=40)rank=4;
-    else if(pct>=20)rank=5;
-    else rank=6;
-  }
-  S.set('user_rank',rank);
-  const el=document.getElementById('u-rank');
-  if(el)el.innerText=rank==='--'?'#--':'#'+rank;
-  const lbEl=document.getElementById('lb-rank-display');
-  if(lbEl)lbEl.innerText=rank==='--'?'#--':'#'+rank;
-}
-
-// ══════════════════════════════
-// LEADERBOARD
-// ══════════════════════════════
-function openLeaderboard(){
-  const name=S.get('student_name','You');
-  document.getElementById('lb-student-name').innerText=name;
-  const allSubj=subjects.flatMap(c=>c.list);
-  let doneCount=0,scoreSum=0,scoredCount=0,rows='';
-  allSubj.forEach(s=>{
-    const done=S.get('done_'+s.id,false);
-    const best=S.get('best_'+s.id,null);
-    if(done){doneCount++;if(best!=null){scoreSum+=best;scoredCount++;
-      const clr=best>=80?'#007a52':best>=60?'#a07800':'#c0392b';
-      rows+=`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--bdr)"><span>${s.icon||''} ${s.title}</span><b style="color:${clr}">${best}%</b></div>`;
-    }}
-  });
-  const avg=scoredCount>0?Math.round(scoreSum/scoredCount):0;
-  document.getElementById('lb-time').innerText=`${doneCount}/${allSubj.length} · avg ${avg}%`;
-  document.getElementById('lb-subject-scores').innerHTML=rows||'<div style="text-align:center;padding:12px;color:var(--sub);font-size:.75rem">Complete a Trial to see scores</div>';
-  const rank=S.get('user_rank','--');
-  document.getElementById('lb-rank-display').innerText=rank==='--'?'#--':'#'+rank;
-  openM('m-lb');
-}
-
-// ══════════════════════════════
-// PROFILE
-// ══════════════════════════════
-function saveProfile(){
-  const name=document.getElementById('inp-name').value.trim();
-  if(!name){document.getElementById('inp-name').style.border='2px solid var(--danger)';return;}
-  S.set('student_name',name);
-  S.set('student_email',document.getElementById('inp-email').value.trim());
-  S.set('student_class',document.getElementById('inp-class').value.trim());
-  S.set('profile_set',true);
-  // Update profile view
-  const pvName=document.getElementById('pv-name');
-  const pvEmail=document.getElementById('pv-email');
-  const pvClass=document.getElementById('pv-class');
-  if(pvName)pvName.innerText=name;
-  if(pvEmail)pvEmail.innerText=document.getElementById('inp-email').value.trim()||'No email set';
-  if(pvClass)pvClass.innerText=document.getElementById('inp-class').value.trim()||'';
-  closeM();
+// ── SPLASH ──
+document.addEventListener('DOMContentLoaded',()=>{
   setTimeout(()=>{
-    if(pendingTrialId!==null)launchTrial(pendingTrialId);
-    else if(pendingDrillId!==null)openDrillGate(pendingDrillId,false);
-  },150);
-}
-function skipProfile(){
-  S.set('profile_set',true);
-  closeM();
-  setTimeout(()=>{
-    if(pendingTrialId!==null)launchTrial(pendingTrialId);
-    else if(pendingDrillId!==null)openDrillGate(pendingDrillId,false);
-  },150);
-}
-
-// ══════════════════════════════
-// TOPUP HANDLER
-// ══════════════════════════════
-function handleTopup(method){
-  if(method==='pin'){
-    closeM();pinState.topup='';updatePinDots('topup');
-    document.getElementById('topup-pin-err').innerText='';
-    setTimeout(()=>openM('m-topup-pin'),120);
-  }else{
-    closeM();
-    window.open('https://wa.me/2348157505037?text=I%20want%20to%20purchase%20a%20goCBT%20PIN','_blank');
-  }
-}
-
-// ══════════════════════════════
-// MODALS
-// ══════════════════════════════
-function openM(id){document.getElementById(id).classList.add('show');}
-function closeM(){document.querySelectorAll('.overlay').forEach(m=>m.classList.remove('show'));}
-function toggleDark(){document.body.classList.toggle('dark-mode');localStorage.setItem('theme',document.body.classList.contains('dark-mode')?'dark':'light');}
-function resetAll(){if(confirm('Clear all progress and reset?')){localStorage.clear();location.reload();}}
-
-// ══════════════════════════════
-// INIT
-// ══════════════════════════════
-window.addEventListener('load',()=>{
-  updateWalletUI();
-  renderTopics();
-  initCountdown();
-  initAdSlider();
-  // Load profile into view modal
-  const name=S.get('student_name','');
-  const pvName=document.getElementById('pv-name');
-  const pvEmail=document.getElementById('pv-email');
-  const pvClass=document.getElementById('pv-class');
-  if(pvName)pvName.innerText=name||'No name set';
-  if(pvEmail)pvEmail.innerText=S.get('student_email','')||'No email set';
-  if(pvClass)pvClass.innerText=S.get('student_class','')||'';
-  // Splash
-  setTimeout(()=>{
-    const sp=document.getElementById('splash');
-    sp.style.opacity='0';
-    setTimeout(()=>sp.style.display='none',600);
+    const s=el('splash');s.classList.add('hide');
+    setTimeout(()=>s.style.display='none',600);
   },1400);
+  // draw abstract avatar
+  drawAbstractAvatar(el('profile-canvas'));
+  drawAbstractAvatar(el('hdr-avatar-canvas'));
+  // load persistence
+  const name=localStorage.getItem('gc_name')||'Learner';
+  el('bc-name').textContent=name+' 👋';
+  el('d-name') && (el('d-name').textContent=name);
+  el('user-name-profile').textContent=name;
+  const w=parseInt(localStorage.getItem('gc_wallet')||'1000');
+  const fmt='₦'+w.toLocaleString();
+  el('bc-total').textContent=fmt;
+  const s=parseInt(localStorage.getItem('gc_streak')||'1');
+  el('streak-el').textContent='🔥 '+s+'d';
 });
+
+// ── ABSTRACT AVATAR ──
+function drawAbstractAvatar(canvas){
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const w=canvas.width,h=canvas.height;
+  const seed=parseInt(localStorage.getItem('gc_avatar_seed')||String(Math.floor(Math.random()*9999)));
+  localStorage.setItem('gc_avatar_seed',seed);
+  const r=n=>{let x=Math.sin(seed+n)*10000;return x-Math.floor(x);};
+  const hue1=Math.floor(r(1)*360),hue2=Math.floor(r(2)*360);
+  const grd=ctx.createLinearGradient(0,0,w,h);
+  grd.addColorStop(0,`hsl(${hue1},70%,35%)`);
+  grd.addColorStop(1,`hsl(${hue2},80%,45%)`);
+  ctx.fillStyle=grd;ctx.fillRect(0,0,w,h);
+  for(let i=0;i<6;i++){
+    ctx.beginPath();
+    const cx=r(i*3)*w,cy=r(i*3+1)*h,rad=r(i*3+2)*35+8;
+    ctx.arc(cx,cy,rad,0,Math.PI*2);
+    ctx.fillStyle=`hsla(${Math.floor(r(i*5)*360)},80%,70%,0.3)`;
+    ctx.fill();
+  }
+  ctx.fillStyle='rgba(255,255,255,0.85)';
+  ctx.font=`bold ${Math.floor(w*.38)}px Inter,sans-serif`;
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('G',w/2,h/2);
+}
+
+// ── PUSH NOTIFICATION ──
+function pushNotif(title,body){
+  el('notif-ttl').textContent=title;
+  el('notif-body').textContent=body;
+  el('push-notif').classList.add('show');
+  triggerHaptic([50,30,50]);
+  setTimeout(()=>el('push-notif').classList.remove('show'),4500);
+}
+function closePush(){el('push-notif').classList.remove('show');}
+
+// ── ONLINE / OFFLINE ──
+window.addEventListener('online',()=>{el('offline-screen').classList.remove('show');pushNotif('⚡ Connected','Connection restored!');});
+window.addEventListener('offline',()=>el('offline-screen').classList.add('show'));
+if(!navigator.onLine)el('offline-screen').classList.add('show');
+
+// ── DRAWER / SIDE MENU ──
+function toggleDrw(){
+  el('side-menu').classList.toggle('open');
+  el('menu-overlay').classList.toggle('open');
+  el('ham').classList.toggle('open');
+  soundAndHaptic('tap');
+}
+function closeDrw(){
+  el('side-menu').classList.remove('open');
+  el('menu-overlay').classList.remove('open');
+  el('ham').classList.remove('open');
+}
+
+// ── THEME TOGGLE ──
+function toggleTheme(chk){
+  document.body.classList.toggle('light-mode-cbt',chk.checked);
+  soundAndHaptic('tap');
+}
+
+// ── INVITE ──
+function inviteToGoApps(){
+  soundAndHaptic('confirm');
+  if(navigator.share){
+    navigator.share({title:'goAPPs Nigeria',text:'Join me on goAPPs — Nigeria\'s all-in-one digital wallet & services platform! 🚀',url:'https://goapps-official.github.io/Welcome-to-goAPPs/'}).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText('https://goapps-official.github.io/Welcome-to-goAPPs/').then(()=>showToast('goAPPs link copied!'));
+  }
+}
+
+// ── PROFILE ──
+function openProfileModal(){closeDrw();openOverlay('profile-modal');}
+function submitProfile(){
+  const num=el('profile-wa').value.trim();
+  if(!num){alert('Enter your WhatsApp number');return;}
+  soundAndHaptic('confirm');
+  closeOverlay('profile-modal');
+  goWhatsApp(SUPPORT_WA,`Profile Update Request\nWhatsApp: ${num}`);
+}
+
+// ── WALLET ADDRESS ──
+function submitWalletAddress(){
+  const num=el('wallet-wa').value.trim();
+  if(!num){alert('Enter your WhatsApp number');return;}
+  soundAndHaptic('confirm');
+  closeOverlay('wallet-address-modal');
+  goWhatsApp(SUPPORT_WA,`Wallet Address Request\nWhatsApp: ${num}`);
+}
+
+// ── BUSINESS PACKAGE ──
+function openBizPackageModal(){closeDrw();openOverlay('biz-package-modal');}
+function submitBizPackage(){
+  const name=el('biz-name').value.trim();
+  const email=el('biz-email').value.trim();
+  const wa=el('biz-wa').value.trim();
+  if(!name||!email||!wa){alert('Please fill in all fields');return;}
+  soundAndHaptic('confirm');
+  closeOverlay('biz-package-modal');
+  goWhatsApp(SUPPORT_WA,`Business Package Request\nBusiness: ${name}\nEmail: ${email}\nWhatsApp: ${wa}`);
+}
+
+// ── APPLY TO STUDY — iframe modal ──
+function openApplyModal(){
+  soundAndHaptic('confirm');
+  openMod('m-apply');
+}
+
+// ── RSS TICKER ──
+const RSS_ITEMS=[
+  '📢 JAMB 2026 registration now open — Apply to Study today!',
+  '🏆 100+ students scored 300+ in last month\'s Practice Exam',
+  '🔢 New Study PINs available — buy yours now for full access',
+  '📬 WAEC 2026 timetable is now live — check yours under Timetable',
+  '🧠 Practice Mode updated with 5,000 new questions this week',
+  '📂 Submit your Class Task before the deadline — check Tasks tab',
+  '⚡ System upgrade complete — faster load times across all pages',
+  '🎓 Welcome to goCBT NG — your smart CBT learning companion!',
+  '📝 Enter Class feature now supports JSS 1 through SSS 3',
+  '🤝 Need help? Contact goSUPPORT on WhatsApp anytime',
+];
+(function buildTicker(){
+  const track=el('ticker-track');
+  const all=[...RSS_ITEMS,...RSS_ITEMS];
+  track.innerHTML=all.map(t=>`<span class="ticker-item"><span class="ticker-dot"></span>${t}</span>`).join('');
+})();
+
+// ── IMAGE BANNER SLIDER ──
+let bannerIdx=0;
+const SLIDE_COUNT=4;
+function buildDots(){
+  const wrap=el('banner-dots');wrap.innerHTML='';
+  for(let i=0;i<SLIDE_COUNT;i++){
+    const d=document.createElement('div');
+    d.className='b-dot'+(i===0?' on':'');
+    d.onclick=(()=>{const ii=i;return()=>{goSlide(ii);soundAndHaptic('tap');};})();
+    wrap.appendChild(d);
+  }
+}
+function goSlide(idx){
+  bannerIdx=(idx+SLIDE_COUNT)%SLIDE_COUNT;
+  el('banner-track').style.transform=`translateX(-${bannerIdx*100}%)`;
+  document.querySelectorAll('.b-dot').forEach((d,i)=>d.classList.toggle('on',i===bannerIdx));
+}
+function bannerMove(dir){goSlide(bannerIdx+dir);}
+buildDots();
+let bannerTimer=setInterval(()=>bannerMove(1),4000);
+el('banner-wrap').addEventListener('touchstart',()=>clearInterval(bannerTimer),{passive:true});
+(function(){
+  let sx=0;
+  const track=el('banner-track');
+  track.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;},{passive:true});
+  track.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>40)bannerMove(dx<0?1:-1);},{passive:true});
+})();
+
+// ── WELCOME PUSH ──
+setTimeout(()=>{pushNotif('🎓 Welcome back!','Your study streak is active. Keep it up!');},2200);
+
+// ── PWA ──
+let dp;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();dp=e;});
+if('serviceWorker' in navigator)
+  window.addEventListener('load',()=>navigator.serviceWorker.register('/sw.js').catch(()=>{}));
 </script>
 </body>
 </html>
