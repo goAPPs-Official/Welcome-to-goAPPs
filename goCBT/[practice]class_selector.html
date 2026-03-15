@@ -2,227 +2,496 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎓 goCLASS | Practice Selector</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🎓 goCBT | Practice Class Selector</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* ── THEME PALETTE ── */
-            --bg: #081f14;
-            --bg2: #0a2a1a;
-            --card: #0d3d26;
-            --card2: #0f4a2e;
-            --text: #f0faf5;
-            --text2: #a8c5b5;
-            --primary: #00d28d;
-            --primary-glow: rgba(0, 210, 141, 0.25);
-            --border: rgba(255, 255, 255, 0.07);
-            --opay-gradient: linear-gradient(135deg, #00d28d 0%, #064e35 100%);
-            --overlay: rgba(0,0,0,0.85);
+            --bg:#081f14;--bg2:#0a2a1a;--card:#0d3d26;--card2:#0f4a2e;
+            --text:#f0faf5;--text2:#a8c5b5;--primary:#00d28d;
+            --primary-glow:rgba(0,210,141,0.25);--border:rgba(255,255,255,0.07);
+            --opay-gradient:linear-gradient(135deg,#00d28d 0%,#064e35 100%);
+            --overlay:rgba(0,0,0,0.88);--danger:#ff4d4d;--gray:#6b8f7a;
+            --shadow:rgba(0,0,0,0.5);--nav-bg:#0a2a1a;--header-bg:#081f14;
         }
+        *{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif}
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        html,body{width:100%;height:100%;overflow:hidden;background:#111;color:var(--text)}
+        body{display:flex;justify-content:center;align-items:center}
 
-        body {
-            background-color: #111;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: var(--text);
+        /* ── FULL SCALE PHONE ── */
+        .phone-container{
+            width:100vw;height:100vh;
+            background:var(--bg);
+            position:relative;display:flex;flex-direction:column;
+            overflow:hidden;border-radius:0;border:none;
         }
-
-        .phone-container {
-            width: 375px;
-            height: 750px;
-            background: var(--bg);
-            border-radius: 40px;
-            overflow: hidden;
-            position: relative;
-            border: 8px solid #1a1a1a;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        @media(min-width:480px){
+            .phone-container{
+                width:390px;height:844px;
+                border-radius:40px;border:8px solid #1a1a1a;
+                box-shadow:0 25px 60px rgba(0,0,0,.7);
+            }
         }
 
         /* ── HEADER ── */
-        header { 
-            padding: 25px 20px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            background: var(--bg);
-            border-bottom: 1px solid var(--border);
+        header{
+            padding:20px 20px 14px;display:flex;justify-content:space-between;align-items:center;
+            background:var(--header-bg);border-bottom:1px solid var(--border);flex-shrink:0;
         }
+        .menu-icon{width:22px;height:16px;border-top:2px solid var(--primary);border-bottom:2px solid var(--primary);position:relative;cursor:pointer}
+        .menu-icon::after{content:'';position:absolute;top:5px;width:100%;height:2px;background:var(--primary)}
 
-        .menu-icon { width: 22px; height: 16px; border-top: 2px solid var(--primary); border-bottom: 2px solid var(--primary); position: relative; }
-        .menu-icon::after { content: ''; position: absolute; top: 5px; width: 100%; height: 2px; background: var(--primary); }
+        /* ── BREADCRUMB ── */
+        .breadcrumb-bar{
+            display:flex;align-items:center;gap:6px;
+            padding:10px 16px 8px;
+            background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0;
+        }
+        .back-btn{
+            background:var(--card);border:1px solid var(--primary);color:var(--primary);
+            border-radius:8px;padding:4px 10px;font-size:.68rem;font-weight:800;cursor:pointer;
+            display:flex;align-items:center;gap:4px;flex-shrink:0;
+            transition:background .2s;
+        }
+        .back-btn:hover{background:var(--primary);color:#081f14}
+        .breadcrumb-path{display:flex;align-items:center;gap:4px;flex:1;overflow:hidden}
+        .bc-item{font-size:.65rem;color:var(--text2);white-space:nowrap;cursor:pointer}
+        .bc-item:hover{color:var(--primary)}
+        .bc-item.active{color:var(--primary);font-weight:700}
+        .bc-sep{font-size:.6rem;color:var(--border);opacity:.6}
 
         /* ── SCROLL CONTENT ── */
-        .main-scroll { flex: 1; overflow-y: auto; padding: 0 15px 100px; scrollbar-width: none; }
-        .main-scroll::-webkit-scrollbar { display: none; }
+        .main-scroll{flex:1;overflow-y:auto;padding:0 15px 100px;scrollbar-width:none}
+        .main-scroll::-webkit-scrollbar{display:none}
 
-        .balance-card {
-            margin: 15px 0;
-            padding: 22px;
-            background: var(--opay-gradient);
-            border-radius: 24px;
-            color: white;
-            box-shadow: 0 10px 20px var(--primary-glow);
+        /* ── BALANCE CARD ── */
+        .balance-card{
+            margin:15px 0;padding:22px;
+            background:var(--opay-gradient);border-radius:24px;color:white;
+            box-shadow:0 10px 20px var(--primary-glow);
         }
 
-        .section-title { font-weight: 800; margin: 25px 0 15px; font-size: 1.1rem; color: var(--primary); }
+        .section-title{font-weight:800;margin:25px 0 12px;font-size:1.05rem;color:var(--primary);display:flex;align-items:center;gap:8px}
+        .section-badge{background:var(--card2);border:1px solid var(--border);color:var(--text2);font-size:.58rem;padding:2px 8px;border-radius:20px;font-weight:600}
 
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        /* ── GRID ── */
+        .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
-        .service-item {
-            background: var(--card);
-            padding: 15px;
-            border-radius: 18px;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 8px;
-            border: 1px solid var(--border);
-            text-decoration: none;
-            cursor: pointer;
-            transition: transform 0.1s;
+        .service-item{
+            background:var(--card);padding:15px;border-radius:18px;
+            display:flex;flex-direction:column;align-items:flex-start;gap:8px;
+            border:1px solid var(--border);text-decoration:none;cursor:pointer;
+            transition:transform .15s ease,box-shadow .15s ease;
+            -webkit-tap-highlight-color:transparent;
         }
+        .service-item:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.3)}
+        .service-item:active{transform:scale(.96)}
+        .service-item span{font-size:1.4rem}
+        .service-info b{font-size:.85rem;display:block;color:var(--text)}
+        .service-info small{font-size:.65rem;color:var(--text2)}
+        .highlight{background:var(--primary);border:none}
+        .highlight .service-info b,.highlight .service-info small{color:#081f14!important;font-weight:800}
 
-        .service-item:active { transform: scale(0.95); }
-
-        .service-item span { font-size: 1.4rem; }
-        .service-info b { font-size: 0.85rem; display: block; color: var(--text); }
-        .service-info small { font-size: 0.65rem; color: var(--text2); }
-
-        .highlight { background: var(--primary); border: none; }
-        .highlight b, .highlight small { color: #081f14 !important; font-weight: 800; }
-
-        /* ── MODALS ── */
-        .modal-overlay {
-            position: absolute; inset: 0; background: var(--overlay);
-            display: none; flex-direction: column; justify-content: center; align-items: center;
-            padding: 20px; z-index: 1000;
+        /* ── BECOME EXAMINER SECTION ── */
+        .examiner-cta{
+            margin:30px 0 20px;
+            background:linear-gradient(135deg,#0d3d26,#0f4a2e);
+            border:1px solid var(--primary);border-radius:22px;
+            padding:20px;text-align:center;
         }
-
-        .modal-content {
-            background: var(--bg2);
-            width: 100%;
-            padding: 25px;
-            border-radius: 24px;
-            border: 1px solid var(--border);
-            text-align: center;
+        .examiner-cta h3{font-size:.95rem;color:var(--primary);margin-bottom:6px}
+        .examiner-cta p{font-size:.72rem;color:var(--text2);margin-bottom:14px;line-height:1.5}
+        .examiner-btn{
+            width:100%;padding:13px;border-radius:14px;border:none;
+            background:var(--primary);color:#081f14;font-weight:800;font-size:.85rem;
+            cursor:pointer;transition:opacity .2s;
         }
+        .examiner-btn:hover{opacity:.9}
 
-        .btn-action {
-            width: 100%; padding: 14px; border-radius: 12px; border: none;
-            font-weight: 800; cursor: pointer; margin-top: 10px;
-            background: var(--primary); color: #081f14;
+        /* ── BOTTOM NAV ── */
+        nav{
+            display:flex;justify-content:space-around;
+            padding:12px 0 max(20px,env(safe-area-inset-bottom));
+            background:var(--nav-bg)!important;border-top:1px solid var(--border);
+            position:relative;bottom:0;width:100%;flex-shrink:0;
         }
+        nav a{text-decoration:none;color:var(--text2);font-size:.65rem;text-align:center;opacity:.55;transition:opacity .2s,color .2s}
+        nav a.active{color:var(--primary)!important;opacity:1;font-weight:800}
 
-        /* ── NAVIGATION ── */
-        nav { 
-            display: flex; justify-content: space-around; padding: 15px 0 25px; 
-            background: var(--bg2); border-top: 1px solid var(--border);
-            position: absolute; bottom: 0; width: 100%;
+        /* ── SIDE MENU ── */
+        #menu-overlay{position:absolute;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(3px);z-index:100;opacity:0;pointer-events:none;transition:.3s}
+        #side-menu{position:absolute;left:-300px;top:0;width:300px;height:100%;background:var(--bg);z-index:101;display:flex;flex-direction:column;padding:0 20px 20px;border-right:1px solid rgba(255,255,255,.1);box-sizing:border-box;overflow-y:auto;scrollbar-width:none;transition:left .4s cubic-bezier(.4,0,.2,1)}
+        #side-menu::-webkit-scrollbar{display:none}
+        .menu-open #side-menu{left:0}
+        .menu-open #menu-overlay{opacity:1;pointer-events:auto}
+        .menu-item{display:flex;align-items:center;gap:15px;padding:12px 0;color:var(--text);text-decoration:none;font-size:.85rem;border-bottom:1px solid rgba(255,255,255,.05);cursor:pointer;transition:color .2s}
+        .menu-item:hover{color:var(--primary)}
+        .side-support-btn{width:100%;padding:10px;border-radius:10px;background:var(--primary);color:#062c1e;border:none;font-weight:800;font-size:.8rem;cursor:pointer;margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:6px}
+        .switch{position:relative;display:inline-block;width:40px;height:20px}
+        .switch input{opacity:0;width:0;height:0}
+        .slider-sw{position:absolute;cursor:pointer;inset:0;background-color:rgba(255,255,255,.15);transition:.4s;border-radius:20px}
+        .slider-sw:before{position:absolute;content:"";height:14px;width:14px;left:3px;bottom:3px;background-color:white;transition:.4s;border-radius:50%}
+        input:checked + .slider-sw{background-color:var(--primary)}
+        input:checked + .slider-sw:before{transform:translateX(20px)}
+
+        /* ── OVERLAY MODALS ── */
+        .overlay-modal{position:absolute;inset:0;background:var(--overlay);display:none;flex-direction:column;justify-content:center;align-items:center;padding:20px;z-index:1000}
+        .overlay-modal.show{display:flex}
+        .modal-card{background:var(--bg2);width:100%;padding:24px;border-radius:24px;border:1px solid var(--border);text-align:center}
+        .modal-card h3{color:var(--primary);margin-bottom:10px;font-size:1rem}
+        .modal-card p{font-size:.78rem;color:var(--text2);line-height:1.5;margin-bottom:16px}
+        .overlay-input{width:100%;padding:12px;margin:5px 0;border-radius:10px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:.85rem;outline:none;box-sizing:border-box}
+        .overlay-btn{width:100%;padding:13px;border-radius:12px;border:none;font-weight:800;font-size:.85rem;cursor:pointer;margin-top:8px;transition:opacity .2s}
+        .overlay-btn.primary{background:var(--primary);color:#081f14}
+        .overlay-btn.secondary{background:transparent;color:var(--gray);border:1px solid var(--border)}
+        .overlay-btn:hover{opacity:.9}
+        .overlay-cancel{margin-top:12px;font-size:.78rem;color:var(--gray);cursor:pointer}
+
+        /* ── UPDATING ANIMATION ── */
+        .updating-animation{display:flex;align-items:center;justify-content:center;gap:6px;margin:16px 0}
+        .upd-dot{width:10px;height:10px;border-radius:50%;background:var(--primary);animation:updBounce 1.2s ease-in-out infinite}
+        .upd-dot:nth-child(2){animation-delay:.2s}
+        .upd-dot:nth-child(3){animation-delay:.4s}
+        @keyframes updBounce{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(-8px);opacity:1}}
+
+        /* ── PAYMENT GRID ── */
+        .pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+        .pay-btn{background:var(--card);border:1px solid var(--border);color:var(--text);padding:14px 10px;border-radius:14px;font-size:.82rem;font-weight:700;cursor:pointer;transition:background .2s,transform .1s;text-align:center}
+        .pay-btn:hover{background:var(--card2)}
+        .pay-btn:active{transform:scale(.96)}
+        .pay-btn.highlight{background:var(--primary);color:#081f14;border:none}
+
+        /* ── PUSH NOTIFICATION ── */
+        #push-notification{position:absolute;top:-100px;left:10px;right:10px;background:var(--card);border:1px solid var(--primary);border-radius:15px;padding:12px 15px;display:flex;align-items:center;gap:12px;z-index:2000;box-shadow:0 10px 30px rgba(0,0,0,.5);transition:transform .5s cubic-bezier(.175,.885,.32,1.275)}
+        #push-notification.show{transform:translateY(115px)}
+
+        /* ── LIGHT MODE ── */
+        .light-mode{
+            --bg:#f0faf6;--bg2:#e6f5ee;--card:#ffffff;--card2:#f7fdf9;
+            --text:#0d2b1c;--text2:#4a7a5e;--primary:#059669;
+            --primary-glow:rgba(5,150,105,0.2);--border:rgba(0,0,0,0.08);
+            --overlay:rgba(0,0,0,0.5);--nav-bg:#ffffff;--header-bg:#ffffff;--shadow:rgba(0,0,0,0.12);
         }
-
-        nav a { text-decoration: none; color: var(--text2); font-size: 0.65rem; text-align: center; opacity: 0.6; }
-        nav a.active { color: var(--primary); opacity: 1; font-weight: 800; }
     </style>
 </head>
-<body>
+<body id="app-body">
 
-    <div class="phone-container">
+    <div class="phone-container" id="phone-container">
+
+        <!-- Push Notification -->
+        <div id="push-notification">
+            <div style="background:var(--primary);color:#062c1e;width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800">G</div>
+            <div style="flex:1">
+                <div id="notify-title" style="font-size:.75rem;font-weight:800;color:var(--primary)">goCLASS</div>
+                <div id="notify-body" style="font-size:.65rem;opacity:.8">Ready!</div>
+            </div>
+        </div>
+
+        <!-- MENU OVERLAY -->
+        <div id="menu-overlay" onclick="toggleMenu()"></div>
+
+        <!-- SIDE MENU -->
+        <div id="side-menu">
+            <div style="padding:40px 0 10px">
+                <a href="https://wa.me/2348157505037?text=Hello%20goSUPPORT" target="_blank" style="text-decoration:none">
+                    <button class="side-support-btn">🤝 goSUPPORT — Get Help</button>
+                </a>
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;cursor:pointer" onclick="toggleMenu()">
+                    <div style="width:45px;height:45px;border-radius:12px;background:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:1.2rem">🎓</div>
+                    <div><b>goCLASS</b><br><small style="color:var(--primary)">Practice Portal</small></div>
+                </div>
+            </div>
+            <div style="flex:1;overflow-y:auto;scrollbar-width:none">
+                <small style="opacity:.6;text-transform:uppercase;font-size:.6rem;letter-spacing:1px">Navigation</small>
+                <a href="https://goapps-official.github.io/Welcome/" class="menu-item" style="text-decoration:none"><span>🏠</span> goAPPs Home</a>
+                <a href="https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/" class="menu-item" style="text-decoration:none"><span>📝</span> goCBT</a>
+                <a href="https://official-gocbt.github.io/goCBT-Drill-Center/JAMB_drill.html" class="menu-item" style="text-decoration:none"><span>🎯</span> JAMB Drill</a>
+                <a href="#" class="menu-item" style="text-decoration:none"><span>🎁</span> Rewards</a>
+                <div style="margin-top:16px">
+                    <small style="opacity:.6;text-transform:uppercase;font-size:.6rem">Preferences</small>
+                    <div class="menu-item" style="justify-content:space-between"><span>🌓 Light Mode</span><label class="switch"><input type="checkbox" onchange="toggleTheme(this)"><span class="slider-sw"></span></label></div>
+                </div>
+            </div>
+            <button class="overlay-btn primary" onclick="openOverlay('examiner-modal');toggleMenu();" style="margin-top:14px;border-radius:12px">✍️ Become an Online Examiner</button>
+        </div>
+
+        <!-- ══ ALL OVERLAY MODALS ══ -->
+
+        <!-- Updating Modal -->
+        <div class="overlay-modal" id="updating-modal">
+            <div class="modal-card">
+                <div style="font-size:2rem;margin-bottom:8px">🔧</div>
+                <h3>Class Being Updated</h3>
+                <p id="updating-class-name">This class is currently being updated with fresh content.</p>
+                <div class="updating-animation">
+                    <div class="upd-dot"></div>
+                    <div class="upd-dot"></div>
+                    <div class="upd-dot"></div>
+                </div>
+                <p style="font-size:.7rem;color:var(--text2);margin-bottom:14px">Our team is preparing the best practice materials for you.</p>
+                <button class="overlay-btn primary" onclick="remindMe()">🔔 Remind Me</button>
+                <p class="overlay-cancel" onclick="closeOverlay('updating-modal')">Go Back</p>
+            </div>
+        </div>
+
+        <!-- Transfer / Unlock PIN Modal -->
+        <div class="overlay-modal" id="transfer-modal">
+            <div class="modal-card">
+                <h3>🔑 Unlock Practice PIN</h3>
+                <p>Select a payment method to unlock your Premium Practice PIN</p>
+                <div class="pay-grid">
+                    <button class="pay-btn" onclick="sendWhatsApp('Opay')">OPay</button>
+                    <button class="pay-btn" onclick="sendWhatsApp('PalmPay')">PalmPay</button>
+                    <button class="pay-btn" onclick="sendWhatsApp('MoniePoint')">MoniePoint</button>
+                    <button class="pay-btn" onclick="sendWhatsApp('eTranzact')">eTranzact</button>
+                    <button class="pay-btn highlight" style="grid-column:span 2" onclick="sendWhatsApp('goCOINs')">💰 goCOINs</button>
+                </div>
+                <p class="overlay-cancel" onclick="closeOverlay('transfer-modal')">Cancel</p>
+            </div>
+        </div>
+
+        <!-- Become Examiner Modal -->
+        <div class="overlay-modal" id="examiner-modal">
+            <div class="modal-card">
+                <div style="font-size:2rem;margin-bottom:8px">✍️</div>
+                <h3>Become an Online Examiner</h3>
+                <p>Join our growing network of educators and create practice exams for students across Nigeria.</p>
+                <input class="overlay-input" type="text" id="ex-name" placeholder="Full Name">
+                <input class="overlay-input" type="text" id="ex-institution" placeholder="Institution of Teaching">
+                <input class="overlay-input" type="email" id="ex-email" placeholder="Email Address">
+                <input class="overlay-input" type="tel" id="ex-wa" placeholder="WhatsApp Phone Number">
+                <button class="overlay-btn primary" onclick="submitExaminer()">📩 Submit Application</button>
+                <p class="overlay-cancel" onclick="closeOverlay('examiner-modal')">Cancel</p>
+            </div>
+        </div>
+
+        <!-- HEADER -->
         <header>
-            <div class="menu-icon"></div>
-            <div style="font-weight: 800; font-size: 1.1rem; color: var(--primary);">🎓 goCLASS</div>
-            <div style="width: 35px; height: 35px; border-radius: 50%; background: var(--card); border: 1px solid var(--primary);"></div>
+            <div class="menu-icon" onclick="toggleMenu()"></div>
+            <div style="font-weight:800;font-size:1.05rem;color:var(--primary)">🎓 goCLASS</div>
+            <div style="width:34px;height:34px;border-radius:50%;background:var(--card);border:2px solid var(--primary);display:flex;align-items:center;justify-content:center;font-size:.8rem;cursor:pointer" onclick="openOverlay('transfer-modal')">🔑</div>
         </header>
 
+        <!-- BREADCRUMB -->
+        <div class="breadcrumb-bar">
+            <button class="back-btn" onclick="goBack()">← Back</button>
+            <div class="breadcrumb-path">
+                <span class="bc-item" onclick="navigateTo('home')">🏠 Home</span>
+                <span class="bc-sep">›</span>
+                <span class="bc-item" onclick="navigateTo('cbt')">goCBT</span>
+                <span class="bc-sep">›</span>
+                <span class="bc-item active" id="bc-current">Practice Selector</span>
+            </div>
+        </div>
+
+        <!-- MAIN SCROLL -->
         <div class="main-scroll">
             <div class="balance-card">
-                <p style="font-size: 0.7rem; opacity: 0.9;">Choose a class to begin practice</p>
-                <h2 style="margin: 5px 0;">Select Level</h2>
-                <button class="btn-action" style="background: white; color: var(--bg); margin-top: 10px;" onclick="openTransferModal()">Unlock Premium PIN</button>
+                <p style="font-size:.7rem;opacity:.9">Choose a class to begin practice</p>
+                <h2 style="margin:5px 0">Select Your Level</h2>
+                <p style="font-size:.72rem;opacity:.8;margin-top:4px">JSS · SSS · Tertiary · Professional</p>
+                <button class="overlay-btn primary" style="background:white;color:var(--bg);margin-top:12px;border-radius:10px;padding:11px" onclick="openOverlay('transfer-modal')">🔑 Unlock Premium PIN</button>
             </div>
 
-            <h3 class="section-title">Junior Secondary</h3>
+            <!-- JUNIOR SECONDARY -->
+            <h3 class="section-title">📚 Junior Secondary <span class="section-badge">JSS</span></h3>
             <div class="grid">
-                <div class="service-item" onclick="alert('JSS1 Selected')">
+                <div class="service-item" onclick="showUpdating('JSS 1')">
                     <span>📖</span>
                     <div class="service-info"><b>JSS 1</b><small>Practice Now</small></div>
                 </div>
-                <div class="service-item" onclick="alert('JSS2 Selected')">
+                <div class="service-item" onclick="showUpdating('JSS 2')">
                     <span>📚</span>
                     <div class="service-info"><b>JSS 2</b><small>Practice Now</small></div>
                 </div>
-                <div class="service-item highlight" onclick="alert('JSS3 Selected')">
+                <div class="service-item highlight" onclick="openJSS3()" style="grid-column:span 2;flex-direction:row;align-items:center;gap:12px">
                     <span>🎓</span>
-                    <div class="service-info"><b>JSS 3</b><small>Exam Mode</small></div>
+                   <a href="https://official-gocbt.github.io/goCBT-Drill-Center/JSSCE_drill.html" style="text-decoration:none;color:inherit;grid-column:span 2;display:contents"><div class="service-info"><b>JSS 3</b><small>Exam Mode — BECE Prep</small></div>
                 </div>
-            </div>
-
-            <h3 class="section-title">Senior Secondary</h3>
+              </div></a>
+            <!-- SENIOR SECONDARY -->
+            <h3 class="section-title">🔬 Senior Secondary <span class="section-badge">SSS</span></h3>
             <div class="grid">
-                <div class="service-item" onclick="alert('SSS1 Selected')">
+                <div class="service-item" onclick="showUpdating('SSS 1')">
                     <span>🔬</span>
-                    <div class="service-info"><b>SSS 1</b><small>Science/Arts</small></div>
+                    <div class="service-info"><b>SSS 1</b><small>Science / Arts</small></div>
                 </div>
-                <div class="service-item" onclick="alert('SSS2 Selected')">
+                <div class="service-item" onclick="showUpdating('SSS 2')">
                     <span>🧬</span>
                     <div class="service-info"><b>SSS 2</b><small>Core Subjects</small></div>
                 </div>
-                <a href="https://official-gocbt.github.io/goCBT-Drill-Center/JAMB_drill.html" style="text-decoration: none; color: inherit;">
-                <div class="service-item highlight" onclick="alert('SSS3 Selected')">
-                    <span>🎖️</span>
-                    <div class="service-info"><b>SSS 3</b><small>WAEC/JAMB</small></div>
-                </div>
+                <a href="https://official-gocbt.github.io/goCBT-Drill-Center/JAMB_drill.html" style="text-decoration:none;color:inherit;grid-column:span 2;display:contents">
+                    <div class="service-item highlight" style="grid-column:span 2;flex-direction:row;align-items:center;gap:12px">
+                        <span>🎖️</span>
+                        <div class="service-info"><b>SSS 3</b><small>WAEC / NECO / JAMB Prep</small></div>
+                    </div>
                 </a>
             </div>
-        </div>
 
-        <div id="transfer-modal" class="modal-overlay">
-            <div class="modal-content">
-                <h3 style="color: var(--primary); margin-bottom: 15px;">Unlock Practice PIN</h3>
-                <p style="font-size: 0.8rem; color: var(--text2); margin-bottom: 20px;">Select a transfer method to proceed</p>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <button class="service-item" style="width:100%;" onclick="sendWhatsApp('Opay')"><b>Opay</b></button>
-                    <button class="service-item" style="width:100%;" onclick="sendWhatsApp('PalmPay')"><b>PalmPay</b></button>
-                    <button class="service-item" style="width:100%;" onclick="sendWhatsApp('MoniePoint')"><b>MoniePoint</b></button>
-                    <button class="service-item" style="width:100%;" onclick="sendWhatsApp('eTranzact')"><b>eTranzact</b></button>
-                    <button class="service-item highlight" style="width:100%; grid-column: span 2;" onclick="sendWhatsApp('goCOINs')"><b>goCOINs</b></button>
+            <!-- TERTIARY -->
+            <h3 class="section-title">🏛️ Tertiary Education <span class="section-badge">UNI</span></h3>
+            <div class="grid">
+                <div class="service-item" onclick="showUpdating('100 Level')">
+                    <span>🎒</span>
+                    <div class="service-info"><b>100 Level</b><small>Foundation Courses</small></div>
                 </div>
-                
-                <p onclick="closeModal()" style="margin-top: 20px; font-size: 0.8rem; color: var(--text2); cursor: pointer;">Cancel</p>
+                <div class="service-item" onclick="showUpdating('200 Level')">
+                    <span>📐</span>
+                    <div class="service-info"><b>200 Level</b><small>Core Modules</small></div>
+                </div>
+                <div class="service-item" onclick="showUpdating('300 Level')">
+                    <span>🧪</span>
+                    <div class="service-info"><b>300 Level</b><small>Specialisation</small></div>
+                </div>
+                <div class="service-item" onclick="showUpdating('400 Level')">
+                    <span>📊</span>
+                    <div class="service-info"><b>400 Level</b><small>Advanced Units</small></div>
+                </div>
+                <div class="service-item highlight" onclick="showUpdating('Postgraduate')" style="grid-column:span 2;flex-direction:row;align-items:center;gap:12px">
+                    <span>🎓</span>
+                    <div class="service-info"><b>Postgraduate</b><small>MSc · MBA · PhD Prep</small></div>
+                </div>
+            </div>
+
+            <!-- PROFESSIONAL -->
+            <h3 class="section-title">💼 Professional Certifications <span class="section-badge">PRO</span></h3>
+            <div class="grid">
+                <div class="service-item" onclick="showUpdating('ICAN / ACCA')">
+                    <span>💰</span>
+                    <div class="service-info"><b>ICAN / ACCA</b><small>Accounting</small></div>
+                </div>
+                <div class="service-item" onclick="showUpdating('CIPM / CIPD')">
+                    <span>🤝</span>
+                    <div class="service-info"><b>CIPM / CIPD</b><small>HR Management</small></div>
+                </div>
+                <div class="service-item" onclick="showUpdating('NIM / CIM')">
+                    <span>📈</span>
+                    <div class="service-info"><b>NIM / CIM</b><small>Management / Marketing</small></div>
+                </div>
+                <div class="service-item" onclick="showUpdating('COREN / NSE')">
+                    <span>⚙️</span>
+                    <div class="service-info"><b>COREN / NSE</b><small>Engineering</small></div>
+                </div>
+                <div class="service-item" onclick="showUpdating('MCPN / FPSN')">
+                    <span>💊</span>
+                    <div class="service-info"><b>MCPN / FPSN</b><small>Pharmacy</small></div>
+                </div>
+                <div class="service-item" onclick="showUpdating('NMA / MDCN')">
+                    <span>🏥</span>
+                    <div class="service-info"><b>NMA / MDCN</b><small>Medicine</small></div>
+                </div>
+                <div class="service-item highlight" onclick="showUpdating('Digital & Tech')" style="grid-column:span 2;flex-direction:row;align-items:center;gap:12px">
+                    <span>💻</span>
+                    <a href="https://official-gocbt.github.io/Digital-Literacy-Online-Class/"><div class="service-info"><b>Digital & Tech</b><small>AWS · Google · Microsoft Certs</small></div>
+                </div>
+            </div></a>
+
+            <!-- BECOME AN EXAMINER -->
+            <div class="examiner-cta">
+                <h3>✍️ Become an Online Examiner</h3>
+                <p>Are you an educator? Join our growing network of examiners and create quality practice exams for Nigerian students.</p>
+                <button class="examiner-btn" onclick="openOverlay('examiner-modal')">Apply to Become an Examiner</button>
             </div>
         </div>
 
+        <!-- BOTTOM NAV -->
         <nav>
             <a href="https://goapps-official.github.io/Welcome/"><span>🏠</span><br>Home</a>
             <a href="#" class="active"><span>📝</span><br>Practice</a>
             <a href="#"><span>🎁</span><br>Rewards</a>
-            <a href="#"><span>⚙️</span><br>Settings</a>
+            <a href="#" onclick="toggleMenu()"><span>⚙️</span><br>Settings</a>
         </nav>
-    </div>
 
-    <script>
-        function openTransferModal() {
-            document.getElementById('transfer-modal').style.display = 'flex';
-        }
+    </div><!-- /phone-container -->
 
-        function closeModal() {
-            document.getElementById('transfer-modal').style.display = 'none';
-        }
+<script>
+const WA_NUM = '2348157505037';
 
-        function sendWhatsApp(method) {
-            const phoneNumber = "2340265544737";
-            const message = `Hello goAPPs,\n\nI want to unlock a *Practice PIN* using *${method}*.\n\nPlease provide payment details.`;
-            const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
-            window.open(url, '_blank');
-            closeModal();
-        }
-    </script>
+// ── HELPERS ──
+function openOverlay(id){document.getElementById(id).classList.add('show');haptic()}
+function closeOverlay(id){document.getElementById(id).classList.remove('show')}
+function toggleMenu(){document.getElementById('app-body').classList.toggle('menu-open')}
+function goWhatsApp(msg){window.open(`https://wa.me/${WA_NUM}?text=${encodeURIComponent(msg)}`,'_blank')}
+function haptic(p=[40,20,40]){if(navigator.vibrate)navigator.vibrate(p)}
+function playChime(type='confirm'){
+    try{
+        const ctx=new(window.AudioContext||window.webkitAudioContext)();
+        const map={confirm:[[523.25,0],[659.25,.12],[783.99,.24]],success:[[783.99,0],[987.77,.15]],remind:[[880,0,.2],[1046.5,.22,.25]]};
+        const notes=map[type]||map.confirm;
+        notes.forEach(([freq,delay,dur=.4])=>{
+            const o=ctx.createOscillator(),g=ctx.createGain();
+            o.connect(g);g.connect(ctx.destination);o.type='sine';
+            o.frequency.setValueAtTime(freq,ctx.currentTime+delay);
+            g.gain.setValueAtTime(0,ctx.currentTime+delay);
+            g.gain.linearRampToValueAtTime(.2,ctx.currentTime+delay+.02);
+            g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+delay+dur);
+            o.start(ctx.currentTime+delay);o.stop(ctx.currentTime+delay+dur+.02);
+        });
+    }catch(e){}
+}
+function showNotify(title,body){
+    const n=document.getElementById('push-notification');
+    document.getElementById('notify-title').textContent=title;
+    document.getElementById('notify-body').textContent=body;
+    n.classList.add('show');haptic();
+    setTimeout(()=>n.classList.remove('show'),4000);
+}
+
+// ── BREADCRUMB / BACK ──
+const history_stack=['home','cbt'];
+function navigateTo(dest){
+    const map={home:'https://goapps-official.github.io/Welcome-to-goAPPs/',cbt:'https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/'};
+    if(map[dest]) window.location.href=map[dest];
+}
+function goBack(){
+    haptic([30,20,30]);
+    if(document.referrer) window.history.back();
+    else window.location.href='https://goapps-official.github.io/Welcome-to-goAPPs/goCBT/';
+}
+
+// ── UPDATING MODAL ──
+function showUpdating(className){
+    haptic();
+    document.getElementById('updating-class-name').textContent=`"${className}" is currently being updated with fresh content. Check back soon!`;
+    openOverlay('updating-modal');
+}
+function remindMe(){
+    playChime('remind');haptic([50,30,80]);
+    closeOverlay('updating-modal');
+    showNotify('🔔 Reminder Set',`We'll notify you when this class is ready!`);
+}
+
+// ── JSS3 ──
+function openJSS3(){
+    haptic();
+    window.location.href='https://official-gocbt.github.io/goCBT-Drill-Center/JAMB_drill.html';
+}
+
+// ── SEND WHATSAPP (payment) ──
+function sendWhatsApp(method){
+    playChime('confirm');haptic();
+    closeOverlay('transfer-modal');
+    goWhatsApp(`Hello goAPPs,\n\nI want to unlock a *Practice PIN* using *${method}*.\n\nPlease provide payment details.`);
+}
+
+// ── EXAMINER SUBMIT ──
+function submitExaminer(){
+    const name=document.getElementById('ex-name').value.trim();
+    const inst=document.getElementById('ex-institution').value.trim();
+    const email=document.getElementById('ex-email').value.trim();
+    const wa=document.getElementById('ex-wa').value.trim();
+    if(!name||!inst||!email||!wa){alert('Please fill in all fields to submit your application.');return;}
+    playChime('success');haptic([60,30,60,30,80]);
+    closeOverlay('examiner-modal');
+    goWhatsApp(`✍️ Examiner Application\n\nFull Name: ${name}\nInstitution: ${inst}\nEmail: ${email}\nWhatsApp: ${wa}`);
+}
+
+// ── THEME ──
+function toggleTheme(el){
+    document.body.classList.toggle('light-mode');
+    document.querySelectorAll('input[onchange*="toggleTheme"]').forEach(s=>s.checked=document.body.classList.contains('light-mode'));
+}
+</script>
 </body>
 </html>
