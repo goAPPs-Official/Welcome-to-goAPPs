@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduBot — Smart Learning Assistant</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Mulish:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#0A4D3C;--green2:#0D6B52;--green3:#0F7A5E;--green4:#125F4B;
+  --mint:#12B886;--mint-light:#20D49A;--mint-glow:rgba(18,184,134,0.18);
+  --gold:#D4A017;--gold-light:#F0C040;--gold-pale:#FFF3CC;--gold-glow:rgba(212,160,23,0.2);
+  --ivory:#FDFBF4;--cream:#F5F0E0;--cream2:#EDE8D5;
+  --bg:#FAFAF6;--surface:#FFFFFF;--surface2:#F7F5EE;--surface3:#EFF0E8;
+  --border:#D8D4C4;--border2:#E8E4D8;
+  --text:#1C2B22;--text-muted:#5A6B5E;--text-dim:#9CAB9E;
+  --rose:#E05050;--violet:#6B4EAA;--sky:#2B91CC;
+  --shadow:0 2px 16px rgba(10,77,60,0.08);--shadow-lg:0 10px 40px rgba(10,77,60,0.14);
+  --wa:#25D366;--wa-deep:#128C7E;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;font-family:'Mulish',sans-serif;color:var(--text);overflow:hidden;}
+::-webkit-scrollbar{width:4px;} ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+body{display:flex;align-items:center;justify-content:center;min-height:100vh;
+  background:linear-gradient(160deg,#EAF4EF 0%,#F5F0E0 45%,#EAF0F5 100%);}
+body::before{content:'';position:fixed;inset:0;
+  background-image:radial-gradient(rgba(10,77,60,0.035) 1.5px,transparent 1.5px);
+  background-size:28px 28px;pointer-events:none;}
+body::after{content:'';position:fixed;top:-160px;right:-100px;width:500px;height:500px;border-radius:50%;
+  background:radial-gradient(circle,rgba(18,184,134,0.08),transparent 65%);pointer-events:none;}
+
+/* WINDOW */
+.window{width:100%;max-width:440px;height:97vh;max-height:870px;
+  background:var(--surface);border-radius:26px;
+  box-shadow:var(--shadow-lg),0 0 0 1px rgba(10,77,60,0.08);
+  display:flex;flex-direction:column;overflow:hidden;position:relative;z-index:2;
+  animation:emerge .5s cubic-bezier(.34,1.4,.64,1);}
+@keyframes emerge{from{opacity:0;transform:translateY(22px) scale(.96);}to{opacity:1;transform:none;}}
+
+/* HEADER */
+.hdr{background:linear-gradient(135deg,var(--green),var(--green2),var(--green3));
+  padding:15px 16px 13px;flex-shrink:0;position:relative;overflow:hidden;}
+.hdr::before{content:'';position:absolute;top:-50px;right:-50px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,0.06);}
+.hdr::after{content:'';position:absolute;bottom:-30px;left:-20px;width:120px;height:120px;border-radius:50%;background:rgba(212,160,23,0.1);}
+.hdr-stripe{position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold-light),var(--mint-light),transparent);opacity:.6;}
+.hdr-inner{display:flex;align-items:center;gap:11px;position:relative;z-index:1;}
+.hdr-av{width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,var(--gold),var(--gold-light));display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;box-shadow:0 2px 12px rgba(212,160,23,0.4);}
+.hdr-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:#fff;line-height:1;}
+.hdr-sub{font-size:11px;color:rgba(255,255,255,.75);margin-top:3px;display:flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;}
+.online-dot{width:6px;height:6px;border-radius:50%;background:#86EFAC;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+.hdr-right{margin-left:auto;display:flex;gap:6px;}
+.hbtn{width:33px;height:33px;border-radius:9px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:#fff;transition:.18s;}
+.hbtn:hover{background:rgba(255,255,255,.25);}
+.hbtn-rel{position:relative;}
+.hbtn-badge{position:absolute;top:-4px;right:-4px;width:15px;height:15px;border-radius:50%;background:var(--gold);color:var(--green);font-size:8px;font-weight:800;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;}
+
+/* CONTEXT STRIP */
+.ctx-strip{background:linear-gradient(90deg,var(--gold-glow),transparent);border-bottom:1px solid var(--border2);padding:7px 16px;display:none;align-items:center;gap:6px;flex-shrink:0;flex-wrap:wrap;}
+.ctx-strip.show{display:flex;}
+.ctx-pill{font-size:9.5px;font-weight:700;font-family:'JetBrains Mono',monospace;padding:2px 8px;border-radius:10px;display:flex;align-items:center;gap:4px;}
+.cp-inst{background:rgba(10,77,60,0.1);color:var(--green2);border:1px solid rgba(10,77,60,0.15);}
+.cp-class{background:var(--gold-pale);color:var(--gold);border:1px solid rgba(212,160,23,0.2);}
+.cp-exam{background:rgba(18,184,134,0.1);color:var(--mint);border:1px solid rgba(18,184,134,0.2);}
+.cp-pts{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--gold);background:var(--gold-pale);padding:2px 8px;border-radius:10px;}
+
+/* MESSAGES */
+.msgs{flex:1;overflow-y:auto;padding:14px 12px;display:flex;flex-direction:column;gap:10px;}
+
+/* BUBBLES */
+.msg{display:flex;gap:8px;animation:popUp .22s ease;max-width:100%;}
+.msg.user{flex-direction:row-reverse;}
+@keyframes popUp{from{opacity:0;transform:translateY(7px);}to{opacity:1;transform:none;}}
+.av{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:2px;}
+.msg.bot .av{background:linear-gradient(135deg,var(--green),var(--green2));box-shadow:0 2px 8px rgba(10,77,60,0.25);}
+.msg.user .av{background:var(--surface2);border:1px solid var(--border);}
+.mcol{display:flex;flex-direction:column;max-width:87%;}
+.msg.user .mcol{align-items:flex-end;}
+.bbl{padding:10px 14px;border-radius:17px;font-size:13.5px;line-height:1.65;}
+.msg.bot .bbl{background:var(--surface2);border:1px solid var(--border2);border-top-left-radius:5px;}
+.msg.user .bbl{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;border-top-right-radius:5px;box-shadow:0 3px 12px rgba(10,77,60,0.22);}
+.bbl b,.bbl strong{color:var(--green2);}
+.msg.user .bbl b,.msg.user .bbl strong{color:var(--gold-light);}
+.mtime{font-size:9.5px;color:var(--text-dim);margin-top:3px;font-family:'JetBrains Mono',monospace;}
+
+/* TYPING */
+.tbbl{background:var(--surface2);border:1px solid var(--border2);border-radius:17px;border-top-left-radius:5px;padding:12px 15px;display:flex;gap:5px;align-items:center;}
+.td{width:6px;height:6px;border-radius:50%;background:var(--mint);animation:tdB 1.1s infinite;}
+.td:nth-child(2){animation-delay:.18s;}.td:nth-child(3){animation-delay:.36s;}
+@keyframes tdB{0%,60%,100%{transform:translateY(0);opacity:.35;}30%{transform:translateY(-5px);opacity:1;}}
+
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.chip{background:var(--surface);border:1.5px solid var(--border);color:var(--green2);padding:6px 13px;border-radius:20px;font-size:12.5px;font-weight:700;cursor:pointer;transition:.18s;}
+.chip:hover{background:var(--green);border-color:var(--green);color:#fff;transform:translateY(-1px);}
+.chip.gold{border-color:var(--gold);color:var(--gold);background:var(--gold-pale);}
+.chip.gold:hover{background:var(--gold);color:#fff;}
+.chip.violet{border-color:var(--violet);color:var(--violet);background:rgba(107,78,170,0.08);}
+.chip.violet:hover{background:var(--violet);color:#fff;}
+
+/* SELECTION GRIDS */
+.sel-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;width:100%;}
+.sel-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:8px;width:100%;}
+.sg-card{background:var(--surface);border:1.5px solid var(--border);border-radius:13px;padding:12px 10px;cursor:pointer;transition:.22s;text-align:center;position:relative;overflow:hidden;}
+.sg-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--mint),var(--gold));opacity:0;transition:.22s;}
+.sg-card:hover{border-color:var(--mint);transform:translateY(-2px);box-shadow:0 5px 18px rgba(18,184,134,0.15);}
+.sg-card:hover::after{opacity:1;}
+.sg-card.sel{border-color:var(--gold);background:var(--gold-pale);}
+.sg-icon{font-size:24px;display:block;margin-bottom:5px;}
+.sg-name{font-family:'Playfair Display',serif;font-size:12px;font-weight:700;color:var(--text);}
+.sg-tag{font-size:9.5px;color:var(--text-muted);margin-top:2px;font-family:'JetBrains Mono',monospace;}
+.sg-badge{position:absolute;top:5px;right:5px;font-size:8px;font-weight:800;padding:2px 5px;border-radius:4px;}
+.sb-new{background:rgba(18,184,134,0.18);color:var(--mint);border:1px solid rgba(18,184,134,0.3);}
+.sb-pop{background:rgba(212,160,23,0.18);color:var(--gold);border:1px solid rgba(212,160,23,0.3);}
+.sb-exam{background:rgba(224,80,80,0.15);color:var(--rose);border:1px solid rgba(224,80,80,0.25);}
+.sb-pro{background:rgba(107,78,170,0.15);color:var(--violet);border:1px solid rgba(107,78,170,0.25);}
+
+/* CLASS LEVEL CARDS */
+.class-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px;}
+.class-btn{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:8px 14px;
+  cursor:pointer;font-size:12px;font-weight:700;color:var(--text-muted);transition:.18s;white-space:nowrap;}
+.class-btn:hover{border-color:var(--mint);color:var(--green2);background:rgba(18,184,134,0.06);}
+.class-btn.active{background:var(--green);border-color:var(--green);color:#fff;}
+.class-btn.gold-btn{border-color:var(--gold);color:var(--gold);}
+.class-btn.gold-btn:hover,.class-btn.gold-btn.active{background:var(--gold);color:#fff;border-color:var(--gold);}
+
+/* SECTION HEADER */
+.sec-hdr{display:flex;align-items:center;gap:8px;padding:8px 0;margin-top:4px;}
+.sec-line{flex:1;height:1px;background:var(--border2);}
+.sec-label{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;white-space:nowrap;}
+
+/* GALLERY */
+.gal-wrap{width:100%;margin-top:10px;}
+.gal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.gal-title{font-family:'Playfair Display',serif;font-size:11px;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.8px;}
+.gal-cnt{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-dim);}
+.gal-outer{overflow:hidden;border-radius:14px;}
+.gal-track{display:flex;transition:transform .42s cubic-bezier(.4,0,.2,1);}
+.gal-slide{min-width:100%;}
+
+/* COURSE CARD */
+.course-card{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;}
+.cc-top{height:140px;display:flex;align-items:center;justify-content:center;font-size:68px;position:relative;overflow:hidden;}
+.cc-top::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(28,43,34,0.55));}
+.cc-top-icon{position:relative;z-index:0;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.2));}
+.cc-lvl{position:absolute;top:9px;left:10px;z-index:2;font-size:9px;font-weight:800;padding:2px 8px;border-radius:7px;text-transform:uppercase;letter-spacing:.5px;}
+.lv-beg{background:rgba(18,184,134,0.9);color:#fff;}
+.lv-int{background:rgba(212,160,23,0.9);color:var(--green);}
+.lv-adv{background:rgba(224,80,80,0.85);color:#fff;}
+.lv-pro{background:rgba(107,78,170,0.9);color:#fff;}
+.cc-type{position:absolute;top:9px;right:10px;z-index:2;font-size:9px;font-weight:800;padding:2px 7px;border-radius:6px;text-transform:uppercase;}
+.ct-waec{background:rgba(45,145,204,0.85);color:#fff;}
+.ct-jamb{background:rgba(212,160,23,0.85);color:var(--green);}
+.ct-prof{background:rgba(107,78,170,0.85);color:#fff;}
+.ct-uni{background:rgba(10,77,60,0.85);color:#fff;}
+.cc-dur{position:absolute;bottom:8px;right:10px;z-index:2;font-family:'JetBrains Mono',monospace;font-size:9.5px;color:rgba(255,255,255,.8);}
+.cc-body{padding:12px 13px;}
+.cc-name{font-family:'Playfair Display',serif;font-size:15px;font-weight:700;margin-bottom:3px;}
+.cc-desc{font-size:11.5px;color:var(--text-muted);line-height:1.45;margin-bottom:8px;}
+.cc-meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:9px;}
+.cm-tag{font-size:9.5px;padding:2px 7px;border-radius:5px;font-weight:700;}
+.cm-subj{background:rgba(10,77,60,0.1);color:var(--green2);border:1px solid rgba(10,77,60,0.15);}
+.cm-price{background:var(--gold-pale);color:var(--gold);border:1px solid rgba(212,160,23,0.25);}
+.cm-rating{background:rgba(240,192,64,0.15);color:var(--gold);}
+.cm-pro{background:rgba(107,78,170,0.1);color:var(--violet);border:1px solid rgba(107,78,170,0.2);}
+.cc-btns{display:flex;gap:7px;}
+.cc-btn{flex:1;padding:9px;border-radius:10px;border:none;cursor:pointer;font-size:12.5px;font-weight:700;font-family:'Mulish',sans-serif;transition:.18s;}
+.btn-primary{background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;box-shadow:0 3px 10px rgba(10,77,60,0.22);}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 5px 16px rgba(10,77,60,0.35);}
+.btn-ghost{background:var(--surface2);border:1.5px solid var(--border);color:var(--green2);}
+.btn-ghost:hover{border-color:var(--green2);}
+.btn-gold{background:linear-gradient(135deg,var(--gold),var(--gold-light));color:var(--green);box-shadow:0 3px 10px var(--gold-glow);}
+.btn-gold:hover{transform:translateY(-1px);}
+.btn-violet{background:linear-gradient(135deg,var(--violet),#8B6BC0);color:#fff;box-shadow:0 3px 10px rgba(107,78,170,0.25);}
+.btn-violet:hover{transform:translateY(-1px);}
+
+/* GAL NAV */
+.gal-nav{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:9px;}
+.garrow{width:29px;height:29px;border-radius:50%;background:var(--surface);border:1.5px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--green2);transition:.18s;}
+.garrow:hover{background:var(--green);border-color:var(--green);color:#fff;}
+.gdots{display:flex;gap:5px;}
+.gdot{width:5px;height:5px;border-radius:50%;background:var(--cream2);transition:.25s;cursor:pointer;}
+.gdot.on{width:14px;border-radius:3px;background:var(--green2);}
+
+/* QUIZ */
+.quiz-card{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:16px;margin-top:8px;width:100%;}
+.quiz-progress{background:var(--surface3);border-radius:4px;height:5px;margin-bottom:12px;}
+.quiz-bar{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--green),var(--mint));transition:width .4s;}
+.quiz-q{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;margin-bottom:12px;line-height:1.5;}
+.quiz-opts{display:flex;flex-direction:column;gap:6px;}
+.quiz-opt{background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;font-size:13px;transition:.18s;display:flex;align-items:center;gap:9px;}
+.quiz-opt:hover{border-color:var(--mint);background:rgba(18,184,134,0.06);}
+.quiz-opt.correct{border-color:var(--mint);background:rgba(18,184,134,0.1);color:var(--green);}
+.quiz-opt.wrong{border-color:var(--rose);background:rgba(224,80,80,0.08);color:var(--rose);}
+.quiz-opt.disabled{pointer-events:none;}
+.qo-letter{width:24px;height:24px;border-radius:7px;background:var(--surface3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;font-family:'JetBrains Mono',monospace;flex-shrink:0;}
+.quiz-result{margin-top:10px;padding:10px 12px;border-radius:10px;font-size:13px;font-weight:700;text-align:center;}
+.qr-correct{background:rgba(18,184,134,0.12);color:var(--green2);border:1px solid rgba(18,184,134,0.25);}
+.qr-wrong{background:rgba(224,80,80,0.08);color:var(--rose);border:1px solid rgba(224,80,80,0.2);}
+
+/* TIMETABLE */
+.tt-card{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;margin-top:8px;width:100%;}
+.tt-head{background:linear-gradient(135deg,var(--green),var(--green2));padding:10px 14px;font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:space-between;}
+.tt-day{display:flex;align-items:stretch;border-bottom:1px solid var(--border2);}
+.tt-day:last-child{border-bottom:none;}
+.tt-day-lbl{width:52px;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--green2);border-right:1px solid var(--border2);padding:8px 4px;flex-shrink:0;}
+.tt-slots{flex:1;display:flex;flex-direction:column;}
+.tt-slot{display:flex;align-items:center;gap:8px;padding:7px 10px;border-bottom:1px solid var(--border2);}
+.tt-slot:last-child{border-bottom:none;}
+.tt-time{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--text-muted);min-width:50px;}
+.tt-subj{font-size:12px;font-weight:700;flex:1;}
+.tt-room{font-size:10px;color:var(--text-dim);font-family:'JetBrains Mono',monospace;}
+.tt-status{font-size:9px;padding:2px 6px;border-radius:5px;font-weight:700;white-space:nowrap;}
+.ts-live{background:rgba(224,80,80,0.15);color:var(--rose);}
+.ts-next{background:rgba(212,160,23,0.15);color:var(--gold);}
+.ts-done{background:var(--surface3);color:var(--text-dim);}
+.ts-free{background:rgba(18,184,134,0.12);color:var(--mint);}
+
+/* PIN SHOP */
+.pin-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;width:100%;}
+.pin-card{background:var(--surface);border:1.5px solid var(--border);border-radius:13px;padding:13px;cursor:pointer;transition:.22s;text-align:center;position:relative;}
+.pin-card:hover{border-color:var(--gold);transform:translateY(-2px);box-shadow:0 5px 18px var(--gold-glow);}
+.pin-icon{font-size:28px;display:block;margin-bottom:5px;}
+.pin-name{font-family:'Playfair Display',serif;font-size:12.5px;font-weight:700;}
+.pin-price{font-size:14px;font-weight:800;color:var(--gold);margin-top:3px;}
+.pin-desc{font-size:10.5px;color:var(--text-muted);margin-top:2px;}
+.pin-badge{position:absolute;top:6px;right:6px;font-size:8px;font-weight:800;padding:2px 6px;border-radius:5px;}
+
+/* CONSULTANT CARD */
+.consult-card{background:var(--surface);border:1.5px solid var(--border);border-radius:13px;padding:13px;margin-bottom:8px;display:flex;align-items:center;gap:11px;cursor:pointer;transition:.2s;}
+.consult-card:hover{border-color:var(--mint);box-shadow:0 4px 16px rgba(18,184,134,0.1);}
+.cons-av{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--green3),var(--mint));display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.cons-av.pro{background:linear-gradient(135deg,var(--violet),#8B6BC0);}
+.cons-name{font-family:'Playfair Display',serif;font-size:13.5px;font-weight:700;margin-bottom:2px;}
+.cons-spec{font-size:11px;color:var(--text-muted);}
+.cons-meta{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;}
+.cm{font-size:9.5px;padding:2px 7px;border-radius:5px;font-weight:700;}
+.cm-avail{background:rgba(18,184,134,0.12);color:var(--mint);border:1px solid rgba(18,184,134,0.2);}
+.cm-exp{background:var(--surface2);color:var(--text-muted);border:1px solid var(--border);}
+.cm-rate{background:var(--gold-pale);color:var(--gold);border:1px solid rgba(212,160,23,0.2);}
+.cons-fee{margin-left:auto;text-align:right;flex-shrink:0;}
+.cf-price{font-size:14px;font-weight:800;color:var(--green2);}
+.cf-per{font-size:10px;color:var(--text-dim);}
+
+/* INFO CARD */
+.info-card{background:var(--surface2);border:1px solid var(--border2);border-radius:12px;padding:11px 14px;margin-top:8px;width:100%;}
+.ir{display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px solid var(--border2);}
+.ir:last-child{border-bottom:none;}
+.ir-icon{font-size:14px;flex-shrink:0;margin-top:1px;}
+.ir-text{font-size:12.5px;line-height:1.55;flex:1;color:var(--text-muted);}
+.ir-text b{color:var(--text);}
+
+/* RESULT CARD */
+.result-card{background:linear-gradient(135deg,var(--green),var(--green2));border-radius:14px;padding:18px;margin-top:8px;width:100%;text-align:center;position:relative;overflow:hidden;}
+.result-card::before{content:'🎓';position:absolute;font-size:80px;right:-10px;top:-10px;opacity:.12;}
+.rc-grade{font-family:'Playfair Display',serif;font-size:48px;font-weight:900;color:var(--gold-light);line-height:1;}
+.rc-status{font-size:14px;font-weight:800;color:rgba(255,255,255,.9);margin-top:4px;}
+.rc-name{font-size:12px;color:rgba(255,255,255,.7);margin-top:6px;}
+.rc-bars{margin-top:12px;display:flex;flex-direction:column;gap:5px;}
+.rcb-row{display:flex;align-items:center;gap:8px;}
+.rcb-label{font-size:10.5px;color:rgba(255,255,255,.7);min-width:80px;text-align:left;}
+.rcb-track{flex:1;height:6px;background:rgba(255,255,255,.15);border-radius:3px;}
+.rcb-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--gold-light));}
+.rcb-score{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--gold-light);min-width:30px;text-align:right;}
+
+/* PROGRESS CARD */
+.progress-card{background:var(--surface);border:1.5px solid var(--border);border-radius:13px;padding:14px;margin-top:8px;width:100%;}
+.prog-title{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;margin-bottom:10px;}
+.prog-row{display:flex;align-items:center;gap:9px;margin-bottom:7px;}
+.prog-label{font-size:12px;flex:1;}
+.prog-track{flex:2;height:7px;background:var(--surface3);border-radius:4px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--green),var(--mint));}
+.prog-pct{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--green2);min-width:32px;text-align:right;}
+
+/* PROMO */
+.promo-bar{background:linear-gradient(135deg,var(--green),var(--gold));border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-top:8px;width:100%;}
+.pb-text{font-size:12.5px;font-weight:700;color:#fff;flex:1;}
+.pb-code{font-family:'JetBrains Mono',monospace;font-size:11px;background:rgba(255,255,255,.25);padding:3px 9px;border-radius:6px;color:#fff;cursor:pointer;}
+
+/* WA BTN */
+.wa-btn{display:flex;align-items:center;justify-content:center;gap:9px;padding:12px 18px;background:linear-gradient(135deg,var(--wa-deep),var(--wa));color:#fff;border:none;border-radius:13px;font-size:14px;font-weight:700;cursor:pointer;width:100%;margin-top:10px;font-family:'Mulish',sans-serif;transition:.2s;box-shadow:0 4px 16px rgba(37,211,102,0.25);}
+.wa-btn:hover{transform:translateY(-2px);box-shadow:0 7px 22px rgba(37,211,102,0.4);}
+.wa-ghost{background:transparent;border:1.5px solid var(--wa);color:var(--wa-deep);box-shadow:none;}
+.wa-ghost:hover{background:rgba(37,211,102,0.08);}
+
+/* GREEN BTN */
+.gr-btn{display:flex;align-items:center;justify-content:center;gap:7px;padding:11px 16px;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;border:none;border-radius:12px;font-size:13.5px;font-weight:800;cursor:pointer;width:100%;margin-top:8px;font-family:'Playfair Display',serif;transition:.2s;box-shadow:0 4px 12px rgba(10,77,60,0.22);}
+.gr-btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(10,77,60,0.35);}
+
+/* INPUT */
+.inp-area{border-top:1px solid var(--border2);padding:11px 12px;background:var(--ivory);display:flex;gap:8px;align-items:flex-end;flex-shrink:0;}
+.inp-box{flex:1;background:var(--surface);border:1.5px solid var(--border);border-radius:13px;display:flex;align-items:flex-end;gap:7px;padding:8px 12px;transition:.2s;}
+.inp-box:focus-within{border-color:rgba(10,77,60,0.4);box-shadow:0 0 0 3px rgba(18,184,134,0.1);}
+.txt-inp{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:13.5px;font-family:'Mulish',sans-serif;resize:none;max-height:80px;line-height:1.5;}
+.txt-inp::placeholder{color:var(--text-dim);}
+.snd{width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--green),var(--green2));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;color:#fff;box-shadow:0 3px 10px rgba(10,77,60,0.25);transition:.18s;flex-shrink:0;}
+.snd:hover{transform:scale(1.07);box-shadow:0 5px 16px rgba(10,77,60,0.38);}
+
+/* OVERLAYS */
+.overlay{position:fixed;inset:0;background:rgba(28,43,34,0.55);backdrop-filter:blur(4px);z-index:200;display:none;align-items:flex-end;justify-content:center;}
+.overlay.open{display:flex;}
+.sheet{background:var(--surface);border-radius:24px 24px 0 0;width:100%;max-width:440px;max-height:90vh;display:flex;flex-direction:column;overflow:hidden;border:1px solid var(--border);border-bottom:none;box-shadow:0 -8px 40px rgba(10,77,60,0.12);animation:sUp .3s cubic-bezier(.34,1.15,.64,1);}
+@keyframes sUp{from{transform:translateY(100%);}to{transform:none;}}
+.shdl{width:36px;height:3px;border-radius:3px;background:var(--cream2);margin:11px auto 0;}
+.sh-hdr{padding:14px 18px 12px;border-bottom:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;}
+.sh-title{font-family:'Playfair Display',serif;font-size:15px;font-weight:800;color:var(--green);}
+.sh-close{width:27px;height:27px;border-radius:7px;background:var(--surface2);border:1px solid var(--border);cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;color:var(--text-muted);}
+.sh-body{flex:1;overflow-y:auto;padding:16px 18px;}
+.sh-foot{padding:14px 18px;border-top:1px solid var(--border2);}
+
+/* FORMS */
+.fg{margin-bottom:13px;}
+.fl{font-size:10.5px;font-weight:800;color:var(--text-muted);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:.5px;font-family:'JetBrains Mono',monospace;}
+.fi,.fs,.fta{width:100%;background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:10px 13px;color:var(--text);font-size:13px;font-family:'Mulish',sans-serif;outline:none;transition:.2s;}
+.fi:focus,.fs:focus,.fta:focus{border-color:rgba(10,77,60,0.45);box-shadow:0 0 0 3px rgba(18,184,134,0.1);}
+.fta{resize:vertical;min-height:76px;}
+.fs option{background:var(--surface);}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.div{height:1px;background:var(--border2);margin:8px 0;}
+.achievement{background:linear-gradient(135deg,var(--gold-pale),var(--cream));border:1.5px solid var(--gold);border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:10px;margin-top:8px;width:100%;}
+.ach-icon{font-size:24px;}
+.ach-title{font-family:'Playfair Display',serif;font-size:12.5px;font-weight:700;color:var(--gold);}
+.ach-desc{font-size:11px;color:var(--text-muted);}
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="hdr">
+    <div class="hdr-stripe"></div>
+    <div class="hdr-inner">
+      <div class="hdr-av">🎓</div>
+      <div>
+        <div class="hdr-title">EduBot</div>
+        <div class="hdr-sub"><div class="online-dot"></div>SMART LEARNING ASSISTANT · ONLINE</div>
+      </div>
+      <div class="hdr-right">
+        <div class="hbtn hbtn-rel" onclick="openCart()" title="My Courses">📚<span class="hbtn-badge" id="cartBadge">0</span></div>
+        <div class="hbtn" onclick="openSearch()" title="Search">🔍</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTEXT STRIP -->
+  <div class="ctx-strip" id="ctxStrip">
+    <span class="ctx-pill cp-inst" id="ctxInst">🏫 —</span>
+    <span class="ctx-pill cp-class" id="ctxClass">📚 —</span>
+    <span class="ctx-pill cp-exam" id="ctxExam">📋 —</span>
+    <span class="cp-pts" id="ctxXP">0 XP</span>
+  </div>
+
+  <div class="msgs" id="msgs"></div>
+
+  <div class="inp-area">
+    <div class="inp-box">
+      <textarea class="txt-inp" id="inp" rows="1" placeholder="Ask EduBot anything…"></textarea>
+    </div>
+    <button class="snd" onclick="send()">➤</button>
+  </div>
+</div>
+
+<!-- ══ ENROLL SHEET ══ -->
+<div class="overlay" id="ovEnroll">
+  <div class="sheet">
+    <div class="shdl"></div>
+    <div class="sh-hdr"><div class="sh-title">📘 Enrol in Course</div><div class="sh-close" onclick="closeOv('ovEnroll')">✕</div></div>
+    <div class="sh-body">
+      <div class="fg"><label class="fl">Full Name</label><input class="fi" id="enName" placeholder="Your full name"></div>
+      <div class="fg"><label class="fl">Phone / WhatsApp</label><input class="fi" id="enPhone" type="tel" placeholder="+234 800 000 0000"></div>
+      <div class="fg"><label class="fl">Email Address</label><input class="fi" id="enEmail" type="email" placeholder="you@email.com"></div>
+      <div class="fg"><label class="fl">Institution</label><select class="fs" id="enInst">
+        <option>Primary School</option><option>Junior Secondary School (JSS)</option>
+        <option>Senior Secondary School (SSS)</option><option>Federal Government College</option>
+        <option>State Government School</option><option>Private Secondary School</option>
+        <option>University (Federal)</option><option>University (State)</option>
+        <option>Polytechnic / College of Education</option>
+        <option>Professional / Self-Study</option>
+      </select></div>
+      <div class="fg"><label class="fl">Class / Level</label><select class="fs" id="enClass">
+        <option>Primary 1</option><option>Primary 2</option><option>Primary 3</option>
+        <option>Primary 4</option><option>Primary 5</option><option>Primary 6</option>
+        <option>JSS 1</option><option>JSS 2</option><option>JSS 3</option>
+        <option>SS 1</option><option>SS 2</option><option>SS 3 (Final Year)</option>
+        <option>100 Level</option><option>200 Level</option><option>300 Level</option>
+        <option>400 Level</option><option>500 Level</option>
+        <option>Postgraduate</option><option>Professional (No fixed level)</option>
+      </select></div>
+      <div class="fg"><label class="fl">Exam Type</label><select class="fs" id="enExamType">
+        <option>WAEC (SSCE)</option><option>NECO (SSCE)</option><option>JAMB (UTME)</option>
+        <option>JAMB Direct Entry</option><option>NABTEB</option><option>GCE (Private)</option>
+        <option>BECE (Junior WAEC)</option><option>Common Entrance</option>
+        <option>ICAN</option><option>ATSWA (ICAN Foundation)</option><option>ACCA</option>
+        <option>CIPM</option><option>CIMA</option><option>NIM</option>
+        <option>NIBSS / CBT Certification</option><option>Other Professional Cert</option>
+        <option>University Exams / Semester</option>
+      </select></div>
+      <div class="fg"><label class="fl">Course</label><input class="fi" id="enCourse" placeholder="e.g. WAEC Mathematics, ICAN Foundation"></div>
+      <div class="fg"><label class="fl">Preferred Schedule</label>
+        <select class="fs" id="enSchedule"><option>Weekdays (Morning)</option><option>Weekdays (Evening)</option><option>Weekends</option><option>Self-paced (Anytime)</option></select>
+      </div>
+    </div>
+    <div class="sh-foot"><button class="wa-btn" onclick="submitEnroll()">📲 Enrol via WhatsApp</button></div>
+  </div>
+</div>
+
+<!-- ══ PURCHASE PIN SHEET ══ -->
+<div class="overlay" id="ovPin">
+  <div class="sheet">
+    <div class="shdl"></div>
+    <div class="sh-hdr"><div class="sh-title">🔑 Purchase Exam Pin</div><div class="sh-close" onclick="closeOv('ovPin')">✕</div></div>
+    <div class="sh-body">
+      <div class="fg"><label class="fl">Full Name</label><input class="fi" id="pnName" placeholder="Full name (as on certificate)"></div>
+      <div class="fg"><label class="fl">Phone / WhatsApp</label><input class="fi" id="pnPhone" type="tel" placeholder="+234 800 000 0000"></div>
+      <div class="fg"><label class="fl">Exam Body</label>
+        <select class="fs" id="pnExam">
+          <option>WAEC (SSCE)</option><option>NECO</option><option>JAMB (UTME / Direct Entry)</option>
+          <option>NABTEB</option><option>GCE (Private)</option><option>BECE (Junior WAEC)</option>
+          <option>Cambridge IGCSE</option><option>JAMB Result Checker</option>
+          <option>ICAN (Professional)</option><option>ACCA (Professional)</option>
+          <option>CIPM (HR Professional)</option><option>CIMA</option><option>NIM</option>
+        </select>
+      </div>
+      <div class="fgrid">
+        <div class="fg"><label class="fl">Year</label><select class="fs" id="pnYear"><option>2025</option><option>2024</option><option>2023</option><option>2022</option></select></div>
+        <div class="fg"><label class="fl">Quantity</label><input class="fi" id="pnQty" type="number" value="1" min="1" max="10"></div>
+      </div>
+      <div class="fg"><label class="fl">Exam Number (if known)</label><input class="fi" id="pnExamNo" placeholder="e.g. 4100101234"></div>
+      <div class="fg"><label class="fl">Payment Method</label>
+        <select class="fs" id="pnPay"><option>Bank Transfer</option><option>Card Payment</option><option>USSD</option><option>Crypto (USDT)</option></select>
+      </div>
+    </div>
+    <div class="sh-foot"><button class="wa-btn" onclick="submitPin()">📲 Purchase Pin via WhatsApp</button></div>
+  </div>
+</div>
+
+<!-- ══ RESULT SHEET ══ -->
+<div class="overlay" id="ovResult">
+  <div class="sheet">
+    <div class="shdl"></div>
+    <div class="sh-hdr"><div class="sh-title">📊 Check Exam Result</div><div class="sh-close" onclick="closeOv('ovResult')">✕</div></div>
+    <div class="sh-body">
+      <div class="fg"><label class="fl">Full Name</label><input class="fi" id="rsName" placeholder="Full name"></div>
+      <div class="fg"><label class="fl">Exam Body</label>
+        <select class="fs" id="rsExam">
+          <option>WAEC (SSCE)</option><option>NECO</option><option>JAMB</option>
+          <option>NABTEB</option><option>GCE</option><option>BECE</option>
+          <option>ICAN</option><option>ACCA</option><option>CIPM</option>
+        </select>
+      </div>
+      <div class="fgrid">
+        <div class="fg"><label class="fl">Exam Year</label><select class="fs" id="rsYear"><option>2025</option><option>2024</option><option>2023</option><option>2022</option></select></div>
+        <div class="fg"><label class="fl">Exam Number</label><input class="fi" id="rsExamNo" placeholder="e.g. 4100101234"></div>
+      </div>
+      <div class="fg"><label class="fl">Scratch Card PIN</label><input class="fi" id="rsPin" placeholder="16-digit PIN from your scratch card"></div>
+      <div class="fg"><label class="fl">Serial Number</label><input class="fi" id="rsSer" placeholder="Serial number on scratch card"></div>
+    </div>
+    <div class="sh-foot">
+      <button class="gr-btn" onclick="checkResultDemo()">🔍 Check Result (Demo)</button>
+      <button class="wa-btn" style="margin-top:8px;" onclick="submitResult()">📲 Check via WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CONSULTANT SHEET ══ -->
+<div class="overlay" id="ovConsult">
+  <div class="sheet">
+    <div class="shdl"></div>
+    <div class="sh-hdr"><div class="sh-title" id="csTitle">📞 Book Consultation</div><div class="sh-close" onclick="closeOv('ovConsult')">✕</div></div>
+    <div class="sh-body">
+      <div class="fg"><label class="fl">Your Full Name</label><input class="fi" id="csName" placeholder="Full name"></div>
+      <div class="fg"><label class="fl">Phone / WhatsApp</label><input class="fi" id="csPhone" type="tel" placeholder="+234 800 000 0000"></div>
+      <div class="fg"><label class="fl">Consultant</label><input class="fi" id="csConsultant" readonly></div>
+      <div class="fg"><label class="fl">Institution</label><select class="fs" id="csInst">
+        <option>Junior Secondary School</option><option>Senior Secondary School</option>
+        <option>Federal Government College</option><option>University</option>
+        <option>Polytechnic</option><option>Professional / Self-Study</option>
+      </select></div>
+      <div class="fg"><label class="fl">Class / Level</label><select class="fs" id="csClass">
+        <option>JSS 1</option><option>JSS 2</option><option>JSS 3</option>
+        <option>SS 1</option><option>SS 2</option><option>SS 3</option>
+        <option>100 Level</option><option>200 Level</option><option>300 Level</option>
+        <option>400 Level</option><option>Professional (no fixed level)</option>
+      </select></div>
+      <div class="fg"><label class="fl">Topic / Subject</label><input class="fi" id="csTopic" placeholder="e.g. JAMB prep, ICAN Foundation, scholarship"></div>
+      <div class="fgrid">
+        <div class="fg"><label class="fl">Preferred Date</label><input class="fi" id="csDate" type="date"></div>
+        <div class="fg"><label class="fl">Preferred Time</label><input class="fi" id="csTime" type="time" value="10:00"></div>
+      </div>
+      <div class="fg"><label class="fl">Session Type</label>
+        <select class="fs" id="csType"><option>Video Call (Zoom/Google Meet)</option><option>Phone Call</option><option>WhatsApp Call</option><option>In-Person</option></select>
+      </div>
+      <div class="fg"><label class="fl">Describe Your Challenge</label><textarea class="fta" id="csNote" placeholder="Tell us what you need help with..."></textarea></div>
+    </div>
+    <div class="sh-foot"><button class="wa-btn" onclick="submitConsult()">📲 Book Session via WhatsApp</button></div>
+  </div>
+</div>
+
+<!-- ══ TIMETABLE SHEET ══ -->
+<div class="overlay" id="ovTimetable">
+  <div class="sheet">
+    <div class="shdl"></div>
+    <div class="sh-hdr"><div class="sh-title">📅 Check Timetable</div><div class="sh-close" onclick="closeOv('ovTimetable')">✕</div></div>
+    <div class="sh-body">
+      <div class="fg"><label class="fl">Your Name / Student ID</label><input class="fi" id="ttName" placeholder="Full name or student ID"></div>
+      <div class="fg"><label class="fl">Institution</label>
+        <select class="fs" id="ttInst">
+          <option>Federal Government College</option><option>State Secondary School</option>
+          <option>Private Secondary School</option><option>University of Lagos</option>
+          <option>University of Ibadan</option><option>Ahmadu Bello University</option>
+          <option>University of Abuja</option><option>University of Nigeria</option>
+          <option>OAU Ile-Ife</option><option>UNIPORT</option>
+          <option>Polytechnic / College of Education</option><option>Other</option>
+        </select>
+      </div>
+      <div class="fg"><label class="fl">Class / Level</label>
+        <select class="fs" id="ttClass">
+          <option>JSS 1</option><option>JSS 2</option><option>JSS 3</option>
+          <option>SS 1</option><option>SS 2</option><option>SS 3</option>
+          <option>100 Level</option><option>200 Level</option><option>300 Level</option>
+          <option>400 Level</option><option>500 Level</option><option>Postgraduate</option>
+        </select>
+      </div>
+      <div class="fg"><label class="fl">Exam Type</label>
+        <select class="fs" id="ttExam">
+          <option>WAEC (SSCE)</option><option>NECO</option><option>JAMB</option>
+          <option>NABTEB</option><option>University Semester Exams</option><option>Other</option>
+        </select>
+      </div>
+      <div class="fg"><label class="fl">Department / Class Arm</label><input class="fi" id="ttDept" placeholder="e.g. Science, Arts, Engineering"></div>
+    </div>
+    <div class="sh-foot">
+      <button class="gr-btn" onclick="showDemoTimetable()">📅 View Demo Timetable</button>
+      <button class="wa-btn" style="margin-top:8px;" onclick="submitTimetable()">📲 Get Full Timetable via WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FEEDBACK SHEET ══ -->
+<div class="overlay" id="ovFeedback">
+  <div class="sheet">
+    <div class="shdl"></div>
+    <div class="sh-hdr"><div class="sh-title">⭐ Rate Your Experience</div><div class="sh-close" onclick="closeOv('ovFeedback')">✕</div></div>
+    <div class="sh-body">
+      <div class="fg"><label class="fl">Your Name</label><input class="fi" id="fbName" placeholder="Full name (optional)"></div>
+      <div class="fg"><label class="fl">What are you rating?</label><input class="fi" id="fbAbout" placeholder="e.g. Maths class, ICAN course, consultant"></div>
+      <div class="fg"><label class="fl">Rating</label>
+        <div style="display:flex;gap:10px;margin-top:6px;" id="starRow">
+          <span style="font-size:28px;cursor:pointer;" onclick="setStar(1)">⭐</span>
+          <span style="font-size:28px;cursor:pointer;" onclick="setStar(2)">⭐</span>
+          <span style="font-size:28px;cursor:pointer;" onclick="setStar(3)">⭐</span>
+          <span style="font-size:28px;cursor:pointer;" onclick="setStar(4)">⭐</span>
+          <span style="font-size:28px;cursor:pointer;" onclick="setStar(5)">⭐</span>
+        </div>
+        <input type="hidden" id="fbStars" value="5">
+      </div>
+      <div class="fg"><label class="fl">Your Feedback</label><textarea class="fta" id="fbText" placeholder="Tell us what you think..."></textarea></div>
+    </div>
+    <div class="sh-foot"><button class="wa-btn" onclick="submitFeedback()">📲 Submit Feedback via WhatsApp</button></div>
+  </div>
+</div>
+
+<!-- ══ SEARCH SHEET ══ -->
+<div class="overlay" id="ovSearch">
+  <div class="sheet">
+    <div class="shdl"></div>
+    <div class="sh-hdr"><div class="sh-title">🔍 Search Courses</div><div class="sh-close" onclick="closeOv('ovSearch')">✕</div></div>
+    <div class="sh-body">
+      <input class="fi" id="srchInp" placeholder="Search by subject, exam, level, profession..." oninput="liveSearch(this.value)" style="margin-bottom:12px;">
+      <div id="srchRes"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MY COURSES SHEET ══ -->
+<div class="overlay" id="ovCart">
+  <div class="sheet">
+    <div class="shdl"></div>
+    <div class="sh-hdr"><div class="sh-title">📚 My Enrolled Courses</div><div class="sh-close" onclick="closeOv('ovCart')">✕</div></div>
+    <div class="sh-body" id="cartBody"></div>
+    <div class="sh-foot" id="cartFoot"></div>
+  </div>
+</div>
+
+<script>
+const WA = '2348000000000';
+
+// ════════════════════════════════════
+// DATA — INSTITUTIONS
+// ════════════════════════════════════
+const institutions = [
+  {id:'prim',icon:'🏫',name:'Primary School',tag:'Pry 1 – Pry 6',badge:''},
+  {id:'jss',icon:'📚',name:'Junior Secondary',tag:'JSS 1 – JSS 3',badge:'pop'},
+  {id:'sss',icon:'🎒',name:'Senior Secondary',tag:'SS 1 – SS 3',badge:'pop'},
+  {id:'fgc',icon:'🏛️',name:'Federal Govt. College',tag:'JSS – SS3',badge:'sb-new'},
+  {id:'uni',icon:'🎓',name:'University',tag:'100L – Postgrad',badge:''},
+  {id:'poly',icon:'🔧',name:'Polytechnic / COE',tag:'ND / HND',badge:''},
+  {id:'pro',icon:'💼',name:'Professional',tag:'ICAN · ACCA · CIPM',badge:'sb-pro'},
+  {id:'dist',icon:'🌐',name:'Distance / Open',tag:'NOUN · NOU',badge:'sb-new'},
+];
+
+// ════════════════════════════════════
+// DATA — CLASSES
+// ════════════════════════════════════
+const classByInst = {
+  prim: ['Primary 1','Primary 2','Primary 3','Primary 4','Primary 5','Primary 6'],
+  jss:  ['JSS 1','JSS 2','JSS 3 (BECE)'],
+  sss:  ['SS 1','SS 2','SS 3 (WAEC/NECO)'],
+  fgc:  ['JSS 1','JSS 2','JSS 3','SS 1','SS 2','SS 3'],
+  uni:  ['100 Level','200 Level','300 Level','400 Level','500 Level','Postgraduate'],
+  poly: ['ND 1','ND 2','HND 1','HND 2'],
+  pro:  ['Foundation','Intermediate','Professional','Fellow (FCAS)'],
+  dist: ['100 Level','200 Level','300 Level','400 Level'],
+};
+
+// ════════════════════════════════════
+// DATA — EXAM TYPES
+// ════════════════════════════════════
+const examsByInst = {
+  prim: ['Common Entrance','Primary Leaving Cert','School Internal Exams'],
+  jss:  ['BECE (Junior WAEC)','NECO Junior','School Internal Exams'],
+  sss:  ['WAEC (SSCE)','NECO (SSCE)','JAMB (UTME)','GCE (Private)','NABTEB'],
+  fgc:  ['WAEC (SSCE)','NECO (SSCE)','JAMB (UTME)','Common Entrance'],
+  uni:  ['JAMB (Direct Entry)','University Semester Exams','Post-UTME','Final Year Project'],
+  poly: ['ND Semester Exams','HND Semester Exams','NABTEB'],
+  pro:  ['ICAN (ATS/Foundation)','ICAN (Skills Level)','ICAN (Professional)','ACCA (Applied Knowledge)','ACCA (Applied Skills)','ACCA (Strategic Professional)','CIPM','CIMA','NIM','CFA Level 1–3','PMP Certification','NITDA Certification'],
+  dist: ['University Semester Exams','JAMB (Direct Entry)'],
+};
+
+// ════════════════════════════════════
+// DATA — SUBJECTS & COURSES
+// ════════════════════════════════════
+const allCourses = [
+  // Secondary
+  {id:'c1',icon:'📐',name:'WAEC Mathematics Masterclass',subj:'Mathematics',cat:'secondary',level:'adv',duration:'12 weeks',price:'₦15,000',num:15000,exam:'WAEC',rating:'4.9',enrolled:2340,desc:'Complete WAEC prep — algebra, geometry, statistics and past questions.',inst:'sss',badge:'sb-pop'},
+  {id:'c2',icon:'📝',name:'English Language Excellence',subj:'English',cat:'secondary',level:'int',duration:'8 weeks',price:'₦12,000',num:12000,exam:'WAEC/NECO',rating:'4.8',enrolled:3100,desc:'Oral, essay, comprehension and summary mastery for WAEC and NECO.',inst:'sss',badge:'sb-pop'},
+  {id:'c3',icon:'⚗️',name:'Physics & Calculations',subj:'Physics',cat:'secondary',level:'adv',duration:'10 weeks',price:'₦14,000',num:14000,exam:'WAEC',rating:'4.7',enrolled:1820,desc:'Mechanics, electricity, waves, optics and quantitative problem-solving.',inst:'sss',badge:''},
+  {id:'c4',icon:'🧪',name:'Chemistry Crash Course',subj:'Chemistry',cat:'secondary',level:'int',duration:'6 weeks',price:'₦11,000',num:11000,exam:'WAEC/NECO',rating:'4.6',enrolled:1540,desc:'Organic and inorganic chemistry, equations and periodic table deep dives.',inst:'sss',badge:''},
+  {id:'c5',icon:'🌿',name:'Biology for JAMB & WAEC',subj:'Biology',cat:'secondary',level:'beg',duration:'10 weeks',price:'₦13,000',num:13000,exam:'JAMB',rating:'4.8',enrolled:2800,desc:'Cell biology, genetics, ecology and physiology — all exam-ready.',inst:'sss',badge:'sb-new'},
+  {id:'c6',icon:'💻',name:'ICT & Digital Skills',subj:'ICT',cat:'secondary',level:'beg',duration:'6 weeks',price:'₦9,000',num:9000,exam:'WAEC',rating:'4.7',enrolled:980,desc:'Hardware, software, networking, spreadsheets and coding basics.',inst:'sss',badge:'sb-new'},
+  {id:'c7',icon:'📈',name:'Economics & Commerce',subj:'Economics',cat:'secondary',level:'int',duration:'8 weeks',price:'₦11,500',num:11500,exam:'WAEC/NECO',rating:'4.6',enrolled:1450,desc:'Micro/macroeconomics, supply & demand, fiscal policy and trade.',inst:'sss',badge:''},
+  {id:'c8',icon:'🧮',name:'Financial Accounting WAEC',subj:'Accounting',cat:'secondary',level:'adv',duration:'10 weeks',price:'₦12,000',num:12000,exam:'WAEC/NECO',rating:'4.8',enrolled:720,desc:'Double-entry bookkeeping, trial balance and final accounts for WAEC.',inst:'sss',badge:''},
+  // JAMB
+  {id:'j1',icon:'🎯',name:'JAMB UTME Mathematics',subj:'Mathematics',cat:'jamb',level:'adv',duration:'6 weeks',price:'₦10,000',num:10000,exam:'JAMB',rating:'4.9',enrolled:5200,desc:'Past questions, CBT drills, speed & accuracy training for UTME Maths.',inst:'sss',badge:'sb-pop'},
+  {id:'j2',icon:'📗',name:'JAMB Use of English',subj:'English',cat:'jamb',level:'int',duration:'4 weeks',price:'₦8,000',num:8000,exam:'JAMB',rating:'4.8',enrolled:6100,desc:'Comprehension, synonyms, antonyms, register and oral English for UTME.',inst:'sss',badge:'sb-pop'},
+  {id:'j3',icon:'🧬',name:'JAMB Biology Intensive',subj:'Biology',cat:'jamb',level:'adv',duration:'5 weeks',price:'₦9,500',num:9500,exam:'JAMB',rating:'4.7',enrolled:3400,desc:'Full UTME biology syllabus — genetics, ecology, cell division and more.',inst:'sss',badge:''},
+  {id:'j4',icon:'⚛️',name:'JAMB Physics Bootcamp',subj:'Physics',cat:'jamb',level:'adv',duration:'5 weeks',price:'₦9,500',num:9500,exam:'JAMB',rating:'4.7',enrolled:2900,desc:'Quantitative physics, optics, thermodynamics and past question mastery.',inst:'sss',badge:''},
+  // University
+  {id:'u1',icon:'📊',name:'Introduction to Statistics',subj:'Statistics',cat:'university',level:'int',duration:'10 weeks',price:'₦18,000',num:18000,exam:'University Exams',rating:'4.7',enrolled:890,desc:'Probability, regression, hypothesis testing and data interpretation.',inst:'uni',badge:''},
+  {id:'u2',icon:'⚖️',name:'Constitutional Law Fundamentals',subj:'Law',cat:'university',level:'adv',duration:'12 weeks',price:'₦22,000',num:22000,exam:'University Exams',rating:'4.8',enrolled:540,desc:'Nigerian constitution, fundamental rights, legislative powers and case law.',inst:'uni',badge:'sb-new'},
+  {id:'u3',icon:'🔬',name:'Organic Chemistry University',subj:'Chemistry',cat:'university',level:'adv',duration:'10 weeks',price:'₦17,000',num:17000,exam:'University Exams',rating:'4.6',enrolled:620,desc:'Advanced organic reactions, mechanisms, stereochemistry and synthesis.',inst:'uni',badge:''},
+  {id:'u4',icon:'💹',name:'Financial Management 200L',subj:'Finance',cat:'university',level:'int',duration:'8 weeks',price:'₦16,000',num:16000,exam:'University Exams',rating:'4.7',enrolled:730,desc:'Capital budgeting, cost of capital, working capital management.',inst:'uni',badge:''},
+  // Professional
+  {id:'p1',icon:'🧾',name:'ICAN Foundation Level',subj:'Accounting',cat:'professional',level:'pro',duration:'16 weeks',price:'₦35,000',num:35000,exam:'ICAN',rating:'4.9',enrolled:1240,desc:'Business Law, Financial Accounting, Quantitative Techniques & more — ATS Level.',inst:'pro',badge:'sb-pro'},
+  {id:'p2',icon:'📉',name:'ICAN Skills Level — SFR',subj:'Financial Reporting',cat:'professional',level:'pro',duration:'14 weeks',price:'₦38,000',num:38000,exam:'ICAN',rating:'4.8',enrolled:870,desc:'Statements of Financial Reporting, IFRS & Nigerian GAAP application.',inst:'pro',badge:'sb-pro'},
+  {id:'p3',icon:'🌍',name:'ACCA Applied Knowledge',subj:'Accounting',cat:'professional',level:'pro',duration:'12 weeks',price:'₦42,000',num:42000,exam:'ACCA',rating:'4.9',enrolled:650,desc:'BT, MA & FA — business, management and financial accounting.',inst:'pro',badge:'sb-pro'},
+  {id:'p4',icon:'👥',name:'CIPM Foundation',subj:'Human Resources',cat:'professional',level:'pro',duration:'10 weeks',price:'₦28,000',num:28000,exam:'CIPM',rating:'4.7',enrolled:430,desc:'HR management, employment law, industrial relations and recruitment.',inst:'pro',badge:'sb-pro'},
+  {id:'p5',icon:'📋',name:'PMP Project Management',subj:'Project Management',cat:'professional',level:'pro',duration:'8 weeks',price:'₦45,000',num:45000,exam:'PMP',rating:'4.8',enrolled:310,desc:'PMBOK 7th edition — initiating, planning, executing and closing projects.',inst:'pro',badge:'sb-pro'},
+  {id:'p6',icon:'💡',name:'Digital Marketing Certificate',subj:'Marketing',cat:'professional',level:'beg',duration:'6 weeks',price:'₦20,000',num:20000,exam:'Google / Meta Cert',rating:'4.7',enrolled:1800,desc:'SEO, social media, email marketing, Google Ads and analytics.',inst:'pro',badge:'sb-new'},
+  {id:'p7',icon:'🖥️',name:'Data Analysis with Excel & Python',subj:'Data Science',cat:'professional',level:'int',duration:'10 weeks',price:'₦32,000',num:32000,exam:'Certificate',rating:'4.8',enrolled:1100,desc:'Pandas, data visualisation, pivot tables and business intelligence.',inst:'pro',badge:'sb-new'},
+  {id:'p8',icon:'🔐',name:'Cybersecurity Fundamentals',subj:'IT Security',cat:'professional',level:'int',duration:'8 weeks',price:'₦38,000',num:38000,exam:'CompTIA / Certificate',rating:'4.8',enrolled:490,desc:'Network security, ethical hacking basics, incident response and GDPR.',inst:'pro',badge:'sb-new'},
+  // Junior / Primary
+  {id:'k1',icon:'🔢',name:'Primary Maths Mastery',subj:'Mathematics',cat:'primary',level:'beg',duration:'8 weeks',price:'₦7,500',num:7500,exam:'Common Entrance',rating:'4.9',enrolled:3200,desc:'Numbers, fractions, word problems and basic geometry for Pry 4–6.',inst:'prim',badge:'sb-pop'},
+  {id:'k2',icon:'✏️',name:'JSS English Language',subj:'English',cat:'jss',level:'beg',duration:'6 weeks',price:'₦8,500',num:8500,exam:'BECE',rating:'4.8',enrolled:2100,desc:'Reading comprehension, letter writing, grammar and vocabulary for JSS.',inst:'jss',badge:''},
+  {id:'k3',icon:'🧮',name:'JSS Mathematics',subj:'Mathematics',cat:'jss',level:'beg',duration:'6 weeks',price:'₦8,500',num:8500,exam:'BECE',rating:'4.8',enrolled:2400,desc:'Algebra, geometry, statistics basics and BECE past questions.',inst:'jss',badge:'sb-pop'},
+];
+
+const consultants = [
+  {id:'dr1',av:'👨‍🏫',type:'academic',name:'Dr. Emeka Okafor',spec:'Mathematics & Physics — WAEC/JAMB',exp:'14 yrs',rating:'★★★★★ 4.9',avail:'Available Today',fee:'₦5,000',per:'/session'},
+  {id:'dr2',av:'👩‍🏫',type:'academic',name:'Mrs. Adaeze Nwosu',spec:'English Language & Literature Coach',exp:'11 yrs',rating:'★★★★★ 4.8',avail:'Available Today',fee:'₦4,500',per:'/session'},
+  {id:'dr3',av:'👨‍💼',type:'academic',name:'Mr. Chukwudi Eze',spec:'JAMB Strategy & University Admission',exp:'9 yrs',rating:'★★★★☆ 4.7',avail:'2 slots open',fee:'₦6,000',per:'/session'},
+  {id:'dr4',av:'👩‍🔬',type:'academic',name:'Dr. Fatima Al-Hassan',spec:'Chemistry & Biology — Medical School Prep',exp:'12 yrs',rating:'★★★★★ 4.9',avail:'Available Tomorrow',fee:'₦5,500',per:'/session'},
+  {id:'pr1',av:'👨‍💻',type:'professional',name:'Mr. Tunde Adeyemi',spec:'ICAN Foundation & Skills Level',exp:'10 yrs',rating:'★★★★★ 4.9',avail:'Available Today',fee:'₦8,000',per:'/session'},
+  {id:'pr2',av:'👩‍💼',type:'professional',name:'Mrs. Ngozi Obi-Nwosu',spec:'ACCA & International Accounting',exp:'13 yrs',rating:'★★★★★ 4.9',avail:'Available Today',fee:'₦9,000',per:'/session'},
+  {id:'pr3',av:'👨‍🏭',type:'professional',name:'Mr. Seun Akinwale',spec:'PMP, Data Science & Digital Marketing',exp:'8 yrs',rating:'★★★★☆ 4.7',avail:'Limited slots',fee:'₦7,500',per:'/session'},
+  {id:'pr4',av:'👩‍⚕️',type:'professional',name:'Dr. Amina Suleiman',spec:'CIPM & HR Strategy Consultant',exp:'11 yrs',rating:'★★★★★ 4.8',avail:'Available Tomorrow',fee:'₦7,000',per:'/session'},
+];
+
+const pins = [
+  {id:'wn1',icon:'📋',name:'WAEC Result Checker',price:'₦1,500',desc:'2024/2025 SSCE Results',badge:'sb-pop'},
+  {id:'wn2',icon:'📋',name:'NECO Result Checker',price:'₦1,200',desc:'2024 SSCE Results',badge:'sb-new'},
+  {id:'wn3',icon:'📋',name:'JAMB Result Checker',price:'₦1,000',desc:'2024/2025 UTME Results',badge:'sb-exam'},
+  {id:'wn4',icon:'🎫',name:'WAEC Scratch Card',price:'₦3,500',desc:'Full examination PIN',badge:'sb-pop'},
+  {id:'wn5',icon:'🎫',name:'NECO Scratch Card',price:'₦2,800',desc:'Full examination PIN',badge:''},
+  {id:'wn6',icon:'🎫',name:'JAMB Form / CAPS',price:'₦5,700',desc:'2025 UTME Registration',badge:'sb-exam'},
+  {id:'wn7',icon:'📜',name:'NABTEB Scratch Card',price:'₦2,500',desc:'Technical result checking',badge:''},
+  {id:'wn8',icon:'📜',name:'GCE (Private) Card',price:'₦3,000',desc:'2024 November/December',badge:''},
+  {id:'wn9',icon:'🏢',name:'ICAN Exam Registration',price:'₦25,000',desc:'ICAN May/November Diet',badge:'sb-pro'},
+  {id:'wn10',icon:'🌍',name:'ACCA Exam Voucher',price:'₦45,000',desc:'Applied Knowledge papers',badge:'sb-pro'},
+];
+
+const quizBank = {
+  math:[
+    {q:'Solve for x: 3x + 7 = 22',opts:['x = 3','x = 4','x = 5','x = 6'],ans:2,exp:'3x = 22 − 7 = 15, so x = 15 ÷ 3 = 5'},
+    {q:'What is the area of a circle with radius 7cm? (π = 22/7)',opts:['144 cm²','154 cm²','162 cm²','176 cm²'],ans:1,exp:'Area = πr² = (22/7) × 7² = 154 cm²'},
+    {q:'Simplify: 2³ × 2⁴',opts:['2⁶','2⁷','2¹²','4⁷'],ans:1,exp:'2³ × 2⁴ = 2^(3+4) = 2⁷'},
+  ],
+  eng:[
+    {q:'Choose the correct sentence:',opts:['He don\'t like books.','He doesn\'t likes books.','He doesn\'t like books.','Him doesn\'t like books.'],ans:2,exp:'"He" is 3rd person singular — use "doesn\'t" + base verb "like".'},
+    {q:'Which is an antonym of "benevolent"?',opts:['Kind','Generous','Malevolent','Charitable'],ans:2,exp:'"Malevolent" means wishing harm — opposite of benevolent.'},
+    {q:'Identify the figure of speech: "The wind whispered secrets."',opts:['Simile','Metaphor','Personification','Hyperbole'],ans:2,exp:'Giving human actions to non-human things = Personification.'},
+  ],
+  phy:[
+    {q:'A car travels 120 km in 2 hours. Average speed?',opts:['60 km/h','80 km/h','30 km/h','100 km/h'],ans:0,exp:'Speed = Distance ÷ Time = 120 ÷ 2 = 60 km/h'},
+    {q:'Which is NOT a vector quantity?',opts:['Velocity','Force','Speed','Acceleration'],ans:2,exp:'Speed has no direction — it is a scalar quantity.'},
+  ],
+  bio:[
+    {q:'Which organelle is the "powerhouse of the cell"?',opts:['Nucleus','Ribosome','Mitochondria','Golgi apparatus'],ans:2,exp:'Mitochondria produce ATP through cellular respiration.'},
+    {q:'Which blood vessel carries blood AWAY from the heart?',opts:['Vein','Capillary','Artery','Venule'],ans:2,exp:'Arteries carry oxygenated blood away from the heart.'},
+  ],
+  acc:[
+    {q:'Which accounting principle says assets = liabilities + equity?',opts:['Prudence','Duality','Going Concern','Matching'],ans:1,exp:'The duality concept forms the basis of the accounting equation.'},
+    {q:'What does IFRS stand for?',opts:['International Financial Reporting Standards','International Fiscal Regulation System','Internal Financial Reconciliation Standards','International Fund Reporting Service'],ans:0,exp:'IFRS = International Financial Reporting Standards, issued by the IASB.'},
+    {q:'Which of these is a current asset?',opts:['Plant & Machinery','Trade Receivables','Goodwill','Long-term Loan'],ans:1,exp:'Trade receivables are expected to be converted to cash within 12 months.'},
+  ],
+  ict:[
+    {q:'What does CPU stand for?',opts:['Computer Processing Unit','Central Processing Unit','Core Power Unit','Central Program Utility'],ans:1,exp:'CPU = Central Processing Unit — the "brain" of the computer.'},
+    {q:'Which protocol is used to send emails?',opts:['FTP','HTTP','SMTP','POP3'],ans:2,exp:'SMTP (Simple Mail Transfer Protocol) is used for sending emails.'},
+  ],
+};
+
+// ════════════════════════════════════
+// STATE
+// ════════════════════════════════════
+let student=null, enrolled=[], xp=0, quizState=null, starVal=5;
+let selectedInst=null, selectedClass=null, selectedExam=null;
+const WA_NUM=WA;
+
+function toWA(msg){window.open(`https://wa.me/${WA_NUM}?text=${encodeURIComponent(msg)}`,'_blank');}
+function ts(){return new Date().toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});}
+
+// ════════════════════════════════════
+// CHAT HELPERS
+// ════════════════════════════════════
+function botMsg(html,extra=''){
+  const a=document.getElementById('msgs');
+  const d=document.createElement('div');d.className='msg bot';
+  d.innerHTML=`<div class="av">🎓</div><div class="mcol"><div class="bbl">${html}</div>${extra}<div class="mtime">${ts()}</div></div>`;
+  a.appendChild(d);a.scrollTop=a.scrollHeight;
+}
+function userMsg(t){
+  const a=document.getElementById('msgs');
+  const d=document.createElement('div');d.className='msg user';
+  d.innerHTML=`<div class="av">👤</div><div class="mcol"><div class="bbl">${t}</div><div class="mtime">${ts()}</div></div>`;
+  a.appendChild(d);a.scrollTop=a.scrollHeight;
+}
+function typing(cb,ms=750){
+  const a=document.getElementById('msgs');
+  const d=document.createElement('div');d.className='msg bot';d.id='typ';
+  d.innerHTML=`<div class="av">🎓</div><div class="mcol"><div class="tbbl"><div class="td"></div><div class="td"></div><div class="td"></div></div></div>`;
+  a.appendChild(d);a.scrollTop=a.scrollHeight;
+  setTimeout(()=>{document.getElementById('typ')?.remove();cb();},ms+Math.random()*200);
+}
+
+// ════════════════════════════════════
+// CONTEXT STRIP
+// ════════════════════════════════════
+function updateCtx(){
+  const inst=institutions.find(i=>i.id===selectedInst);
+  document.getElementById('ctxInst').innerHTML=`🏫 ${inst?inst.name:'Select Institution'}`;
+  document.getElementById('ctxClass').innerHTML=`📚 ${selectedClass||'Select Class'}`;
+  document.getElementById('ctxExam').innerHTML=`📋 ${selectedExam||'Select Exam'}`;
+  document.getElementById('ctxXP').textContent=xp+' XP';
+  document.getElementById('ctxStrip').classList.add('show');
+}
+function addXP(pts){xp+=pts;updateCtx();}
+
+// ════════════════════════════════════
+// STEP 1 — INSTITUTION SELECTION
+// ════════════════════════════════════
+function showInstitutions(){
+  botMsg('👋 First, let\'s set up your profile.<br>Which <strong>type of institution</strong> are you currently in?',
+    `<div class="sel-grid">${institutions.map(inst=>`
+      <div class="sg-card" onclick="pickInstitution('${inst.id}',this)">
+        ${inst.badge?`<span class="sg-badge ${inst.badge}">${inst.badge==='sb-pro'?'PRO':inst.badge==='sb-new'?'NEW':''}</span>`:''}
+        <span class="sg-icon">${inst.icon}</span>
+        <div class="sg-name">${inst.name}</div>
+        <div class="sg-tag">${inst.tag}</div>
+      </div>`).join('')}</div>`);
+}
+
+function pickInstitution(id,el){
+  selectedInst=id;
+  const inst=institutions.find(i=>i.id===id);
+  document.querySelectorAll('.sg-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  userMsg(`${inst.icon} ${inst.name}`);
+  updateCtx();
+  typing(()=>{
+    const classes=classByInst[id]||[];
+    botMsg(`Great! You selected <strong>${inst.name}</strong>.<br>Now choose your <strong>class / level</strong>:`,
+      buildClassPicker(classes,id));
+  },800);
+}
+
+// ════════════════════════════════════
+// STEP 2 — CLASS SELECTION
+// ════════════════════════════════════
+function buildClassPicker(classes,instId){
+  const isPro = instId==='pro';
+  return `<div class="class-row">${classes.map(c=>`
+    <div class="class-btn ${isPro?'gold-btn':''}" onclick="pickClass('${c}',this)">${c}</div>`).join('')}</div>`;
+}
+
+function pickClass(cls,el){
+  selectedClass=cls;
+  document.querySelectorAll('.class-btn').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  userMsg(`📚 ${cls}`);
+  updateCtx();
+  typing(()=>{
+    const exams=examsByInst[selectedInst]||[];
+    botMsg(`Selected: <strong>${cls}</strong> ✅<br>Now choose your <strong>exam type</strong>:`,
+      buildExamPicker(exams));
+  },700);
+}
+
+// ════════════════════════════════════
+// STEP 3 — EXAM TYPE SELECTION
+// ════════════════════════════════════
+function buildExamPicker(exams){
+  const isPro=selectedInst==='pro';
+  return `<div class="sel-grid-3">${exams.map(e=>`
+    <div class="sg-card" onclick="pickExam('${e}',this)" style="padding:9px 6px;">
+      <span class="sg-icon" style="font-size:18px;">${getExamIcon(e)}</span>
+      <div class="sg-name" style="font-size:11px;">${e}</div>
+    </div>`).join('')}</div>`;
+}
+
+function getExamIcon(exam){
+  if(exam.includes('WAEC')) return '📋';
+  if(exam.includes('NECO')) return '📝';
+  if(exam.includes('JAMB')) return '🎯';
+  if(exam.includes('ICAN')) return '🧾';
+  if(exam.includes('ACCA')) return '🌍';
+  if(exam.includes('CIPM')) return '👥';
+  if(exam.includes('PMP')) return '📊';
+  if(exam.includes('NABTEB')) return '🔧';
+  if(exam.includes('Common')) return '✏️';
+  if(exam.includes('BECE')) return '📚';
+  if(exam.includes('University')) return '🎓';
+  if(exam.includes('Data')||exam.includes('Digital')||exam.includes('Cyber')) return '💡';
+  return '📋';
+}
+
+function pickExam(exam,el){
+  selectedExam=exam;
+  document.querySelectorAll('.sg-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  userMsg(`📋 ${exam}`);
+  updateCtx();
+  addXP(10);
+  const inst=institutions.find(i=>i.id===selectedInst);
+  typing(()=>{
+    botMsg(`✅ Profile set!<br><br>🏫 <strong>${inst?.name}</strong> · 📚 <strong>${selectedClass}</strong> · 📋 <strong>${exam}</strong><br><br>You're all set! What would you like to do?`,
+      mainMenu());
+  },800);
+}
+
+// ════════════════════════════════════
+// MAIN MENU
+// ════════════════════════════════════
+function mainMenu(){
+  const isPro=selectedInst==='pro';
+  return `<div class="chips">
+    <div class="chip" onclick="go('classes')">📘 Take a Class</div>
+    ${isPro?`<div class="chip violet" onclick="go('professional')">💼 Professional Courses</div>`:''}
+    <div class="chip" onclick="go('quiz')">✏️ Practice Exam</div>
+    <div class="chip" onclick="go('gallery')">🖼️ Course Gallery</div>
+    <div class="chip" onclick="go('pin')">🔑 Buy Exam Pin</div>
+    <div class="chip" onclick="go('result')">📊 Check Result</div>
+    <div class="chip" onclick="go('consult')">👨‍🏫 Consultant</div>
+    <div class="chip" onclick="go('timetable')">📅 Timetable</div>
+    <div class="chip" onclick="go('progress')">📈 My Progress</div>
+    <div class="chip" onclick="go('promo')">🎁 Promo Codes</div>
+    <div class="chip" onclick="go('feedback')">⭐ Feedback</div>
+    <div class="chip" onclick="openCart()">📚 My Courses (${enrolled.length})</div>
+    <div class="chip" onclick="showInstitutions()">🔄 Change Profile</div>
+  </div>`;
+}
+
+function go(a){
+  const lbl={classes:'📘 Take a Class',professional:'💼 Professional Courses',quiz:'✏️ Practice Exam',gallery:'🖼️ Course Gallery',pin:'🔑 Buy Exam Pin',result:'📊 Check Result',consult:'👨‍🏫 Consultant',timetable:'📅 Timetable',progress:'📈 My Progress',promo:'🎁 Promo Codes',feedback:'⭐ Feedback'};
+  if(lbl[a]) userMsg(lbl[a]);
+  switch(a){
+    case 'classes':doClasses();break;
+    case 'professional':doProfessional();break;
+    case 'quiz':doQuizMenu();break;
+    case 'gallery':doGallery();break;
+    case 'pin':doPin();break;
+    case 'result':openOv('ovResult');break;
+    case 'consult':doConsult();break;
+    case 'timetable':openOv('ovTimetable');break;
+    case 'progress':doProgress();break;
+    case 'promo':doPromo();break;
+    case 'feedback':openOv('ovFeedback');break;
+  }
+}
+
+// ════════════════════════════════════
+// GALLERY
+// ════════════════════════════════════
+function buildGallery(items,title){
+  if(!items.length) return '<p style="color:var(--text-muted);font-size:13px;margin-top:8px;">No courses found for this selection.</p>';
+  window._galItems=items;window._galIdx=0;
+  const bgColors=['#E8F4EE','#EEF0E8','#E8EEF4','#F4EEE8','#F0E8F4','#E8F4F4','#F4F0E8','#EAF4E8','#F4EAF0','#EAF0F4'];
+  const slides=items.map((c,i)=>`
+    <div class="gal-slide">
+      <div class="course-card">
+        <div class="cc-top" style="background:${bgColors[i%bgColors.length]};" onclick="openCourseDetail('${c.id}')">
+          <span class="cc-top-icon">${c.icon}</span>
+          <span class="cc-lvl lv-${c.level}">${c.level==='beg'?'Beginner':c.level==='int'?'Intermediate':c.level==='pro'?'Professional':'Advanced'}</span>
+          <span class="cc-type ${c.cat==='professional'?'ct-prof':c.cat==='jamb'?'ct-jamb':c.cat==='university'?'ct-uni':'ct-waec'}">${c.exam.split('/')[0]}</span>
+          <span class="cc-dur">⏱ ${c.duration}</span>
+        </div>
+        <div class="cc-body">
+          <div class="cc-name">${c.name}</div>
+          <div class="cc-desc">${c.desc}</div>
+          <div class="cc-meta">
+            <span class="cm-tag cm-subj">${c.subj}</span>
+            <span class="cm-tag cm-price">${c.price}</span>
+            <span class="cm-tag cm-rating">★ ${c.rating}</span>
+            ${c.cat==='professional'?`<span class="cm-tag cm-pro">Professional</span>`:''}
+          </div>
+          <div style="font-size:10.5px;color:var(--text-dim);margin-bottom:8px;font-family:'JetBrains Mono',monospace;">${c.enrolled.toLocaleString()} enrolled · ${c.exam}</div>
+          <div class="cc-btns">
+            <button class="cc-btn btn-ghost" onclick="openCourseDetail('${c.id}')">📖 Details</button>
+            <button class="cc-btn ${c.cat==='professional'?'btn-violet':'btn-primary'}" onclick="enrollCourse('${c.id}')">✅ Enrol</button>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+  const dots=items.map((_,i)=>`<div class="gdot ${i===0?'on':''}" onclick="goSlide(${i})" id="gd-${i}"></div>`).join('');
+  return `<div class="gal-wrap">
+    <div class="gal-hdr"><span class="gal-title">${title} — ${items.length}</span><span class="gal-cnt" id="galCnt">1 / ${items.length}</span></div>
+    <div class="gal-outer" id="galOut"><div class="gal-track" id="galTrk">${slides}</div></div>
+    <div class="gal-nav">
+      <div class="garrow" onclick="shiftGal(-1)">◀</div>
+      <div class="gdots" id="galDts">${dots}</div>
+      <div class="garrow" onclick="shiftGal(1)">▶</div>
+    </div>
+  </div>`;
+}
+
+function shiftGal(d){
+  const items=window._galItems||[];if(!items.length)return;
+  window._galIdx=(window._galIdx+d+items.length)%items.length;updateGal();
+}
+function goSlide(i){window._galIdx=i;updateGal();}
+function updateGal(){
+  const i=window._galIdx,items=window._galItems||[];
+  const tr=document.getElementById('galTrk');if(tr)tr.style.transform=`translateX(-${i*100}%)`;
+  const cnt=document.getElementById('galCnt');if(cnt)cnt.textContent=`${i+1} / ${items.length}`;
+  document.querySelectorAll('.gdot').forEach((d,j)=>d.classList.toggle('on',j===i));
+}
+let tS=0;
+document.addEventListener('touchstart',e=>{if(e.target.closest('#galOut'))tS=e.touches[0].clientX;});
+document.addEventListener('touchend',e=>{if(e.target.closest('#galOut')&&tS){const dx=e.changedTouches[0].clientX-tS;if(Math.abs(dx)>40)shiftGal(dx<0?1:-1);tS=0;}});
+
+// ════════════════════════════════════
+// CLASSES
+// ════════════════════════════════════
+function doClasses(){
+  const filtered = selectedInst
+    ? allCourses.filter(c=>c.inst===selectedInst||c.cat==='secondary'&&['sss','fgc'].includes(selectedInst)||c.cat==='jamb'&&['sss','fgc'].includes(selectedInst)||c.cat==='jss'&&selectedInst==='jss'||c.cat==='primary'&&selectedInst==='prim'||c.cat==='university'&&selectedInst==='uni'||c.cat==='professional'&&selectedInst==='pro')
+    : allCourses.slice(0,8);
+  const list = filtered.length ? filtered : allCourses.slice(0,8);
+  typing(()=>{
+    botMsg(`📘 Courses for <strong>${institutions.find(i=>i.id===selectedInst)?.name||'All Students'}</strong> — ${selectedClass||''} ${selectedExam?`· ${selectedExam}`:''}`,
+      buildGallery(list,'Your Courses')+
+      `<div class="chips" style="margin-top:8px;">
+        <div class="chip" onclick="go('gallery')">🖼️ All Courses</div>
+        <div class="chip" onclick="go('quiz')">✏️ Practice</div>
+        <div class="chip" onclick="openCart()">📚 My Courses</div>
+      </div>`);
+  });
+}
+
+function doGallery(){
+  typing(()=>{
+    botMsg('🖼️ Browse the full course catalogue — swipe to explore:',
+      buildGallery(allCourses,'All Courses')+
+      `<div class="sec-hdr"><div class="sec-line"></div><div class="sec-label">Filter by type</div><div class="sec-line"></div></div>
+      <div class="chips">
+        <div class="chip" onclick="filterCourses('secondary')">📚 Secondary</div>
+        <div class="chip" onclick="filterCourses('jamb')">🎯 JAMB Prep</div>
+        <div class="chip" onclick="filterCourses('university')">🎓 University</div>
+        <div class="chip violet" onclick="filterCourses('professional')">💼 Professional</div>
+        <div class="chip" onclick="filterCourses('primary')">✏️ Primary/JSS</div>
+      </div>`);
+  });
+}
+
+function filterCourses(cat){
+  userMsg(cat.charAt(0).toUpperCase()+cat.slice(1)+' Courses');
+  const list=allCourses.filter(c=>c.cat===cat||c.cat==='jss'&&cat==='primary');
+  typing(()=>{
+    botMsg(`<strong>${cat.charAt(0).toUpperCase()+cat.slice(1)}</strong> — ${list.length} courses:`,
+      buildGallery(list,cat+' Courses')+mainMenu());
+  });
+}
+
+// ════════════════════════════════════
+// PROFESSIONAL COURSES
+// ════════════════════════════════════
+function doProfessional(){
+  const proCourses=allCourses.filter(c=>c.cat==='professional');
+  typing(()=>{
+    botMsg('💼 <strong>Professional Courses & Certifications</strong>',
+      `<div class="sec-hdr"><div class="sec-line"></div><div class="sec-label">Choose a path</div><div class="sec-line"></div></div>
+      <div class="sel-grid">
+        <div class="sg-card" onclick="filterProCourses('ICAN','🧾')"><span class="sg-icon">🧾</span><div class="sg-name">ICAN</div><div class="sg-tag">Accounting</div></div>
+        <div class="sg-card" onclick="filterProCourses('ACCA','🌍')"><span class="sg-icon">🌍</span><div class="sg-name">ACCA</div><div class="sg-tag">International Accounting</div></div>
+        <div class="sg-card" onclick="filterProCourses('CIPM','👥')"><span class="sg-icon">👥</span><div class="sg-name">CIPM</div><div class="sg-tag">Human Resources</div></div>
+        <div class="sg-card" onclick="filterProCourses('PMP','📊')"><span class="sg-icon">📊</span><div class="sg-name">PMP</div><div class="sg-tag">Project Management</div></div>
+        <div class="sg-card" onclick="filterProCourses('Digital','💡')"><span class="sg-icon">💡</span><div class="sg-name">Digital Skills</div><div class="sg-tag">Marketing · Data · Tech</div></div>
+        <div class="sg-card" onclick="filterProCourses('all','💼')"><span class="sg-icon">💼</span><div class="sg-name">All Pro Courses</div><div class="sg-tag">${proCourses.length} available</div></div>
+      </div>`);
+  });
+}
+
+function filterProCourses(filter,icon){
+  userMsg(`${icon} ${filter} Courses`);
+  const list=filter==='all'?allCourses.filter(c=>c.cat==='professional'):allCourses.filter(c=>c.cat==='professional'&&(c.exam.includes(filter)||c.subj.toLowerCase().includes(filter.toLowerCase())||c.name.toLowerCase().includes(filter.toLowerCase())));
+  const show=list.length?list:allCourses.filter(c=>c.cat==='professional');
+  typing(()=>{
+    botMsg(`<strong>💼 ${filter==='all'?'All Professional':filter} Courses</strong> — ${show.length} available:`,
+      buildGallery(show,filter+' Courses')+mainMenu());
+  });
+}
+
+// ════════════════════════════════════
+// COURSE DETAIL
+// ════════════════════════════════════
+function openCourseDetail(id){
+  const c=allCourses.find(x=>x.id===id);if(!c)return;
+  const already=enrolled.some(e=>e.id===id);
+  const isPro=c.cat==='professional';
+  typing(()=>{
+    botMsg(`<strong>${c.icon} ${c.name}</strong>`,
+      `<div class="info-card">
+        <div class="ir"><div class="ir-icon">📚</div><div class="ir-text"><b>Subject:</b> ${c.subj}</div></div>
+        <div class="ir"><div class="ir-icon">🎯</div><div class="ir-text"><b>Level:</b> ${c.level==='beg'?'Beginner':c.level==='int'?'Intermediate':c.level==='pro'?'Professional':'Advanced'}</div></div>
+        <div class="ir"><div class="ir-icon">⏱</div><div class="ir-text"><b>Duration:</b> ${c.duration}</div></div>
+        <div class="ir"><div class="ir-icon">📝</div><div class="ir-text"><b>Exam:</b> ${c.exam}</div></div>
+        <div class="ir"><div class="ir-icon">👥</div><div class="ir-text"><b>Enrolled:</b> ${c.enrolled.toLocaleString()} students</div></div>
+        <div class="ir"><div class="ir-icon">💰</div><div class="ir-text"><b>Price:</b> ${c.price}</div></div>
+        <div class="ir"><div class="ir-icon">⭐</div><div class="ir-text"><b>Rating:</b> ★ ${c.rating}</div></div>
+        ${isPro?`<div class="ir"><div class="ir-icon">💼</div><div class="ir-text"><b>Type:</b> Professional Certification Course</div></div>`:''}
+      </div>
+      <div class="chips" style="margin-top:8px;">
+        ${already?'<div class="chip" style="background:rgba(18,184,134,0.1);border-color:var(--mint);color:var(--green2);">✅ Already Enrolled</div>':`<div class="chip gold" onclick="enrollCourse('${c.id}')">✅ Enrol Now</div>`}
+        <div class="chip" onclick="startLesson('${c.id}')">▶ Start Lesson</div>
+      </div>`);
+  },600);
+}
+
+function enrollCourse(id){
+  const c=allCourses.find(x=>x.id===id);if(!c)return;
+  if(!enrolled.some(e=>e.id===id)){
+    enrolled.push(c);
+    document.getElementById('cartBadge').textContent=enrolled.length;
+    addXP(50);
+    document.getElementById('enCourse').value=c.name;
+    typing(()=>{
+      botMsg(`🎉 <strong>Enrolled in ${c.name}!</strong> +50 XP`,
+        `<div class="achievement"><div class="ach-icon">🏅</div><div><div class="ach-title">Course Enrolled!</div><div class="ach-desc">${c.name}</div></div></div>
+        <div class="chips" style="margin-top:8px;">
+          <div class="chip" onclick="startLesson('${id}')">▶ Start Lesson</div>
+          <div class="chip gold" onclick="openOv('ovEnroll')">📲 Confirm via WhatsApp</div>
+          <div class="chip" onclick="openCart()">📚 My Courses</div>
+        </div>`);
+    },400);
+  } else {
+    typing(()=>{botMsg(`You're already enrolled in <strong>${c.name}</strong>!`,`<div class="chips"><div class="chip" onclick="startLesson('${id}')">▶ Continue Lesson</div></div>`);},400);
+  }
+}
+
+function startLesson(id){
+  const c=allCourses.find(x=>x.id===id);if(!c)return;
+  const subKey=c.subj.toLowerCase().split(' ')[0];
+  const qSet=quizBank[subKey]||quizBank.math;
+  userMsg(`▶ Start — ${c.name}`);
+  typing(()=>{
+    botMsg(`📖 <strong>Lesson 1 — ${c.name}</strong><br><br>Welcome! This lesson covers the core fundamentals. Complete the quiz to test your understanding and earn XP.`,
+      buildQuiz(qSet,c.subj));
+  });
+}
+
+// ════════════════════════════════════
+// QUIZ
+// ════════════════════════════════════
+function doQuizMenu(){
+  const isPro=selectedInst==='pro';
+  typing(()=>{
+    botMsg('✏️ <strong>Practice Exams</strong> — Choose a subject:',
+      `<div class="chips">
+        <div class="chip" onclick="startQuiz('math')">📐 Mathematics</div>
+        <div class="chip" onclick="startQuiz('eng')">📝 English</div>
+        <div class="chip" onclick="startQuiz('phy')">⚗️ Physics</div>
+        <div class="chip" onclick="startQuiz('bio')">🌿 Biology</div>
+        ${isPro?`<div class="chip violet" onclick="startQuiz('acc')">🧾 Accounting (ICAN)</div>
+        <div class="chip violet" onclick="startQuiz('ict')">💻 ICT / Data</div>`:`<div class="chip" onclick="startQuiz('acc')">🧮 Accounting</div>
+        <div class="chip" onclick="startQuiz('ict')">💻 ICT</div>`}
+      </div>`);
+  });
+}
+
+function startQuiz(subj){
+  const labels={math:'📐 Mathematics',eng:'📝 English',phy:'⚗️ Physics',bio:'🌿 Biology',acc:'🧾 Accounting',ict:'💻 ICT'};
+  userMsg(labels[subj]||subj);
+  const qSet=quizBank[subj]||quizBank.math;
+  typing(()=>{
+    botMsg(`✏️ <strong>${labels[subj]||subj} Practice Quiz</strong> — ${qSet.length} questions:`,
+      buildQuiz(qSet,subj));
+  });
+}
+
+function buildQuiz(questions,subject){
+  quizState={questions,subject,current:0,score:0,answered:false};
+  return renderQuestion();
+}
+
+function renderQuestion(){
+  if(!quizState)return '';
+  const q=quizState.questions[quizState.current];
+  const pct=Math.round((quizState.current/quizState.questions.length)*100);
+  return `<div class="quiz-card" id="quizCard">
+    <div class="quiz-progress"><div class="quiz-bar" style="width:${pct}%"></div></div>
+    <div style="font-size:10px;color:var(--text-dim);margin-bottom:8px;font-family:'JetBrains Mono',monospace;">Q${quizState.current+1} of ${quizState.questions.length} · ${quizState.subject}</div>
+    <div class="quiz-q">${q.q}</div>
+    <div class="quiz-opts">${q.opts.map((o,i)=>`
+      <div class="quiz-opt" id="opt-${i}" onclick="answerQ(${i})">
+        <span class="qo-letter">${String.fromCharCode(65+i)}</span>${o}
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+function answerQ(idx){
+  if(!quizState||quizState.answered)return;
+  quizState.answered=true;
+  const q=quizState.questions[quizState.current];
+  const correct=idx===q.ans;
+  if(correct){quizState.score++;addXP(10);}
+  document.querySelectorAll('.quiz-opt').forEach((el,i)=>{
+    el.classList.add('disabled');
+    if(i===q.ans)el.classList.add('correct');
+    else if(i===idx&&!correct)el.classList.add('wrong');
+  });
+  const card=document.getElementById('quizCard');
+  const r=document.createElement('div');
+  r.className=`quiz-result ${correct?'qr-correct':'qr-wrong'}`;
+  r.innerHTML=`${correct?'✅ Correct! +10 XP':'❌ Wrong'} — ${q.exp}`;
+  card.appendChild(r);
+  setTimeout(()=>{
+    quizState.answered=false;quizState.current++;
+    if(quizState.current>=quizState.questions.length){showQuizResult();}
+    else{
+      const area=document.getElementById('msgs');
+      const d=document.createElement('div');d.className='msg bot';
+      d.innerHTML=`<div class="av">🎓</div><div class="mcol"><div class="bbl">Next question:</div>${renderQuestion()}<div class="mtime">${ts()}</div></div>`;
+      area.appendChild(d);area.scrollTop=area.scrollHeight;
+    }
+  },2000);
+}
+
+function showQuizResult(){
+  const pct=Math.round((quizState.score/quizState.questions.length)*100);
+  const grade=pct>=80?'A':pct>=65?'B':pct>=50?'C':pct>=40?'D':'F';
+  const passed=pct>=50;
+  addXP(passed?30:10);
+  typing(()=>{
+    botMsg(`🎓 Quiz complete! <strong>${quizState.score}/${quizState.questions.length}</strong> correct (${pct}%)`,
+      `<div class="result-card">
+        <div class="rc-grade">${grade}</div>
+        <div class="rc-status">${passed?'🎉 PASSED':'📚 NEEDS IMPROVEMENT'}</div>
+        <div class="rc-name">${quizState.subject} · ${quizState.score}/${quizState.questions.length} correct · ${pct}%</div>
+      </div>
+      <div class="chips" style="margin-top:8px;">
+        <div class="chip" onclick="startQuiz('${quizState.subject}')">🔄 Try Again</div>
+        <div class="chip" onclick="go('consult')">👨‍🏫 Get Tutoring</div>
+        <div class="chip gold" onclick="go('pin')">🔑 Buy Exam Pin</div>
+      </div>`);
+  },800);
+  quizState=null;
+}
+
+// ════════════════════════════════════
+// PINS
+// ════════════════════════════════════
+function doPin(){
+  typing(()=>{
+    botMsg('🔑 <strong>Purchase Exam Pins & Scratch Cards</strong>',
+      `<div class="pin-grid">${pins.map(p=>`
+        <div class="pin-card" onclick="buyPin('${p.id}')">
+          ${p.badge?`<span class="pin-badge ${p.badge}">${p.badge==='sb-pop'?'Popular':p.badge==='sb-new'?'New':p.badge==='sb-pro'?'PRO':'Exam'}</span>`:''}
+          <span class="pin-icon">${p.icon}</span>
+          <div class="pin-name">${p.name}</div>
+          <div class="pin-price">${p.price}</div>
+          <div class="pin-desc">${p.desc}</div>
+        </div>`).join('')}</div>`);
+  });
+}
+
+function buyPin(id){
+  const p=pins.find(x=>x.id===id);
+  if(p) document.getElementById('pnExam').value=p.name.replace(' Scratch Card','').replace(' Result Checker','').replace(' Form / CAPS','').replace(' Exam Registration','').replace(' Exam Voucher','');
+  openOv('ovPin');
+}
+
+// ════════════════════════════════════
+// CONSULTANTS
+// ════════════════════════════════════
+function doConsult(){
+  const isPro=selectedInst==='pro';
+  const acad=consultants.filter(c=>c.type==='academic');
+  const pro=consultants.filter(c=>c.type==='professional');
+  typing(()=>{
+    botMsg('👨‍🏫 <strong>Educational Consultants</strong> — Book a 1-on-1 session:',
+      `<div class="sec-hdr"><div class="sec-line"></div><div class="sec-label">Academic Consultants</div><div class="sec-line"></div></div>
+      ${acad.map(c=>consultCard(c)).join('')}
+      <div class="sec-hdr"><div class="sec-line"></div><div class="sec-label">Professional Exam Coaches</div><div class="sec-line"></div></div>
+      ${pro.map(c=>consultCard(c)).join('')}`);
+  });
+}
+
+function consultCard(c){
+  return `<div class="consult-card" onclick="bookConsultant('${c.id}')">
+    <div class="cons-av ${c.type==='professional'?'pro':''}">${c.av}</div>
+    <div style="flex:1;">
+      <div class="cons-name">${c.name}</div>
+      <div class="cons-spec">${c.spec}</div>
+      <div class="cons-meta">
+        <span class="cm cm-avail">${c.avail}</span>
+        <span class="cm cm-exp">${c.exp}</span>
+        <span class="cm cm-rate">${c.rating}</span>
+      </div>
+    </div>
+    <div class="cons-fee"><div class="cf-price">${c.fee}</div><div class="cf-per">${c.per}</div></div>
+  </div>`;
+}
+
+function bookConsultant(id){
+  const c=consultants.find(x=>x.id===id);
+  document.getElementById('csTitle').textContent=`📞 Book — ${c.name}`;
+  document.getElementById('csConsultant').value=c.name+' ('+c.spec+')';
+  if(selectedInst) document.getElementById('csInst').value=institutions.find(i=>i.id===selectedInst)?.name||'';
+  if(selectedClass) document.getElementById('csClass').value=selectedClass;
+  openOv('ovConsult');
+}
+
+// ════════════════════════════════════
+// TIMETABLE (DEMO)
+// ════════════════════════════════════
+function showDemoTimetable(){
+  closeOv('ovTimetable');
+  const inst=document.getElementById('ttInst').value;
+  const cls=document.getElementById('ttClass').value;
+  const exam=document.getElementById('ttExam').value;
+  const isPro=cls.includes('Level')||cls.includes('ND')||cls.includes('HND')||cls.includes('Foundation');
+  const ttData = isPro ? [
+    {day:'MON',slots:[{t:'8:00–10:00',s:'Financial Accounting',r:'Hall A',st:'done'},{t:'1:00–3:00',s:'Business Law',r:'Room 12',st:'done'}]},
+    {day:'TUE',slots:[{t:'9:00–11:00',s:'Quantitative Techniques',r:'Lab 3',st:'live'},{t:'2:00–4:00',s:'Management & Strategy',r:'Room 5',st:'next'}]},
+    {day:'WED',slots:[{t:'8:00–10:00',s:'Taxation',r:'Hall B',st:'free'},{t:'11:00–1:00',s:'Audit & Assurance',r:'Room 9',st:'free'}]},
+    {day:'THU',slots:[{t:'9:00–12:00',s:'Financial Reporting (IFRS)',r:'Hall A',st:'free'}]},
+    {day:'FRI',slots:[{t:'8:00–10:00',s:'CBT Practice Session',r:'ICT Centre',st:'free'},{t:'11:00–1:00',s:'Past Questions Review',r:'Hall C',st:'free'}]},
+  ] : [
+    {day:'MON',slots:[{t:'8:00–9:00',s:'Mathematics',r:'Rm 101',st:'done'},{t:'10:00–11:00',s:'English Language',r:'Rm 203',st:'done'},{t:'1:00–2:00',s:'Physics',r:'Lab B',st:'next'}]},
+    {day:'TUE',slots:[{t:'8:00–9:00',s:'Biology',r:'Lab A',st:'free'},{t:'11:00–12:00',s:'Chemistry',r:'Lab C',st:'free'}]},
+    {day:'WED',slots:[{t:'9:00–10:00',s:'Economics',r:'Rm 105',st:'free'},{t:'2:00–3:00',s:'Literature',r:'Rm 208',st:'free'}]},
+    {day:'THU',slots:[{t:'8:00–10:00',s:'Mathematics (Double)',r:'Rm 101',st:'live'},{t:'1:00–2:00',s:'ICT / Computer',r:'ICT Lab',st:'free'}]},
+    {day:'FRI',slots:[{t:'9:00–10:00',s:'Government',r:'Rm 110',st:'free'},{t:'11:00–1:00',s:'English — Essay',r:'Rm 203',st:'free'}]},
+  ];
+  typing(()=>{
+    botMsg(`📅 <strong>Timetable — ${inst} · ${cls}</strong><br><small style="color:var(--text-muted);">${exam}</small>`,
+      `<div class="tt-card">
+        <div class="tt-head"><span>${inst.substring(0,20)}</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;opacity:.8;">${new Date().toLocaleDateString('en-GB',{month:'short',year:'numeric'})}</span></div>
+        ${ttData.map(row=>`
+          <div class="tt-day">
+            <div class="tt-day-lbl">${row.day}</div>
+            <div class="tt-slots">
+              ${row.slots.map(sl=>`
+                <div class="tt-slot">
+                  <span class="tt-time">${sl.t}</span>
+                  <span class="tt-subj">${sl.s}</span>
+                  <span class="tt-room">${sl.r}</span>
+                  <span class="tt-status ${sl.st==='live'?'ts-live':sl.st==='next'?'ts-next':sl.st==='done'?'ts-done':'ts-free'}">${sl.st==='live'?'LIVE NOW':sl.st==='next'?'NEXT':sl.st==='done'?'DONE':'FREE'}</span>
+                </div>`).join('')}
+            </div>
+          </div>`).join('')}
+      </div>
+      <div class="chips" style="margin-top:8px;">
+        <div class="chip" onclick="submitTimetable()">📲 Get Full Timetable on WhatsApp</div>
+        <div class="chip" onclick="go('classes')">📘 Take a Class</div>
+      </div>`);
+  });
+}
+
+// ════════════════════════════════════
+// RESULT DEMO
+// ════════════════════════════════════
+function checkResultDemo(){
+  const exam=document.getElementById('rsExam').value;
+  const name=document.getElementById('rsName').value||'Student';
+  closeOv('ovResult');
+  const subs=exam.includes('ICAN')||exam.includes('ACCA')
+    ? [{s:'Financial Accounting',sc:72},{s:'Business Law',sc:68},{s:'Quant. Techniques',sc:75},{s:'Management',sc:70},{s:'Taxation',sc:65}]
+    : [{s:'Mathematics',sc:72},{s:'English Language',sc:68},{s:'Physics',sc:75},{s:'Chemistry',sc:65},{s:'Biology',sc:80},{s:'Economics',sc:70}];
+  typing(()=>{
+    botMsg(`📊 <strong>${exam} Result</strong> — ${name}`,
+      `<div class="result-card">
+        <div class="rc-grade">B2</div>
+        <div class="rc-status">${subs.length>=5?'🎉 QUALIFIED — 5 CREDITS':'🎉 PASSED'}</div>
+        <div class="rc-name">${name} · ${exam} · ${document.getElementById('rsYear').value}</div>
+        <div class="rc-bars">
+          ${subs.map(s=>`<div class="rcb-row"><span class="rcb-label">${s.s}</span><div class="rcb-track"><div class="rcb-fill" style="width:${s.sc}%"></div></div><span class="rcb-score">${s.sc}%</span></div>`).join('')}
+        </div>
+      </div>
+      <div class="chips" style="margin-top:8px;">
+        <div class="chip" onclick="submitResult()">📲 Full Result on WhatsApp</div>
+        <div class="chip gold" onclick="go('consult')">👨‍🏫 Get Advice</div>
+      </div>`);
+  });
+}
+
+// ════════════════════════════════════
+// PROGRESS
+// ════════════════════════════════════
+function doProgress(){
+  typing(()=>{
+    botMsg('📈 <strong>Your Learning Progress</strong>',
+      `<div class="progress-card">
+        <div class="prog-title">Course Completion</div>
+        ${(enrolled.length?enrolled:allCourses.slice(0,4)).map((c,i)=>{
+          const p=[45,72,30,88][i]||Math.floor(Math.random()*60+20);
+          return `<div class="prog-row"><span class="prog-label">${c.name.substring(0,20)}…</span><div class="prog-track"><div class="prog-fill" style="width:${p}%"></div></div><span class="prog-pct">${p}%</span></div>`;
+        }).join('')}
+      </div>
+      <div class="info-card">
+        <div class="ir"><div class="ir-icon">🏫</div><div class="ir-text"><b>Institution:</b> ${institutions.find(i=>i.id===selectedInst)?.name||'Not set'}</div></div>
+        <div class="ir"><div class="ir-icon">📚</div><div class="ir-text"><b>Class:</b> ${selectedClass||'Not set'}</div></div>
+        <div class="ir"><div class="ir-icon">📋</div><div class="ir-text"><b>Exam:</b> ${selectedExam||'Not set'}</div></div>
+        <div class="ir"><div class="ir-icon">⭐</div><div class="ir-text"><b>XP Earned:</b> ${xp} points</div></div>
+        <div class="ir"><div class="ir-icon">📖</div><div class="ir-text"><b>Courses Enrolled:</b> ${enrolled.length}</div></div>
+      </div>
+      <div class="chips" style="margin-top:8px;"><div class="chip" onclick="go('quiz')">✏️ Practice Now</div><div class="chip" onclick="go('consult')">👨‍🏫 Get Coaching</div></div>`);
+  });
+}
+
+// ════════════════════════════════════
+// PROMO
+// ════════════════════════════════════
+function doPromo(){
+  typing(()=>{
+    botMsg('🎁 <strong>Active Promo Codes</strong>',
+      `<div class="info-card">
+        <div class="ir"><div class="ir-icon">🎁</div><div class="ir-text"><b>STUDY10</b> — 10% off any course <span class="pb-code" onclick="copyCode(this,'STUDY10')" style="font-size:10px;padding:2px 7px;">COPY</span></div></div>
+        <div class="ir"><div class="ir-icon">🆕</div><div class="ir-text"><b>FIRSTCLASS</b> — First course free (1 month) <span class="pb-code" onclick="copyCode(this,'FIRSTCLASS')" style="font-size:10px;padding:2px 7px;">COPY</span></div></div>
+        <div class="ir"><div class="ir-icon">📋</div><div class="ir-text"><b>PIN20</b> — 20% off exam scratch cards <span class="pb-code" onclick="copyCode(this,'PIN20')" style="font-size:10px;padding:2px 7px;">COPY</span></div></div>
+        <div class="ir"><div class="ir-icon">💼</div><div class="ir-text"><b>PROPASS</b> — ₦5,000 off professional courses <span class="pb-code" onclick="copyCode(this,'PROPASS')" style="font-size:10px;padding:2px 7px;">COPY</span></div></div>
+        <div class="ir"><div class="ir-icon">👨‍🏫</div><div class="ir-text"><b>CONSULT50</b> — ₦2,500 off first consultation <span class="pb-code" onclick="copyCode(this,'CONSULT50')" style="font-size:10px;padding:2px 7px;">COPY</span></div></div>
+      </div>
+      <div class="chips"><div class="chip" onclick="go('classes')">📘 Use Now</div></div>`);
+  });
+}
+
+function copyCode(el,c){navigator.clipboard?.writeText(c).catch(()=>{});el.textContent='Copied ✓';setTimeout(()=>el.textContent='COPY',1600);}
+
+// ════════════════════════════════════
+// MY COURSES
+// ════════════════════════════════════
+function openCart(){
+  if(!enrolled.length){
+    document.getElementById('cartBody').innerHTML=`<div style="text-align:center;padding:40px 16px;"><div style="font-size:52px;margin-bottom:12px;">📚</div><div style="color:var(--text-muted);font-size:14px;">No courses enrolled yet.<br>Browse and enrol to get started!</div></div>`;
+    document.getElementById('cartFoot').innerHTML=`<button class="gr-btn" onclick="closeOv('ovCart');go('classes')">📘 Browse Courses</button>`;
+  } else {
+    const total=enrolled.reduce((a,b)=>a+b.num,0);
+    document.getElementById('cartBody').innerHTML=`
+      <div style="background:linear-gradient(135deg,rgba(10,77,60,0.06),rgba(18,184,134,0.04));border:1.5px solid rgba(18,184,134,0.2);border-radius:12px;padding:12px;margin-bottom:10px;">
+        ${enrolled.map(c=>`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(18,184,134,0.12);">
+          <span style="font-size:18px;">${c.icon}</span>
+          <div style="flex:1;font-size:12px;font-weight:700;font-family:'Playfair Display',serif;">${c.name}</div>
+          <div style="font-size:12.5px;font-weight:800;color:var(--gold);">${c.price}</div>
+        </div>`).join('')}
+        <div style="display:flex;justify-content:space-between;margin-top:9px;padding-top:9px;border-top:1.5px solid rgba(18,184,134,0.2);">
+          <span style="font-weight:700;font-size:13px;">Total</span>
+          <span style="font-size:17px;font-weight:800;color:var(--gold);font-family:'Playfair Display',serif;">₦${total.toLocaleString()}</span>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="ir"><div class="ir-icon">⭐</div><div class="ir-text"><b>XP Earned:</b> ${xp} points</div></div>
+        <div class="ir"><div class="ir-icon">📅</div><div class="ir-text"><b>Access:</b> Unlimited (no expiry)</div></div>
+      </div>`;
+    document.getElementById('cartFoot').innerHTML=`<button class="wa-btn" onclick="closeOv('ovCart');submitAllEnrolment()">📲 Confirm All Enrolments via WhatsApp</button>`;
+  }
+  openOv('ovCart');
+}
+
+function submitAllEnrolment(){
+  if(!enrolled.length)return;
+  const list=enrolled.map(c=>`• ${c.name} (${c.price})`).join('\n');
+  const inst=institutions.find(i=>i.id===selectedInst);
+  toWA(`📚 *COURSE ENROLMENT — EduBot*\n\n🏫 *Institution:* ${inst?.name||'N/A'}\n📚 *Class:* ${selectedClass||'N/A'}\n📋 *Exam:* ${selectedExam||'N/A'}\n\n*Courses:*\n${list}\n\n💰 *Total:* ₦${enrolled.reduce((a,b)=>a+b.num,0).toLocaleString()}\n\nPlease process my enrolment. ⏰ ${ts()}`);
+}
+
+// ════════════════════════════════════
+// SUBMIT HANDLERS → WhatsApp
+// ════════════════════════════════════
+function submitEnroll(){
+  const name=document.getElementById('enName').value.trim();
+  const phone=document.getElementById('enPhone').value.trim();
+  const email=document.getElementById('enEmail').value.trim();
+  const instSel=document.getElementById('enInst').value;
+  const cls=document.getElementById('enClass').value;
+  const examType=document.getElementById('enExamType').value;
+  const course=document.getElementById('enCourse').value.trim();
+  const sched=document.getElementById('enSchedule').value;
+  if(!name||!phone||!course){alert('Please fill in name, phone and course name.');return;}
+  toWA(`📘 *COURSE ENROLMENT — EduBot*\n\n👤 *Name:* ${name}\n📞 *Phone:* ${phone}\n📧 *Email:* ${email||'N/A'}\n🏫 *Institution:* ${instSel}\n📚 *Class/Level:* ${cls}\n📋 *Exam Type:* ${examType}\n📗 *Course:* ${course}\n📅 *Schedule:* ${sched}\n\n⏰ ${ts()}`);
+  closeOv('ovEnroll');
+  typing(()=>{botMsg(`🎉 <strong>Enrolment sent for ${course}!</strong> We'll confirm on WhatsApp shortly.`,mainMenu());});
+}
+
+function submitPin(){
+  const name=document.getElementById('pnName').value.trim();
+  const phone=document.getElementById('pnPhone').value.trim();
+  const exam=document.getElementById('pnExam').value;
+  const year=document.getElementById('pnYear').value;
+  const qty=document.getElementById('pnQty').value;
+  const exno=document.getElementById('pnExamNo').value.trim();
+  const pay=document.getElementById('pnPay').value;
+  if(!name||!phone){alert('Please fill in your name and phone number.');return;}
+  toWA(`🔑 *EXAM PIN PURCHASE — EduBot*\n\n👤 *Name:* ${name}\n📞 *Phone:* ${phone}\n📋 *Exam:* ${exam}\n📅 *Year:* ${year}\n🔢 *Qty:* ${qty}\n🆔 *Exam No:* ${exno||'N/A'}\n💳 *Payment:* ${pay}\n\n⏰ ${ts()}`);
+  closeOv('ovPin');
+  typing(()=>{botMsg(`🔑 <strong>Pin purchase sent!</strong> Your <strong>${exam}</strong> PIN will be delivered within 5 minutes after payment.`);});
+}
+
+function submitResult(){
+  const name=document.getElementById('rsName').value.trim();
+  const exam=document.getElementById('rsExam').value;
+  const year=document.getElementById('rsYear').value;
+  const exno=document.getElementById('rsExamNo').value.trim();
+  const pin=document.getElementById('rsPin').value.trim();
+  const ser=document.getElementById('rsSer').value.trim();
+  if(!name||!exno){alert('Please fill in your name and exam number.');return;}
+  toWA(`📊 *RESULT CHECK — EduBot*\n\n👤 *Name:* ${name}\n📋 *Exam:* ${exam}\n📅 *Year:* ${year}\n🆔 *Exam No:* ${exno}\n🔑 *PIN:* ${pin||'N/A'}\n🔢 *Serial:* ${ser||'N/A'}\n\n⏰ ${ts()}`);
+  closeOv('ovResult');
+  typing(()=>{botMsg('📊 Redirected to WhatsApp! Our team will process your result check immediately.');});
+}
+
+function submitConsult(){
+  const name=document.getElementById('csName').value.trim();
+  const phone=document.getElementById('csPhone').value.trim();
+  const consultant=document.getElementById('csConsultant').value;
+  const inst=document.getElementById('csInst').value;
+  const cls=document.getElementById('csClass').value;
+  const topic=document.getElementById('csTopic').value.trim();
+  const date=document.getElementById('csDate').value;
+  const time=document.getElementById('csTime').value;
+  const type=document.getElementById('csType').value;
+  const note=document.getElementById('csNote').value.trim();
+  if(!name||!phone){alert('Please fill in your name and phone number.');return;}
+  toWA(`👨‍🏫 *CONSULTATION — EduBot*\n\n👤 *Name:* ${name}\n📞 *Phone:* ${phone}\n🧑‍🏫 *Consultant:* ${consultant}\n🏫 *Institution:* ${inst}\n📚 *Class:* ${cls}\n📝 *Topic:* ${topic||'General'}\n📅 *Date:* ${date||'TBD'} at ${time}\n📹 *Type:* ${type}\n${note?`💬 *Notes:*\n${note}\n`:''}\n⏰ ${ts()}`);
+  closeOv('ovConsult');
+  typing(()=>{botMsg(`📞 <strong>Consultation booked!</strong> The consultant will confirm your session via WhatsApp.`);});
+}
+
+function submitTimetable(){
+  const name=document.getElementById('ttName').value.trim();
+  const inst=document.getElementById('ttInst').value;
+  const cls=document.getElementById('ttClass').value;
+  const exam=document.getElementById('ttExam').value;
+  const dept=document.getElementById('ttDept').value.trim();
+  if(!name){alert('Please enter your name or student ID.');return;}
+  toWA(`📅 *TIMETABLE REQUEST — EduBot*\n\n👤 *Name:* ${name}\n🏫 *Institution:* ${inst}\n📚 *Class/Level:* ${cls}\n📋 *Exam Type:* ${exam}\n📐 *Dept/Arm:* ${dept||'N/A'}\n\nPlease send my full timetable. ⏰ ${ts()}`);
+  closeOv('ovTimetable');
+  typing(()=>{botMsg('📅 <strong>Timetable request sent!</strong> Your full schedule will be delivered on WhatsApp as PDF and image.');});
+}
+
+function submitFeedback(){
+  const name=document.getElementById('fbName').value.trim()||'Anonymous';
+  const about=document.getElementById('fbAbout').value.trim();
+  const stars=document.getElementById('fbStars').value;
+  const text=document.getElementById('fbText').value.trim();
+  if(!about||!text){alert('Please fill in what you are rating and your feedback.');return;}
+  toWA(`⭐ *FEEDBACK — EduBot*\n\n👤 *Name:* ${name}\n🏫 *Institution:* ${institutions.find(i=>i.id===selectedInst)?.name||'N/A'}\n📝 *About:* ${about}\n⭐ *Rating:* ${'⭐'.repeat(parseInt(stars))} (${stars}/5)\n💬 *Feedback:*\n${text}\n\n⏰ ${ts()}`);
+  closeOv('ovFeedback');
+  typing(()=>{botMsg('⭐ <strong>Thank you for your feedback!</strong> It helps us improve our courses and teaching quality. 💚');});
+}
+
+// ════════════════════════════════════
+// STAR / SEARCH / OVERLAYS
+// ════════════════════════════════════
+function setStar(n){
+  starVal=n;document.getElementById('fbStars').value=n;
+  document.querySelectorAll('#starRow span').forEach((s,i)=>{s.style.filter=i<n?'none':'grayscale(1) opacity(.3)';});
+}
+function openSearch(){openOv('ovSearch');setTimeout(()=>document.getElementById('srchInp').focus(),300);}
+function liveSearch(q){
+  const el=document.getElementById('srchRes');
+  if(!q.trim()){el.innerHTML='';return;}
+  const res=allCourses.filter(c=>
+    c.name.toLowerCase().includes(q.toLowerCase())||
+    c.subj.toLowerCase().includes(q.toLowerCase())||
+    c.exam.toLowerCase().includes(q.toLowerCase())||
+    c.desc.toLowerCase().includes(q.toLowerCase())
+  );
+  el.innerHTML=res.length
+    ?`<div style="display:flex;flex-direction:column;gap:7px;">${res.slice(0,7).map(c=>`
+        <div class="info-card" style="cursor:pointer;" onclick="openCourseDetail('${c.id}')">
+          <div class="ir">
+            <div class="ir-icon" style="font-size:22px;">${c.icon}</div>
+            <div class="ir-text" style="flex:1;"><b>${c.name}</b><br><span style="font-size:10.5px;">${c.price} · ${c.duration} · ★ ${c.rating}</span></div>
+            <button class="cc-btn ${c.cat==='professional'?'btn-violet':'btn-primary'}" style="width:auto;padding:6px 10px;font-size:11px;flex-shrink:0;" onclick="event.stopPropagation();enrollCourse('${c.id}')">Enrol</button>
+          </div>
+        </div>`).join('')}</div>`
+    :`<div style="text-align:center;padding:24px;color:var(--text-muted);">No courses found for "${q}"<br><br><button class="wa-btn" style="width:auto;padding:10px 16px;margin-top:8px;" onclick="toWA('🔍 Looking for: ${q}')">📲 Ask on WhatsApp</button></div>`;
+}
+function openOv(id){document.getElementById(id).classList.add('open');}
+function closeOv(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.overlay').forEach(el=>{el.addEventListener('click',e=>{if(e.target===el)el.classList.remove('open');});});
+document.getElementById('inp').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}});
+document.getElementById('inp').addEventListener('input',function(){this.style.height='auto';this.style.height=this.scrollHeight+'px';});
+
+// ════════════════════════════════════
+// FREE TEXT CHAT
+// ════════════════════════════════════
+function send(){
+  const inp=document.getElementById('inp');
+  const t=inp.value.trim();if(!t)return;
+  inp.value='';inp.style.height='auto';
+  userMsg(t);const l=t.toLowerCase();
+  if(!selectedInst){typing(()=>{botMsg('Please complete your profile setup first! Choose your institution below:',`<div style="margin-top:8px;">${institutions.map(inst=>`<div class="sg-card" onclick="pickInstitution('${inst.id}',this)" style="display:inline-flex;align-items:center;gap:6px;padding:8px 12px;margin:3px;text-align:left;width:auto;border-radius:10px;"><span>${inst.icon}</span><span style="font-size:12px;font-weight:700;">${inst.name}</span></div>`).join('')}</div>`);});return;}
+  if(/^(hi|hello|hey|good|morn|afternoon|evening)/i.test(l)){typing(()=>{botMsg(`Hello! 👋 Welcome back to <strong>EduBot</strong>. What would you like to do today?`,mainMenu());});}
+  else if(/class|lesson|learn|course|subject|study/i.test(l)){doClasses();}
+  else if(/professional|ican|acca|cipm|pmp|cima|cfa/i.test(l)){doProfessional();}
+  else if(/quiz|practice|mock|test yourself/i.test(l)){doQuizMenu();}
+  else if(/pin|scratch|waec card|neco card|jamb form/i.test(l)){doPin();}
+  else if(/result|check.*result|grade/i.test(l)){openOv('ovResult');}
+  else if(/consult|tutor|teacher|coach/i.test(l)){doConsult();}
+  else if(/timetable|schedule|class time/i.test(l)){openOv('ovTimetable');}
+  else if(/progress|my stat|how.*doing/i.test(l)){doProgress();}
+  else if(/promo|discount|coupon/i.test(l)){doPromo();}
+  else if(/enrol|register|sign up|join/i.test(l)){openOv('ovEnroll');}
+  else if(/feedback|review|rate/i.test(l)){openOv('ovFeedback');}
+  else if(/cart|my course|enrolled/i.test(l)){openCart();}
+  else if(/gallery|browse|all course/i.test(l)){doGallery();}
+  else if(/change|profile|institution/i.test(l)){showInstitutions();}
+  else{
+    const res=allCourses.filter(c=>c.name.toLowerCase().includes(l)||c.subj.toLowerCase().includes(l)||c.desc.toLowerCase().includes(l));
+    if(res.length){typing(()=>{botMsg(`Found <strong>${res.length}</strong> course(s) for "<strong>${t}</strong>":`,buildGallery(res,'Search Results'));});}
+    else{typing(()=>{botMsg(`I'm not sure about that — here's what I can help with:`,mainMenu());});}
+  }
+}
+
+// ════════════════════════════════════
+// INIT
+// ════════════════════════════════════
+window.onload=()=>{
+  const h=new Date().getHours();
+  const gr=h<12?'Good morning, scholar! ☀️':h<17?'Good afternoon! 📚':'Good evening! 🌙';
+  setTimeout(()=>{
+    botMsg(`${gr} I'm <strong>EduBot</strong> — your complete academic & professional learning assistant.<br><br>
+I help you <strong>take classes, practice for exams, purchase exam pins, check results, book consultants</strong> and view your <strong>class timetable</strong>. All connected via WhatsApp. 🎓`);
+  },400);
+  setTimeout(()=>{
+    typing(()=>{showInstitutions();},1400);
+  },1400);
+};
+</script>
+</body>
+</html>
