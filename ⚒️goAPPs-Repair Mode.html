@@ -395,7 +395,7 @@ button{cursor:pointer;font-family:'Inter',sans-serif;border:none;background:none
            onerror="this.style.display='none';this.parentElement.textContent='👤'">
     </div>
     <div>
-      <div class="drw-name" id="d-uname">Student</div>
+      <div class="drw-name" id="d-uname">goAPPs User</div>
       <div class="drw-sub" id="d-usub">🚀 goAPPs · All-in-One</div>
     </div>
   </div>
@@ -666,15 +666,15 @@ window.addEventListener('load',()=>{
 
 /* ── DRAWER SYNC ── */
 function syncDrawer(){
-  const name=S.get('gc_name','Student');
+  const name=S.get('gc_name','goAPPs User');
   const cls=S.get('gc_class','');
-  const wallet=S.get('gc_wallet',1000);
+  const wallet=S.get('gc_wallet',0);
   const fmt='₦'+wallet.toLocaleString();
   el('d-uname').textContent=name;
   el('d-usub').textContent='🚀 goAPPs · '+(cls||'All-in-One');
   el('d-wbal').textContent=fmt;
   el('d-wtotal').textContent=fmt;
-  el('pe-name').value=name!=='Student'?name:'';
+  el('pe-name').value=name!=='goAPPs User'?name:'';
   el('pe-email').value=S.get('gc_email','');
   el('pe-class').value=cls;
 }
